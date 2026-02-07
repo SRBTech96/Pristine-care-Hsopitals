@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuditModule } from './audit/audit.module';
 import { PatientsModule } from './patients/patients.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { DoctorsModule } from './doctors/doctors.module';
 import { User } from './entities/user.entity';
 import { Role } from './entities/role.entity';
 import { UserSession } from './entities/user-session.entity';
@@ -24,7 +25,7 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
       username: process.env.DATABASE_USER || 'pristine',
       password: process.env.DATABASE_PASSWORD || 'change-me',
       database: process.env.DATABASE_NAME || 'pristine_hospital',
-      entities: [User, Role, UserSession, AuditLog, DataAccessLog, require('./entities/patient.entity').Patient, require('./entities/appointment.entity').Appointment],
+      entities: [User, Role, UserSession, AuditLog, DataAccessLog, require('./entities/patient.entity').Patient, require('./entities/appointment.entity').Appointment, require('./entities/doctor.entity').Doctor, require('./entities/doctor-availability-slot.entity').DoctorAvailabilitySlot],
       synchronize: false,
       logging: false
     }),
@@ -33,7 +34,8 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     UsersModule,
     AuditModule,
     PatientsModule,
-    AppointmentsModule
+    AppointmentsModule,
+    DoctorsModule
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: AuditInterceptor }]
 })
