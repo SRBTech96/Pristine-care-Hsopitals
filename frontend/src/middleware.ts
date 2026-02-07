@@ -8,6 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { jwtDecode } from "jwt-decode";
 
 /**
  * Deduplicate concurrent API requests
@@ -15,8 +16,49 @@ import { NextRequest, NextResponse } from "next/server";
  */
 const pendingRequests = new Map<string, Promise<any>>();
 
+/**
+ * RBAC-protected routes
+ * Maps route paths to required roles
+ */
+const PROTECTED_ROUTES: Record<string, string[]> = {
+  "/billing": ["ADMIN", "FINANCE", "CASHIER"],
+};
+
+/**
+ * Verify JWT token and extract user role
+ * Returns role if token is valid, null otherwise
+ */
+function getUserRoleFromToken(request: NextRequest): string | null {
+  try {
+    // Get token from authorization header or cookies
+    const authHeader = request.headers.get("authorization");
+    const cookieToken = request.cookies.get("authToken")?.value;
+    
+    const token = authHeader?.replace("Bearer ", "") || cookieToken;
+    if (!token) return null;
+
+    // Decode JWT (client-side decode, verify happens on backend)
+    const decoded = jwtDecode<any>(token);
+    return decoded.role || null;
+  } catch {
+    return null;
+  }
+}
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
+
+    // Check RBAC for protected routes
+    const pathname = request.nextUrl.pathname;
+    for (const [route, allowedRoles] of Object.entries(PROTECTED_ROUTES)) {
+      if (pathname.startsWith(route)) {
+        const userRole = getUserRoleFromToken(request);
+
+        // If no role or role not in allowed list, redirect to home
+        if (!userRole || !allowedRoles.includes(userRole)) {
+          return NextResponse.redirect(new URL("/", request.url));
+        }
+      }
+    }
 
   // Add security headers
   response.headers.set(
