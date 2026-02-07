@@ -18,3 +18,7 @@ export * from './hr-leave-record.entity';
 export * from './hr-offer-letter.entity';
 export * from './revenue-record.entity';
 export * from './expense-record.entity';
+export * from './pharmacy-inventory.entity';
+export * from './pharmacy-batch.entity';
+export * from './pharmacy-purchase.entity';
+export * from './pharmacy-sale.entity';
