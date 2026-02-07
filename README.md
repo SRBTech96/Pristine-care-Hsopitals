@@ -2,6 +2,27 @@
 
 🏥 **World-class hospital website and comprehensive management system** built with enterprise healthcare engineering standards.
 
+---
+
+## 📚 Documentation Guide
+
+All documentation has been organized into topic-specific folders for easy navigation. **Start with the folder that matches your needs:**
+
+### 🎯 Quick Navigation
+
+| Category | Purpose | Key Files |
+|----------|---------|-----------|
+| **[00-overview](./docs/00-overview/)** | System overview & getting started | [QUICKSTART.md](./docs/00-overview/QUICKSTART.md), [FRONTEND_COMPLETION.md](./docs/00-overview/FRONTEND_COMPLETION.md) |
+| **[01-setup](./docs/01-setup/)** | Installation & environment setup | [ENVIRONMENT_CONFIG.md](./docs/01-setup/ENVIRONMENT_CONFIG.md), [FRONTEND_SETUP.md](./docs/01-setup/FRONTEND_SETUP.md), [PRINTER_SETUP.md](./docs/01-setup/PRINTER_SETUP.md) |
+| **[02-performance](./docs/02-performance/)** | Performance & optimization | [PERFORMANCE_OPTIMIZATION.md](./docs/02-performance/PERFORMANCE_OPTIMIZATION.md), [OPTIMIZATION_SUMMARY.md](./docs/02-performance/OPTIMIZATION_SUMMARY.md) |
+| **[03-billing](./docs/03-billing/)** | Billing & invoicing system | [BILLING_COUNTER.md](./docs/03-billing/BILLING_COUNTER.md), [BILLING_COUNTER_IMPLEMENTATION.md](./docs/03-billing/BILLING_COUNTER_IMPLEMENTATION.md) |
+| **[04-finance](./docs/04-finance/)** | Financial dashboards & reporting | [FINANCE_DASHBOARD.md](./docs/04-finance/FINANCE_DASHBOARD.md), [FINANCE_DASHBOARD_COMPLETE.md](./docs/04-finance/FINANCE_DASHBOARD_COMPLETE.md) |
+| **[05-clinical](./docs/05-clinical/)** | Clinical operations & ward management | [NURSE_STATION.md](./docs/05-clinical/NURSE_STATION.md), [NURSE_STATION_IMPLEMENTATION.md](./docs/05-clinical/NURSE_STATION_IMPLEMENTATION.md), [HOW_TO_ADD_DOCTORS.md](./docs/05-clinical/HOW_TO_ADD_DOCTORS.md) |
+| **[06-verification](./docs/06-verification/)** | Testing & verification | [VERIFICATION_CHECKLIST.md](./docs/06-verification/VERIFICATION_CHECKLIST.md) |
+| **[99-integration](./docs/99-integration/)** | System integration & deployment | [INTEGRATION_GUIDE.md](./docs/99-integration/INTEGRATION_GUIDE.md) |
+
+---
+
 ## 🚀 Quick Start
 
 ### Print Agent (New Feature - 3 minutes)
@@ -10,8 +31,8 @@ cd print-agent
 npm install
 npm start
 ```
-Runs on http://localhost:9100
-See [PRINTER_SETUP.md](./PRINTER_SETUP.md) for complete printer integration guide.
+Runs on http://localhost:9100  
+📖 See [PRINTER_SETUP.md](./docs/01-setup/PRINTER_SETUP.md) for complete printer integration guide.
 
 ### Backend (5 minutes)
 ```bash
@@ -36,7 +57,7 @@ Runs on http://localhost:3000 - Visit to see the premium hospital website!
 psql -U pristine -d pristine_hospital -f database/schema.sql
 ```
 
-See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for complete setup instructions.
+📖 See [INTEGRATION_GUIDE.md](./docs/99-integration/INTEGRATION_GUIDE.md) for complete setup instructions.
 
 ## 📦 What's Included
 
@@ -196,48 +217,55 @@ Neurology
 
 ```
 Hospital/
-├── frontend/                 # Next.js 14 website
+├── docs/                         # 📚 Organized documentation
+│   ├── 00-overview/             # System overview & getting started
+│   ├── 01-setup/                # Installation & environment setup
+│   ├── 02-performance/          # Performance & optimization
+│   ├── 03-billing/              # Billing & invoicing
+│   ├── 04-finance/              # Financial dashboards
+│   ├── 05-clinical/             # Clinical operations & ward management
+│   ├── 06-verification/         # Testing & verification
+│   └── 99-integration/          # System integration & deployment
+│
+├── frontend/                     # Next.js 14 website
 │   ├── src/
-│   │   ├── app/             # Pages & layouts
-│   │   ├── components/      # React components
-│   │   │   └── billing/     # Billing Counter with printer integration
+│   │   ├── app/                 # Pages & layouts
+│   │   ├── components/          # React components
+│   │   │   └── billing/         # Billing Counter with printer integration
 │   │   ├── lib/
 │   │   │   ├── billing-api.ts
 │   │   │   ├── finance-api.ts
 │   │   │   └── printer-service.ts  # 🖨️ Printer integration
-│   │   └── types/           # TypeScript types
-│   ├── public/              # Static files
+│   │   └── types/               # TypeScript types
+│   ├── public/                  # Static files
 │   ├── package.json
 │   └── README.md
 │
-├── backend/                  # NestJS APIs
+├── backend/                      # NestJS APIs
 │   ├── src/
-│   │   ├── modules/         # Feature modules
-│   │   │   ├── billing/     # Invoicing & payments
-│   │   │   ├── finance/     # Financial reports & export
+│   │   ├── modules/             # Feature modules
+│   │   │   ├── billing/         # Invoicing & payments
+│   │   │   ├── finance/         # Financial reports & export
 │   │   │   └── ...
-│   │   ├── entities/        # Database entities
-│   │   ├── auth/            # Authentication
-│   │   ├── common/          # Shared utilities
-│   │   ├── audit/           # Audit logging
+│   │   ├── entities/            # Database entities
+│   │   ├── auth/                # Authentication
+│   │   ├── common/              # Shared utilities
+│   │   ├── audit/               # Audit logging
 │   │   └── main.ts
-│   ├── test/                # Unit tests
+│   ├── test/                    # Unit tests
 │   ├── package.json
 │   └── README.md
 │
-├── print-agent/              # 🖨️ Local Printer Service
-│   ├── index.js             # Express server (localhost:9100)
+├── print-agent/                  # 🖨️ Local Printer Service
+│   ├── index.js                 # Express server (localhost:9100)
 │   ├── package.json
 │   ├── README.md
 │   └── ...
 │
 ├── database/
-│   └── schema.sql           # PostgreSQL schema (44 tables)
+│   └── schema.sql               # PostgreSQL schema (44+ tables)
 │
-├── INTEGRATION_GUIDE.md      # ⭐ Complete setup guide
-├── PRINTER_SETUP.md         # 🖨️ Printer integration guide
-├── FRONTEND_SETUP.md        # Frontend-specific guide
-└── README.md                # This file
+└── README.md                     # This file (table of contents)
 ```
 
 ## 🎯 Key Features
@@ -374,19 +402,42 @@ Update `.env` files in both frontend and backend with production values:
 
 See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for detailed deployment steps.
 
-## 📚 Documentation
+## 📚 Full Documentation
 
-- **[INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)** - Complete setup & architecture overview
-- **[PRINTER_SETUP.md](./PRINTER_SETUP.md)** - 🖨️ Printer integration guide (start here for printing)
-- **[FRONTEND_SETUP.md](./FRONTEND_SETUP.md)** - Frontend-specific guide
+All documentation is organized in the `docs/` directory by topic. **Choose your topic:**
+
+### Getting Started
+- **[📖 QUICKSTART.md](./docs/00-overview/QUICKSTART.md)** - Delivery summary and quick reference
+- **[📖 FRONTEND_COMPLETION.md](./docs/00-overview/FRONTEND_COMPLETION.md)** - Frontend system overview
+
+### Setup & Configuration
+- **[📖 INTEGRATION_GUIDE.md](./docs/99-integration/INTEGRATION_GUIDE.md)** - Complete setup & architecture
+- **[📖 ENVIRONMENT_CONFIG.md](./docs/01-setup/ENVIRONMENT_CONFIG.md)** - Environment variables guide
+- **[📖 FRONTEND_SETUP.md](./docs/01-setup/FRONTEND_SETUP.md)** - Frontend-specific setup
+- **[📖 PRINTER_SETUP.md](./docs/01-setup/PRINTER_SETUP.md)** - 🖨️ Printer integration (start here for printing!)
+
+### Features & Operations
+- **[📖 BILLING_COUNTER.md](./docs/03-billing/BILLING_COUNTER.md)** - Invoicing & payment system
+- **[📖 BILLING_COUNTER_IMPLEMENTATION.md](./docs/03-billing/BILLING_COUNTER_IMPLEMENTATION.md)** - Implementation details
+- **[📖 FINANCE_DASHBOARD.md](./docs/04-finance/FINANCE_DASHBOARD.md)** - Financial reporting
+- **[📖 FINANCE_DASHBOARD_COMPLETE.md](./docs/04-finance/FINANCE_DASHBOARD_COMPLETE.md)** - Dashboard implementation
+- **[📖 HOW_TO_ADD_DOCTORS.md](./docs/05-clinical/HOW_TO_ADD_DOCTORS.md)** - Add doctors to the system
+
+### Clinical Operations (Bed & Ward Management)
+- **[📖 NURSE_STATION.md](./docs/05-clinical/NURSE_STATION.md)** - Ward-based nurse station API
+- **[📖 NURSE_STATION_IMPLEMENTATION.md](./docs/05-clinical/NURSE_STATION_IMPLEMENTATION.md)** - Implementation summary
+
+### Performance & Optimization
+- **[📖 PERFORMANCE_OPTIMIZATION.md](./docs/02-performance/PERFORMANCE_OPTIMIZATION.md)** - Performance tuning guide
+- **[📖 OPTIMIZATION_SUMMARY.md](./docs/02-performance/OPTIMIZATION_SUMMARY.md)** - Optimization strategies
+
+### Testing & Verification
+- **[📖 VERIFICATION_CHECKLIST.md](./docs/06-verification/VERIFICATION_CHECKLIST.md)** - Complete testing checklist
+
+### Additional Resources
 - **[print-agent/README.md](./print-agent/README.md)** - Print agent API documentation
-- **[backend/README.md](./backend/README.md)** - API documentation
-- **[frontend/README.md](./frontend/README.md)** - Website documentation
-- **Module Documentation**:
-  - `backend/src/billing/BILLING.md` - Invoicing & payments
-  - `backend/src/lab/LAB.md` - Lab & diagnostics
-  - `backend/src/hr/HR.md` - HR & payroll
-  - And more...
+- **[backend/README.md](./backend/README.md)** - Backend API documentation
+- **[frontend/README.md](./frontend/README.md)** - Frontend application documentation
 
 ## ✅ Completion Checklist
 
@@ -442,8 +493,9 @@ See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for detailed deployment steps
 2. **Frontend can't fetch doctors**: Verify backend on port 3001
 3. **CORS errors**: Backend CORS already enabled (check FRONTEND_URL)
 4. **Database connection**: Verify credentials in .env
+5. **Printer not working**: See [PRINTER_SETUP.md](./docs/01-setup/PRINTER_SETUP.md)
 
-See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) Troubleshooting section for more.
+📖 See [INTEGRATION_GUIDE.md](./docs/99-integration/INTEGRATION_GUIDE.md) Troubleshooting section for more details.
 
 ## 📄 License
 

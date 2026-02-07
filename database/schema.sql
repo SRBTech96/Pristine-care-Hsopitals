@@ -501,7 +501,256 @@ INSERT INTO departments (name, code, description) VALUES
 ON CONFLICT (code) DO NOTHING;
 
 -- ==============================================================================
--- 10. CONSTRAINTS & TRIGGERS
+-- 9. BED & WARD MANAGEMENT
+-- ==============================================================================
+
+-- Wards (unit/floor/building)
+CREATE TABLE wards (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL, -- ICU, General Ward, NICU, OPD, etc.
+    code VARCHAR(20) UNIQUE NOT NULL, -- ICU-01, GW-01, NICU-01
+    floor_number INT,
+    building VARCHAR(50),
+    total_beds INT NOT NULL DEFAULT 0,
+    description TEXT,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_by UUID NOT NULL REFERENCES users(id),
+    updated_by UUID NOT NULL REFERENCES users(id)
+);
+
+-- Room Categories (bed types/classifications)
+CREATE TABLE room_categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL, -- ICU, NICU, General, Private, Deluxe
+    code VARCHAR(20) UNIQUE NOT NULL,
+    description TEXT,
+    capacity INT NOT NULL DEFAULT 1, -- beds per room
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Beds (individual bed records)
+CREATE TABLE beds (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    bed_code VARCHAR(50) UNIQUE NOT NULL, -- ICU-01-A, NICU-02-B, GW-03-C
+    ward_id UUID NOT NULL REFERENCES wards(id) ON DELETE RESTRICT,
+    room_category_id UUID NOT NULL REFERENCES room_categories(id) ON DELETE RESTRICT,
+    room_number VARCHAR(50), -- Physical room number if applicable
+    floor_number INT, -- Inherited from ward
+    bed_position VARCHAR(10), -- A, B, C, D (for multi-bed rooms)
+    status VARCHAR(50) NOT NULL DEFAULT 'vacant', -- vacant, occupied, maintenance, reserved
+    current_patient_id UUID REFERENCES patients(id) ON DELETE SET NULL,
+    assigned_to_user_id UUID REFERENCES users(id) ON DELETE SET NULL, -- Primary nurse/staff assigned
+    admission_date TIMESTAMPTZ, -- When patient admitted to bed
+    estimated_discharge_date DATE,
+    special_requirements TEXT, -- Oxygen, Dialysis, Ventilator, etc.
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_by UUID NOT NULL REFERENCES users(id),
+    updated_by UUID NOT NULL REFERENCES users(id),
+    CONSTRAINT valid_status CHECK (status IN ('vacant', 'occupied', 'maintenance', 'reserved'))
+);
+
+-- Bed Status History (audit trail for bed changes)
+CREATE TABLE bed_status_history (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    bed_id UUID NOT NULL REFERENCES beds(id) ON DELETE CASCADE,
+    previous_status VARCHAR(50) NOT NULL,
+    new_status VARCHAR(50) NOT NULL,
+    previous_patient_id UUID REFERENCES patients(id) ON DELETE SET NULL,
+    new_patient_id UUID REFERENCES patients(id) ON DELETE SET NULL,
+    changed_by UUID NOT NULL REFERENCES users(id),
+    change_reason TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ==============================================================================
+-- 10. WARD-BASED NURSE STATION
+-- ==============================================================================
+
+-- Nurse Assignments (ward/bed/floor-based assignment by Head Nurse)
+CREATE TABLE nurse_assignments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nurse_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+    ward_id UUID REFERENCES wards(id) ON DELETE SET NULL,
+    floor_number INT,
+    assigned_beds TEXT, -- JSON array of bed IDs or ranges (e.g., ['BED-01', 'BED-02'])
+    shift_start_time TIME,
+    shift_end_time TIME,
+    shift_date DATE,
+    assigned_by_id UUID NOT NULL REFERENCES users(id), -- Head Nurse
+    status VARCHAR(50) NOT NULL DEFAULT 'active', -- active, completed, cancelled
+    notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT valid_status CHECK (status IN ('active', 'completed', 'cancelled'))
+);
+
+-- Inpatient Admissions (patient ↔ bed mapping)
+CREATE TABLE inpatient_admissions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE RESTRICT,
+    bed_id UUID NOT NULL REFERENCES beds(id) ON DELETE RESTRICT,
+    ward_id UUID NOT NULL REFERENCES wards(id) ON DELETE RESTRICT,
+    admission_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    discharge_date TIMESTAMPTZ,
+    admission_type VARCHAR(50) NOT NULL, -- emergency, scheduled, transfer
+    attending_doctor_id UUID NOT NULL REFERENCES users(id),
+    chief_complaint TEXT,
+    admission_notes TEXT,
+    discharge_summary TEXT,
+    status VARCHAR(50) NOT NULL DEFAULT 'active', -- active, discharged, transferred, deceased
+    is_icu BOOLEAN DEFAULT false,
+    is_nicu BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_by UUID NOT NULL REFERENCES users(id),
+    updated_by UUID NOT NULL REFERENCES users(id),
+    CONSTRAINT valid_admission_type CHECK (admission_type IN ('emergency', 'scheduled', 'transfer')),
+    CONSTRAINT valid_status CHECK (status IN ('active', 'discharged', 'transferred', 'deceased'))
+);
+
+-- Doctor Orders (read-only for nurses)
+CREATE TABLE doctor_orders (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    inpatient_admission_id UUID NOT NULL REFERENCES inpatient_admissions(id) ON DELETE CASCADE,
+    doctor_id UUID NOT NULL REFERENCES users(id),
+    order_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    order_type VARCHAR(50) NOT NULL, -- medication, procedure, investigation, diet, activity, observation
+    description TEXT NOT NULL,
+    instructions TEXT,
+    priority VARCHAR(50) NOT NULL DEFAULT 'normal', -- routine, urgent, stat
+    status VARCHAR(50) NOT NULL DEFAULT 'active', -- active, completed, cancelled, on_hold
+    scheduled_date TIMESTAMPTZ,
+    expected_completion_date TIMESTAMPTZ,
+    approvals_required BOOLEAN DEFAULT false,
+    approved_by_id UUID REFERENCES users(id),
+    approved_at TIMESTAMPTZ,
+    cancelled_by_id UUID REFERENCES users(id),
+    cancelled_at TIMESTAMPTZ,
+    cancellation_reason TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT valid_order_type CHECK (order_type IN ('medication', 'procedure', 'investigation', 'diet', 'activity', 'observation')),
+    CONSTRAINT valid_priority CHECK (priority IN ('routine', 'urgent', 'stat')),
+    CONSTRAINT valid_status CHECK (status IN ('active', 'completed', 'cancelled', 'on_hold'))
+);
+
+-- Medication Schedules (doctor-defined)
+CREATE TABLE medication_schedules (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    doctor_order_id UUID NOT NULL REFERENCES doctor_orders(id) ON DELETE CASCADE,
+    inpatient_admission_id UUID NOT NULL REFERENCES inpatient_admissions(id) ON DELETE CASCADE,
+    medication_name VARCHAR(255) NOT NULL,
+    dosage VARCHAR(100) NOT NULL,
+    unit VARCHAR(50) NOT NULL, -- mg, ml, units, tablets, etc.
+    frequency VARCHAR(100) NOT NULL, -- once daily, twice daily, every 6 hours, as needed, etc.
+    route VARCHAR(50) NOT NULL, -- oral, IV, IM, SC, transdermal, topical, inhalation
+    start_date TIMESTAMPTZ NOT NULL,
+    end_date TIMESTAMPTZ,
+    duration_days INT,
+    special_instructions TEXT,
+    contraindications TEXT,
+    allergies_to_check VARCHAR(255),
+    requires_monitoring BOOLEAN DEFAULT false,
+    monitoring_parameters TEXT, -- e.g., Blood Pressure, Heart Rate, etc.
+    prescribing_doctor_id UUID NOT NULL REFERENCES users(id),
+    prescribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    status VARCHAR(50) NOT NULL DEFAULT 'active', -- active, completed, cancelled, paused
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT valid_route CHECK (route IN ('oral', 'IV', 'IM', 'SC', 'transdermal', 'topical', 'inhalation', 'rectal', 'sublingual')),
+    CONSTRAINT valid_status CHECK (status IN ('active', 'completed', 'cancelled', 'paused'))
+);
+
+-- Medication Administration (nurse execution with status, timestamp, nurse)
+CREATE TABLE medication_administrations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    medication_schedule_id UUID NOT NULL REFERENCES medication_schedules(id) ON DELETE CASCADE,
+    inpatient_admission_id UUID NOT NULL REFERENCES inpatient_admissions(id) ON DELETE CASCADE,
+    scheduled_time TIMESTAMPTZ NOT NULL,
+    administered_time TIMESTAMPTZ,
+    administered_by_id UUID REFERENCES users(id), -- Staff Nurse
+    status VARCHAR(50) NOT NULL DEFAULT 'pending', -- pending, administered, refused, held, delayed, not_given
+    reason_if_not_given TEXT, -- patient refusal, medication unavailable, patient NPO, etc.
+    actual_dosage VARCHAR(100), -- May differ from scheduled if nurse administered less
+    route_used VARCHAR(50),
+    site_of_administration VARCHAR(100), -- For IM/SC/IV injections: site, etc.
+    batch_number VARCHAR(100),
+    expiry_date DATE,
+    nurse_notes TEXT,
+    patient_response TEXT,
+    side_effects_observed BOOLEAN DEFAULT false,
+    side_effects_details TEXT,
+    verified_by_id UUID REFERENCES users(id), -- Can be verified by another nurse or doctor
+    verified_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT valid_status CHECK (status IN ('pending', 'administered', 'refused', 'held', 'delayed', 'not_given'))
+);
+
+-- Vital Signs Records
+CREATE TABLE vitals_records (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    inpatient_admission_id UUID NOT NULL REFERENCES inpatient_admissions(id) ON DELETE CASCADE,
+    recorded_by_id UUID NOT NULL REFERENCES users(id), -- Staff Nurse
+    recorded_at TIMESTAMPTZ NOT NULL,
+    temperature_celsius NUMERIC(4,1), -- Body temperature
+    heart_rate_bpm INT, -- Beats per minute
+    systolic_bp INT, -- Systolic Blood Pressure
+    diastolic_bp INT, -- Diastolic Blood Pressure
+    respiratory_rate_rpm INT, -- Respiratory rate per minute
+    oxygen_saturation_percent NUMERIC(3,1), -- SpO2 percentage
+    blood_glucose_mmol NUMERIC(5,2), -- Blood glucose
+    weight_kg NUMERIC(5,2),
+    height_cm NUMERIC(5,1),
+    pain_score INT, -- 0-10 scale
+    gcs_score INT, -- Glasgow Coma Scale
+    consciousness_level VARCHAR(100), -- alert, drowsy, unconscious, etc.
+    urine_output_ml INT, -- Last 24 hours
+    bowel_movement_status VARCHAR(100), -- normal, constipated, diarrhea, etc.
+    notes TEXT, -- Additional observations
+    abnormal_findings BOOLEAN DEFAULT false,
+    reported_to_doctor_id UUID REFERENCES users(id),
+    reported_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Emergency Events (raised by nurses)
+CREATE TABLE emergency_events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    inpatient_admission_id UUID REFERENCES inpatient_admissions(id) ON DELETE SET NULL,
+    patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE RESTRICT,
+    reported_by_id UUID NOT NULL REFERENCES users(id), -- Staff Nurse
+    event_type VARCHAR(100) NOT NULL, -- cardiac arrest, respiratory distress, seizure, anaphylaxis, severe bleeding, code blue, etc.
+    severity VARCHAR(50) NOT NULL, -- critical, high, medium, low
+    location VARCHAR(255), -- Ward/Bed where event occurred
+    description TEXT NOT NULL,
+    time_of_event TIMESTAMPTZ NOT NULL,
+    response_start_time TIMESTAMPTZ,
+    response_end_time TIMESTAMPTZ,
+    doctors_notified_ids TEXT, -- JSON array of doctor IDs notified
+    notified_at TIMESTAMPTZ,
+    actions_taken TEXT,
+    outcome VARCHAR(100), -- patient_stabilized, transferred_to_icu, clinical_death, etc.
+    status VARCHAR(50) NOT NULL DEFAULT 'reported', -- reported, acknowledged, in_progress, resolved, escalated
+    resolvingdoctor_id UUID REFERENCES users(id),
+    resolved_at TIMESTAMPTZ,
+    follow_up_required BOOLEAN DEFAULT true,
+    follow_up_notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT valid_severity CHECK (severity IN ('critical', 'high', 'medium', 'low')),
+    CONSTRAINT valid_status CHECK (status IN ('reported', 'acknowledged', 'in_progress', 'resolved', 'escalated'))
+);
+
+-- ==============================================================================
+-- 11. CONSTRAINTS & TRIGGERS
 -- ==============================================================================
 
 -- Trigger: Update patient updated_at on modification
