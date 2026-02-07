@@ -22,3 +22,7 @@ export * from './pharmacy-inventory.entity';
 export * from './pharmacy-batch.entity';
 export * from './pharmacy-purchase.entity';
 export * from './pharmacy-sale.entity';
+export * from './lab-test.entity';
+export * from './lab-order.entity';
+export * from './lab-sample.entity';
+export * from './lab-report.entity';
