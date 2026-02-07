@@ -41,7 +41,9 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     CrmModule,
     HrModule,
     // Finance & Accounts
-    require('./finance/finance.module').FinanceModule
+    require('./finance/finance.module').FinanceModule,
+    // Owner Dashboard
+    require('./owner-dashboard/owner-dashboard.module').OwnerDashboardModule
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: AuditInterceptor }]
 })
