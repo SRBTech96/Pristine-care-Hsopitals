@@ -4,6 +4,15 @@
 
 ## 🚀 Quick Start
 
+### Print Agent (New Feature - 3 minutes)
+```bash
+cd print-agent
+npm install
+npm start
+```
+Runs on http://localhost:9100
+See [PRINTER_SETUP.md](./PRINTER_SETUP.md) for complete printer integration guide.
+
 ### Backend (5 minutes)
 ```bash
 cd backend
@@ -120,12 +129,19 @@ See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for complete setup instructio
     - Multi-method payments (cash, bank, UPI, card, cheque)
     - Payment tracking and refunds
     - Financial reporting
+    - **Local Printer Integration** 🖨️
+      - Silent printing to system printers
+      - Thermal receipt & A4 document support
+      - Auto-fallback to browser print
+      - Cross-platform (Windows/macOS/Linux)
 
 11. **Owner Dashboard Module** (Bonus)
     - Aggregated metrics (daily/monthly revenue)
     - Revenue per doctor & department
     - Expense summaries
     - OWNER-only access control
+    - Financial report export (PDF/Excel)
+    - Dual-path export system (backend + client fallback)
 
 ### 🗄️ Database - MDM-Compliant PostgreSQL
 **Location**: `/database` | **Tech**: PostgreSQL 13+
@@ -184,7 +200,11 @@ Hospital/
 │   ├── src/
 │   │   ├── app/             # Pages & layouts
 │   │   ├── components/      # React components
-│   │   ├── lib/             # API client & utils
+│   │   │   └── billing/     # Billing Counter with printer integration
+│   │   ├── lib/
+│   │   │   ├── billing-api.ts
+│   │   │   ├── finance-api.ts
+│   │   │   └── printer-service.ts  # 🖨️ Printer integration
 │   │   └── types/           # TypeScript types
 │   ├── public/              # Static files
 │   ├── package.json
@@ -193,6 +213,9 @@ Hospital/
 ├── backend/                  # NestJS APIs
 │   ├── src/
 │   │   ├── modules/         # Feature modules
+│   │   │   ├── billing/     # Invoicing & payments
+│   │   │   ├── finance/     # Financial reports & export
+│   │   │   └── ...
 │   │   ├── entities/        # Database entities
 │   │   ├── auth/            # Authentication
 │   │   ├── common/          # Shared utilities
@@ -202,15 +225,41 @@ Hospital/
 │   ├── package.json
 │   └── README.md
 │
+├── print-agent/              # 🖨️ Local Printer Service
+│   ├── index.js             # Express server (localhost:9100)
+│   ├── package.json
+│   ├── README.md
+│   └── ...
+│
 ├── database/
 │   └── schema.sql           # PostgreSQL schema (44 tables)
 │
-├── INTEGRATION_GUIDE.md     # ⭐ Setup guide (START HERE)
+├── INTEGRATION_GUIDE.md      # ⭐ Complete setup guide
+├── PRINTER_SETUP.md         # 🖨️ Printer integration guide
 ├── FRONTEND_SETUP.md        # Frontend-specific guide
 └── README.md                # This file
 ```
 
 ## 🎯 Key Features
+
+### Billing & Invoicing
+✅ Complete invoice management  
+✅ Patient search and selection  
+✅ Line items with services & taxes  
+✅ Payment tracking (cash, bank, UPI, card)  
+✅ **Local printer integration** 🖨️  
+✅ Silent printing to system printers  
+✅ Thermal receipt & A4 document support  
+✅ Auto-fallback to browser print  
+✅ Cross-platform (Windows/macOS/Linux)  
+
+### Financial Reporting
+✅ Owner dashboard with metrics  
+✅ Revenue tracking per doctor/department  
+✅ Expense management  
+✅ Financial export (PDF/Excel)  
+✅ Dual-export system (backend + client-side)  
+✅ Role-based access control (OWNER, FINANCE)  
 
 ### Security
 ✅ JWT authentication with token rotation  
@@ -328,7 +377,9 @@ See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for detailed deployment steps
 ## 📚 Documentation
 
 - **[INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)** - Complete setup & architecture overview
+- **[PRINTER_SETUP.md](./PRINTER_SETUP.md)** - 🖨️ Printer integration guide (start here for printing)
 - **[FRONTEND_SETUP.md](./FRONTEND_SETUP.md)** - Frontend-specific guide
+- **[print-agent/README.md](./print-agent/README.md)** - Print agent API documentation
 - **[backend/README.md](./backend/README.md)** - API documentation
 - **[frontend/README.md](./frontend/README.md)** - Website documentation
 - **Module Documentation**:
@@ -342,6 +393,18 @@ See [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) for detailed deployment steps
 - ✅ Database schema (MDM-compliant, 44 tables)
 - ✅ Backend: 10 complete modules with tests
 - ✅ Frontend: Premium website with data-driven doctors
+- ✅ Billing Counter: Invoice creation & payment management
+- ✅ **Local Printer Integration** 🖨️
+  - ✅ Print agent Node.js server (localhost:9100)
+  - ✅ Multi-OS support (Windows/macOS/Linux)
+  - ✅ Printer type support (thermal/A4)
+  - ✅ Auto-fallback logic
+  - ✅ Status messaging
+- ✅ **Owner Dashboard Module**
+  - ✅ Financial metrics & reports
+  - ✅ Export functionality (PDF/Excel)
+  - ✅ Dual-path export system
+  - ✅ RBAC for OWNER & FINANCE roles
 - ✅ Authentication & RBAC (12+ roles)
 - ✅ Audit logging & compliance
 - ✅ API integration (frontend ↔ backend)
