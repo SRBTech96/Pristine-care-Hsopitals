@@ -22,6 +22,7 @@ const pendingRequests = new Map<string, Promise<any>>();
  */
 const PROTECTED_ROUTES: Record<string, string[]> = {
   "/billing": ["ADMIN", "FINANCE", "CASHIER"],
+  "/finance": ["OWNER", "FINANCE"],
 };
 
 /**
