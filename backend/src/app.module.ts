@@ -27,7 +27,7 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
       username: process.env.DATABASE_USER || 'pristine',
       password: process.env.DATABASE_PASSWORD || 'change-me',
       database: process.env.DATABASE_NAME || 'pristine_hospital',
-      entities: [User, Role, UserSession, AuditLog, DataAccessLog, require('./entities/patient.entity').Patient, require('./entities/appointment.entity').Appointment, require('./entities/doctor.entity').Doctor, require('./entities/doctor-availability-slot.entity').DoctorAvailabilitySlot, require('./entities/patient-lead.entity').PatientLead, require('./entities/follow-up.entity').FollowUp, require('./entities/visit-attribution.entity').VisitAttribution, require('./entities/discount-approval.entity').DiscountApproval, require('./entities/hr-employee.entity').HrEmployee, require('./entities/salary-structure.entity').SalaryStructure, require('./entities/payroll-record.entity').PayrollRecord, require('./entities/hr-leave-record.entity').HrLeaveRecord, require('./entities/hr-offer-letter.entity').HrOfferLetter],
+      entities: [User, Role, UserSession, AuditLog, DataAccessLog, require('./entities/patient.entity').Patient, require('./entities/appointment.entity').Appointment, require('./entities/doctor.entity').Doctor, require('./entities/doctor-availability-slot.entity').DoctorAvailabilitySlot, require('./entities/patient-lead.entity').PatientLead, require('./entities/follow-up.entity').FollowUp, require('./entities/visit-attribution.entity').VisitAttribution, require('./entities/discount-approval.entity').DiscountApproval, require('./entities/hr-employee.entity').HrEmployee, require('./entities/salary-structure.entity').SalaryStructure, require('./entities/payroll-record.entity').PayrollRecord, require('./entities/hr-leave-record.entity').HrLeaveRecord, require('./entities/hr-offer-letter.entity').HrOfferLetter, require('./entities/revenue-record.entity').RevenueRecord, require('./entities/expense-record.entity').ExpenseRecord],
       synchronize: false,
       logging: false
     }),
@@ -39,7 +39,9 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     AppointmentsModule,
     DoctorsModule,
     CrmModule,
-    HrModule
+    HrModule,
+    // Finance & Accounts
+    require('./finance/finance.module').FinanceModule
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: AuditInterceptor }]
 })
