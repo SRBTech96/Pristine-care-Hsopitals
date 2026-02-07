@@ -26,3 +26,6 @@ export * from './lab-test.entity';
 export * from './lab-order.entity';
 export * from './lab-sample.entity';
 export * from './lab-report.entity';
+export * from './invoice.entity';
+export * from './invoice-line-item.entity';
+export * from './payment.entity';
