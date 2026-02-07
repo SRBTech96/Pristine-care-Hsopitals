@@ -1,183 +1,197 @@
 // backend/src/controllers/QualityMetricsController.ts
-import { Request, Response } from 'express';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  Query,
+  BadRequestException,
+} from '@nestjs/common';
 import { QualityMetricsService } from '../services/QualityMetricsService';
 
+@Controller('quality-metrics')
 export class QualityMetricsController {
   constructor(private metricsService: QualityMetricsService) {}
 
-  async createOrUpdateMetrics(req: Request, res: Response): Promise<void> {
+  @Post()
+  async createOrUpdateMetrics(
+    @Body() body: any,
+  ): Promise<any> {
     try {
-      const { wardId, nurseId, metricDate, ...metricData } = req.body;
+      const { wardId, nurseId, metricDate, ...metricData } = body;
 
       const metric = await this.metricsService.createOrUpdateMetrics(
         wardId,
         nurseId,
         new Date(metricDate),
-        metricData
+        metricData,
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: metric,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to create or update metrics',
+      );
     }
   }
 
-  async getMetricsByNurse(req: Request, res: Response): Promise<void> {
+  @Get('nurse/:nurseId')
+  async getMetricsByNurse(
+    @Param('nurseId') nurseId: string,
+    @Query('wardId') wardId?: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ): Promise<any> {
     try {
-      const { wardId, nurseId } = req.params;
-      const { startDate, endDate } = req.query;
-
       const metrics = await this.metricsService.getMetricsByNurse(
-        wardId,
+        wardId || '',
         nurseId,
-        new Date(startDate as string),
-        new Date(endDate as string)
+        startDate ? new Date(startDate) : new Date(),
+        endDate ? new Date(endDate) : new Date(),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: metrics,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch nurse metrics',
+      );
     }
   }
 
-  async getWardMetrics(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId')
+  async getWardMetrics(
+    @Param('wardId') wardId: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-      const { startDate, endDate } = req.query;
-
       const metrics = await this.metricsService.getWardMetrics(
         wardId,
-        new Date(startDate as string),
-        new Date(endDate as string)
+        startDate ? new Date(startDate) : new Date(),
+        endDate ? new Date(endDate) : new Date(),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: metrics,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch ward metrics',
+      );
     }
   }
 
-  async getTopPerformers(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId/top-performers')
+  async getTopPerformers(
+    @Param('wardId') wardId: string,
+    @Query('limit') limit?: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-      const { limit = 10 } = req.query;
-
       const performers = await this.metricsService.getTopPerformers(
         wardId,
-        parseInt(limit as string)
+        parseInt(limit || '10', 10),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: performers,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch top performers',
+      );
     }
   }
 
-  async getMedicationMetrics(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId/medication')
+  async getMedicationMetrics(
+    @Param('wardId') wardId: string,
+    @Query('nurseId') nurseId?: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-      const { nurseId } = req.query;
-
       const metrics = await this.metricsService.getMedicationMetrics(
         wardId,
-        nurseId as string
+        nurseId || undefined,
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: metrics,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch medication metrics',
+      );
     }
   }
 
-  async getTaskMetrics(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId/tasks')
+  async getTaskMetrics(
+    @Param('wardId') wardId: string,
+    @Query('nurseId') nurseId?: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-      const { nurseId } = req.query;
-
       const metrics = await this.metricsService.getTaskMetrics(
         wardId,
-        nurseId as string
+        nurseId || undefined,
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: metrics,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch task metrics',
+      );
     }
   }
 
-  async getWorkloadMetrics(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId/workload')
+  async getWorkloadMetrics(
+    @Param('wardId') wardId: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-
       const metrics = await this.metricsService.getWorkloadMetrics(wardId);
 
-      res.status(200).json({
+      return {
         success: true,
         data: metrics,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch workload metrics',
+      );
     }
   }
 
-  async getEmergencyResponseMetrics(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId/emergency-response')
+  async getEmergencyResponseMetrics(
+    @Param('wardId') wardId: string,
+    @Query('nurseId') nurseId?: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-      const { nurseId } = req.query;
-
       const metrics = await this.metricsService.getEmergencyResponseMetrics(
         wardId,
-        nurseId as string
+        nurseId || undefined,
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: metrics,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch emergency response metrics',
+      );
     }
   }
 }

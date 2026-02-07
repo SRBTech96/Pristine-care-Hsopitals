@@ -1,14 +1,37 @@
 // backend/src/controllers/NursingNoteController.ts
-import { Request, Response } from 'express';
+import {
+  Controller,
+  Post,
+  Get,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  Request,
+  HttpCode,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { NursingNoteService } from '../services/NursingNoteService';
 
+@Controller('nursing-notes')
 export class NursingNoteController {
   constructor(private nursingNoteService: NursingNoteService) {}
 
-  async createNote(req: Request, res: Response): Promise<void> {
+  @Post()
+  @HttpCode(201)
+  async createNote(
+    @Body() body: any,
+    @Request() req: any,
+  ): Promise<any> {
     try {
-      const { patientId, wardId, noteType, content, soapData } = req.body;
-      const userId = req.user.id;
+      const { patientId, wardId, noteType, content, soapData } = body;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        throw new BadRequestException('User ID not found in request');
+      }
 
       const note = await this.nursingNoteService.createNote({
         patientId,
@@ -19,177 +42,190 @@ export class NursingNoteController {
         soapData,
       });
 
-      res.status(201).json({
+      return {
         success: true,
         data: note,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to create nursing note',
+      );
     }
   }
 
-  async updateNote(req: Request, res: Response): Promise<void> {
+  @Put(':noteId')
+  async updateNote(
+    @Param('noteId') noteId: string,
+    @Body() body: any,
+    @Request() req: any,
+  ): Promise<any> {
     try {
-      const { noteId } = req.params;
-      const { content, soapData } = req.body;
-      const userId = req.user.id;
+      const { content, soapData } = body;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        throw new BadRequestException('User ID not found in request');
+      }
 
       const note = await this.nursingNoteService.updateNote(
         noteId,
         { content, soapData },
-        userId
+        userId,
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: note,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to update nursing note',
+      );
     }
   }
 
-  async getNotesByPatient(req: Request, res: Response): Promise<void> {
+  @Get('patient/:patientId')
+  async getNotesByPatient(
+    @Param('patientId') patientId: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ): Promise<any> {
     try {
-      const { patientId } = req.params;
-      const { limit = 50, offset = 0 } = req.query;
-
       const notes = await this.nursingNoteService.getNotesByPatient(
         patientId,
-        parseInt(limit as string),
-        parseInt(offset as string)
+        parseInt(limit || '50', 10),
+        parseInt(offset || '0', 10),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: notes,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch notes',
+      );
     }
   }
 
-  async getNotesByNurse(req: Request, res: Response): Promise<void> {
+  @Get('nurse/:nurseId')
+  async getNotesByNurse(
+    @Param('nurseId') nurseId: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ): Promise<any> {
     try {
-      const { nurseId } = req.params;
-      const { limit = 100, offset = 0 } = req.query;
-
       const notes = await this.nursingNoteService.getNotesByNurse(
         nurseId,
-        parseInt(limit as string),
-        parseInt(offset as string)
+        parseInt(limit || '100', 10),
+        parseInt(offset || '0', 10),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: notes,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch notes',
+      );
     }
   }
 
-  async getNotesByWard(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId')
+  async getNotesByWard(
+    @Param('wardId') wardId: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-      const { limit = 100, offset = 0 } = req.query;
-
       const notes = await this.nursingNoteService.getNotesByWard(
         wardId,
-        parseInt(limit as string),
-        parseInt(offset as string)
+        parseInt(limit || '100', 10),
+        parseInt(offset || '0', 10),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: notes,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch notes',
+      );
     }
   }
 
-  async getRecentNotes(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId/recent')
+  async getRecentNotes(
+    @Param('wardId') wardId: string,
+    @Query('limit') limit?: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-      const { limit = 20 } = req.query;
-
       const notes = await this.nursingNoteService.getRecentNotes(
         wardId,
-        parseInt(limit as string)
+        parseInt(limit || '20', 10),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: notes,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch recent notes',
+      );
     }
   }
 
-  async getNoteById(req: Request, res: Response): Promise<void> {
+  @Get(':noteId')
+  async getNoteById(
+    @Param('noteId') noteId: string,
+  ): Promise<any> {
     try {
-      const { noteId } = req.params;
-
       const note = await this.nursingNoteService.getNoteById(noteId);
 
       if (!note) {
-        res.status(404).json({
-          success: false,
-          error: 'Note not found',
-        });
-        return;
+        throw new NotFoundException('Note not found');
       }
 
-      res.status(200).json({
+      return {
         success: true,
         data: note,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      if (error?.status === 404) {
+        throw error;
+      }
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch note',
+      );
     }
   }
 
-  async deleteNote(req: Request, res: Response): Promise<void> {
+  @Delete(':noteId')
+  async deleteNote(
+    @Param('noteId') noteId: string,
+    @Request() req: any,
+  ): Promise<any> {
     try {
-      const { noteId } = req.params;
-      const userId = req.user.id;
+      const userId = req.user?.id;
 
-      // Soft delete with audit log
+      if (!userId) {
+        throw new BadRequestException('User ID not found in request');
+      }
+
       const note = await this.nursingNoteService.deleteNote(noteId, userId);
 
-      res.status(200).json({
+      return {
         success: true,
         message: 'Note deleted',
         data: note,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to delete note',
+      );
     }
   }
 }

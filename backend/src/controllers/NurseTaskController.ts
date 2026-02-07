@@ -1,11 +1,29 @@
 // backend/src/controllers/NurseTaskController.ts
-import { Request, Response } from 'express';
+import {
+  Controller,
+  Post,
+  Get,
+  Put,
+  Body,
+  Param,
+  Query,
+  Request,
+  HttpCode,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { NurseTaskService } from '../services/NurseTaskService';
 
+@Controller('nurse-tasks')
 export class NurseTaskController {
   constructor(private nurseTaskService: NurseTaskService) {}
 
-  async createTask(req: Request, res: Response): Promise<void> {
+  @Post()
+  @HttpCode(201)
+  async createTask(
+    @Body() body: any,
+    @Request() req: any,
+  ): Promise<any> {
     try {
       const {
         wardId,
@@ -16,8 +34,12 @@ export class NurseTaskController {
         dueTime,
         description,
         metadata,
-      } = req.body;
-      const userId = req.user.id;
+      } = body;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        throw new BadRequestException('User ID not found in request');
+      }
 
       const task = await this.nurseTaskService.createTask({
         wardId,
@@ -31,173 +53,233 @@ export class NurseTaskController {
         createdBy: userId,
       });
 
-      res.status(201).json({
+      return {
         success: true,
         data: task,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to create task',
+      );
     }
   }
 
-  async updateTaskStatus(req: Request, res: Response): Promise<void> {
+  @Put(':taskId/status')
+  async updateTaskStatus(
+    @Param('taskId') taskId: string,
+    @Body() body: any,
+    @Request() req: any,
+  ): Promise<any> {
     try {
-      const { taskId } = req.params;
-      const { status, notes } = req.body;
-      const userId = req.user.id;
+      const { status, notes } = body;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        throw new BadRequestException('User ID not found in request');
+      }
 
       const task = await this.nurseTaskService.updateTaskStatus(
         taskId,
         status,
         notes,
-        userId
+        userId,
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: task,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to update task status',
+      );
     }
   }
 
-  async assignTask(req: Request, res: Response): Promise<void> {
+  @Put(':taskId/assign')
+  async assignTask(
+    @Param('taskId') taskId: string,
+    @Body() body: any,
+    @Request() req: any,
+  ): Promise<any> {
     try {
-      const { taskId } = req.params;
-      const { assignedTo, reassignmentReason } = req.body;
-      const userId = req.user.id;
+      const { assignedTo, reassignmentReason } = body;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        throw new BadRequestException('User ID not found in request');
+      }
 
       const task = await this.nurseTaskService.assignTask(
         taskId,
         assignedTo,
         reassignmentReason,
-        userId
+        userId,
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: task,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to assign task',
+      );
     }
   }
 
-  async getTasksByNurse(req: Request, res: Response): Promise<void> {
+  @Get('nurse/:nurseId')
+  async getTasksByNurse(
+    @Param('nurseId') nurseId: string,
+    @Query('status') status?: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ): Promise<any> {
     try {
-      const { nurseId } = req.params;
-      const { status, limit = 50, offset = 0 } = req.query;
-
       const tasks = await this.nurseTaskService.getTasksByNurse(
         nurseId,
-        status as string,
-        parseInt(limit as string),
-        parseInt(offset as string)
+        status || undefined,
+        parseInt(limit || '50', 10),
+        parseInt(offset || '0', 10),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: tasks,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch tasks',
+      );
     }
   }
 
-  async getPrioritizedTaskQueue(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId/queue')
+  async getPrioritizedTaskQueue(
+    @Param('wardId') wardId: string,
+    @Query('nurseId') nurseId?: string,
+    @Query('limit') limit?: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-      const { nurseId, limit = 100 } = req.query;
-
       const tasks = await this.nurseTaskService.getPrioritizedTaskQueue(
         wardId,
-        nurseId as string,
-        parseInt(limit as string)
+        nurseId || undefined,
+        parseInt(limit || '100', 10),
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: tasks,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch task queue',
+      );
     }
   }
 
-  async getOverdueTasks(req: Request, res: Response): Promise<void> {
+  @Get('ward/:wardId/overdue')
+  async getOverdueTasks(
+    @Param('wardId') wardId: string,
+  ): Promise<any> {
     try {
-      const { wardId } = req.params;
-
       const tasks = await this.nurseTaskService.getOverdueTasks(wardId);
 
-      res.status(200).json({
+      return {
         success: true,
         data: tasks,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch overdue tasks',
+      );
     }
   }
 
-  async completeTask(req: Request, res: Response): Promise<void> {
+  @Put(':taskId/complete')
+  async completeTask(
+    @Param('taskId') taskId: string,
+    @Body() body: any,
+    @Request() req: any,
+  ): Promise<any> {
     try {
-      const { taskId } = req.params;
-      const { completionNotes } = req.body;
-      const userId = req.user.id;
+      const { completionNotes } = body;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        throw new BadRequestException('User ID not found in request');
+      }
 
       const task = await this.nurseTaskService.completeTask(
         taskId,
         completionNotes,
-        userId
+        userId,
       );
 
-      res.status(200).json({
+      return {
         success: true,
         data: task,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to complete task',
+      );
     }
   }
 
-  async getTaskById(req: Request, res: Response): Promise<void> {
+  @Get(':taskId')
+  async getTaskById(
+    @Param('taskId') taskId: string,
+  ): Promise<any> {
     try {
-      const { taskId } = req.params;
-
       const task = await this.nurseTaskService.getTaskById(taskId);
 
       if (!task) {
-        res.status(404).json({
-          success: false,
-          error: 'Task not found',
-        });
-        return;
+        throw new NotFoundException('Task not found');
       }
 
-      res.status(200).json({
+      return {
         success: true,
+        data: task,
+      };
+    } catch (error: any) {
+      if (error?.status === 404) {
+        throw error;
+      }
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch task',
+      );
+    }
+  }
+
+  @Get('ward/:wardId')
+  async getTasksByWard(
+    @Param('wardId') wardId: string,
+    @Query('status') status?: string,
+    @Query('priority') priority?: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ): Promise<any> {
+    try {
+      const tasks = await this.nurseTaskService.getTasksByWard(
+        wardId,
+        status || undefined,
+        priority || undefined,
+        parseInt(limit || '100', 10),
+        parseInt(offset || '0', 10),
+      );
+
+      return {
+        success: true,
+        data: tasks,
+      };
+    } catch (error: any) {
+      throw new BadRequestException(
+        error?.message || 'Failed to fetch ward tasks',
+      );
+    }
+  }
+}
         data: task,
       });
     } catch (error) {
