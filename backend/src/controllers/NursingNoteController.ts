@@ -8,7 +8,7 @@ import {
   Body,
   Param,
   Query,
-  Request,
+  Req,
   HttpCode,
   NotFoundException,
   BadRequestException,
@@ -23,24 +23,41 @@ export class NursingNoteController {
   @HttpCode(201)
   async createNote(
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
-      const { patientId, wardId, noteType, content, soapData } = body;
+      const {
+        patientId,
+        wardId,
+        format,
+        subjective,
+        objective,
+        assessment,
+        plan,
+        content,
+        category,
+      } = body;
       const userId = req.user?.id;
 
       if (!userId) {
         throw new BadRequestException('User ID not found in request');
       }
 
-      const note = await this.nursingNoteService.createNote({
-        patientId,
-        wardId,
-        nurseId: userId,
-        noteType,
-        content,
-        soapData,
-      });
+      const note = await this.nursingNoteService.createNote(
+        {
+          patientId,
+          wardId,
+          nurseId: userId,
+          format,
+          subjective,
+          objective,
+          assessment,
+          plan,
+          content,
+          category,
+        },
+        userId,
+      );
 
       return {
         success: true,
@@ -57,10 +74,16 @@ export class NursingNoteController {
   async updateNote(
     @Param('noteId') noteId: string,
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
-      const { content, soapData } = body;
+      const {
+        subjective,
+        objective,
+        assessment,
+        plan,
+        content,
+      } = body;
       const userId = req.user?.id;
 
       if (!userId) {
@@ -68,8 +91,14 @@ export class NursingNoteController {
       }
 
       const note = await this.nursingNoteService.updateNote(
-        noteId,
-        { content, soapData },
+        {
+          noteId,
+          subjective,
+          objective,
+          assessment,
+          plan,
+          content,
+        },
         userId,
       );
 
@@ -87,15 +116,9 @@ export class NursingNoteController {
   @Get('patient/:patientId')
   async getNotesByPatient(
     @Param('patientId') patientId: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
   ): Promise<any> {
     try {
-      const notes = await this.nursingNoteService.getNotesByPatient(
-        patientId,
-        parseInt(limit || '50', 10),
-        parseInt(offset || '0', 10),
-      );
+      const notes = await this.nursingNoteService.getNotesByPatient(patientId);
 
       return {
         success: true,
@@ -111,15 +134,9 @@ export class NursingNoteController {
   @Get('nurse/:nurseId')
   async getNotesByNurse(
     @Param('nurseId') nurseId: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
   ): Promise<any> {
     try {
-      const notes = await this.nursingNoteService.getNotesByNurse(
-        nurseId,
-        parseInt(limit || '100', 10),
-        parseInt(offset || '0', 10),
-      );
+      const notes = await this.nursingNoteService.getNotesByNurse(nurseId);
 
       return {
         success: true,
@@ -135,36 +152,24 @@ export class NursingNoteController {
   @Get('ward/:wardId')
   async getNotesByWard(
     @Param('wardId') wardId: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
   ): Promise<any> {
     try {
-      const notes = await this.nursingNoteService.getNotesByWard(
-        wardId,
-        parseInt(limit || '100', 10),
-        parseInt(offset || '0', 10),
-      );
-
-      return {
-        success: true,
-        data: notes,
-      };
-    } catch (error: any) {
+      const notes = await this.nursingNoteService.getNotesByWard(wardIdcatch (error: any) {
       throw new BadRequestException(
         error?.message || 'Failed to fetch notes',
       );
     }
   }
 
-  @Get('ward/:wardId/recent')
+  @Get('recent/:patientId')
   async getRecentNotes(
-    @Param('wardId') wardId: string,
+    @Param('patientId') patientId: string,
     @Query('limit') limit?: string,
   ): Promise<any> {
     try {
       const notes = await this.nursingNoteService.getRecentNotes(
-        wardId,
-        parseInt(limit || '20', 10),
+        patientId,
+        parseInt(limit || '10', 10),
       );
 
       return {
@@ -206,7 +211,7 @@ export class NursingNoteController {
   @Delete(':noteId')
   async deleteNote(
     @Param('noteId') noteId: string,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const userId = req.user?.id;

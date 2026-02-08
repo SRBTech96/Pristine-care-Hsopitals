@@ -7,7 +7,7 @@ import {
   Body,
   Param,
   Query,
-  Request,
+  Req,
   HttpCode,
   NotFoundException,
   BadRequestException,
@@ -22,25 +22,36 @@ export class ShiftHandoverController {
   @HttpCode(201)
   async createHandover(
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
-      const { wardId, fromNurseId, toNurseId, notes, patients, criticalItems } = body;
+      const {
+        wardId,
+        outgoingNurseId,
+        pendingMedications,
+        criticalPatients,
+        pendingLabs,
+        clinicalNotes,
+        patientIds,
+      } = body;
       const userId = req.user?.id;
 
       if (!userId) {
         throw new BadRequestException('User ID not found in request');
       }
 
-      const handover = await this.shiftHandoverService.createHandover({
-        wardId,
-        fromNurseId,
-        toNurseId,
-        notes,
-        patients,
-        criticalItems,
-        createdBy: userId,
-      });
+      const handover = await this.shiftHandoverService.createHandover(
+        {
+          wardId,
+          outgoingNurseId,
+          pendingMedications,
+          criticalPatients,
+          pendingLabs,
+          clinicalNotes,
+          patientIds,
+        },
+        userId,
+      );
 
       return {
         success: true,
@@ -57,10 +68,10 @@ export class ShiftHandoverController {
   async acknowledgeHandover(
     @Param('handoverId') handoverId: string,
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
-      const { acknowledgedNotes } = body;
+      const { incomingNurseId } = body;
       const userId = req.user?.id;
 
       if (!userId) {
@@ -68,8 +79,10 @@ export class ShiftHandoverController {
       }
 
       const handover = await this.shiftHandoverService.acknowledgeHandover(
-        handoverId,
-        acknowledgedNotes,
+        {
+          handoverId,
+          incomingNurseId,
+        },
         userId,
       );
 
@@ -88,7 +101,7 @@ export class ShiftHandoverController {
   async reviewHandover(
     @Param('handoverId') handoverId: string,
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const { reviewNotes } = body;

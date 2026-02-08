@@ -7,7 +7,7 @@ import {
   Body,
   Param,
   Query,
-  Request,
+  Req,
   HttpCode,
   NotFoundException,
   BadRequestException,
@@ -22,17 +22,19 @@ export class NurseTaskController {
   @HttpCode(201)
   async createTask(
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const {
         wardId,
-        taskType,
-        assignedTo,
         patientId,
+        assignedToNurseId,
+        type,
         priority,
-        dueTime,
+        title,
         description,
+        scheduledTime,
+        dueTime,
         metadata,
       } = body;
       const userId = req.user?.id;
@@ -41,17 +43,21 @@ export class NurseTaskController {
         throw new BadRequestException('User ID not found in request');
       }
 
-      const task = await this.nurseTaskService.createTask({
-        wardId,
-        taskType,
-        assignedTo,
-        patientId,
-        priority,
-        dueTime,
-        description,
-        metadata,
-        createdBy: userId,
-      });
+      const task = await this.nurseTaskService.createTask(
+        {
+          wardId,
+          patientId,
+          assignedToNurseId,
+          type,
+          priority,
+          title,
+          description,
+          scheduledTime,
+          dueTime,
+          metadata,
+        },
+        userId,
+      );
 
       return {
         success: true,
@@ -68,10 +74,10 @@ export class NurseTaskController {
   async updateTaskStatus(
     @Param('taskId') taskId: string,
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
-      const { status, notes } = body;
+      const { status, completionNotes } = body;
       const userId = req.user?.id;
 
       if (!userId) {
@@ -79,9 +85,11 @@ export class NurseTaskController {
       }
 
       const task = await this.nurseTaskService.updateTaskStatus(
-        taskId,
-        status,
-        notes,
+        {
+          taskId,
+          status,
+          completionNotes,
+        },
         userId,
       );
 
@@ -100,10 +108,10 @@ export class NurseTaskController {
   async assignTask(
     @Param('taskId') taskId: string,
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
-      const { assignedTo, reassignmentReason } = body;
+      const { assignedToNurseId } = body;
       const userId = req.user?.id;
 
       if (!userId) {
@@ -111,9 +119,10 @@ export class NurseTaskController {
       }
 
       const task = await this.nurseTaskService.assignTask(
-        taskId,
-        assignedTo,
-        reassignmentReason,
+        {
+          taskId,
+          assignedToNurseId,
+        },
         userId,
       );
 
@@ -132,15 +141,11 @@ export class NurseTaskController {
   async getTasksByNurse(
     @Param('nurseId') nurseId: string,
     @Query('status') status?: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
   ): Promise<any> {
     try {
       const tasks = await this.nurseTaskService.getTasksByNurse(
         nurseId,
-        status || undefined,
-        parseInt(limit || '50', 10),
-        parseInt(offset || '0', 10),
+        status as any,
       );
 
       return {
@@ -154,17 +159,13 @@ export class NurseTaskController {
     }
   }
 
-  @Get('ward/:wardId/queue')
+  @Get('nurse/:nurseId/queue')
   async getPrioritizedTaskQueue(
-    @Param('wardId') wardId: string,
-    @Query('nurseId') nurseId?: string,
-    @Query('limit') limit?: string,
+    @Param('nurseId') nurseId: string,
   ): Promise<any> {
     try {
       const tasks = await this.nurseTaskService.getPrioritizedTaskQueue(
-        wardId,
-        nurseId || undefined,
-        parseInt(limit || '100', 10),
+        nurseId,
       );
 
       return {
@@ -200,7 +201,7 @@ export class NurseTaskController {
   async completeTask(
     @Param('taskId') taskId: string,
     @Body() body: any,
-    @Request() req: any,
+    @Req() req: any,
   ): Promise<any> {
     try {
       const { completionNotes } = body;
@@ -256,17 +257,11 @@ export class NurseTaskController {
   async getTasksByWard(
     @Param('wardId') wardId: string,
     @Query('status') status?: string,
-    @Query('priority') priority?: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string,
   ): Promise<any> {
     try {
       const tasks = await this.nurseTaskService.getTasksByWard(
         wardId,
-        status || undefined,
-        priority || undefined,
-        parseInt(limit || '100', 10),
-        parseInt(offset || '0', 10),
+        status as any,
       );
 
       return {
@@ -277,41 +272,6 @@ export class NurseTaskController {
       throw new BadRequestException(
         error?.message || 'Failed to fetch ward tasks',
       );
-    }
-  }
-}
-        data: task,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
-    }
-  }
-
-  async getTasksByWard(req: Request, res: Response): Promise<void> {
-    try {
-      const { wardId } = req.params;
-      const { status, priority, limit = 100, offset = 0 } = req.query;
-
-      const tasks = await this.nurseTaskService.getTasksByWard(
-        wardId,
-        status as string,
-        priority as string,
-        parseInt(limit as string),
-        parseInt(offset as string)
-      );
-
-      res.status(200).json({
-        success: true,
-        data: tasks,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        error: error.message,
-      });
     }
   }
 }
