@@ -2,7 +2,7 @@ import { IsUUID, IsNumber, IsOptional, IsString, IsDate, IsBoolean } from 'class
 
 export class RecordVitalsDto {
   @IsUUID()
-  inpatientAdmissionId: string;
+  inpatientAdmissionId!: string;
 
   @IsOptional()
   @IsNumber()
@@ -74,32 +74,32 @@ export class RecordVitalsDto {
 }
 
 export class VitalsRecordResponseDto {
-  id: string;
-  inpatientAdmissionId: string;
-  patientId: string;
-  patientName: string;
-  recordedById: string;
-  recordedByName: string;
-  recordedAt: Date;
-  temperatureCelsius: number;
-  heartRateBpm: number;
-  systolicBp: number;
-  diastolicBp: number;
-  respiratoryRateRpm: number;
-  oxygenSaturationPercent: number;
-  bloodGlucoseMmol: number;
-  weightKg: number;
-  heightCm: number;
-  painScore: number;
-  gcsScore: number;
-  consciousnessLevel: string;
-  urineOutputMl: number;
-  bowelMovementStatus: string;
-  notes: string;
-  abnormalFindings: boolean;
-  reportedToDoctorId: string;
-  reportedToDoctorName: string;
-  reportedAt: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  id!: string;
+  inpatientAdmissionId!: string;
+  patientId!: string;
+  patientName!: string;
+  recordedById!: string;
+  recordedByName!: string;
+  recordedAt!: Date;
+  temperatureCelsius!: number;
+  heartRateBpm!: number;
+  systolicBp!: number;
+  diastolicBp!: number;
+  respiratoryRateRpm!: number;
+  oxygenSaturationPercent!: number;
+  bloodGlucoseMmol!: number;
+  weightKg!: number;
+  heightCm!: number;
+  painScore!: number;
+  gcsScore!: number;
+  consciousnessLevel!: string;
+  urineOutputMl!: number;
+  bowelMovementStatus!: string;
+  notes!: string;
+  abnormalFindings!: boolean;
+  reportedToDoctorId!: string;
+  reportedToDoctorName!: string;
+  reportedAt!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 }

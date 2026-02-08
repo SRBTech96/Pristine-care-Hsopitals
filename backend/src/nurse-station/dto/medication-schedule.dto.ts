@@ -1,29 +1,28 @@
 import { IsUUID, IsString, IsOptional, IsBoolean, IsDate } from 'class-validator';
 
-export class CreateMedicationScheduleDto {
   @IsUUID()
-  doctorOrderId: string;
+  doctorOrderId!: string;
 
   @IsUUID()
-  inpatientAdmissionId: string;
+  inpatientAdmissionId!: string;
 
   @IsString()
-  medicationName: string;
+  medicationName!: string;
 
   @IsString()
-  dosage: string;
+  dosage!: string;
 
   @IsString()
-  unit: string; // mg, ml, units, tablets, etc.
+  unit!: string; // mg, ml, units, tablets, etc.
 
   @IsString()
-  frequency: string; // once daily, twice daily, every 6 hours, as needed
+  frequency!: string; // once daily, twice daily, every 6 hours, as needed
 
   @IsString()
-  route: string; // oral, IV, IM, SC, transdermal, topical, inhalation
+  route!: string; // oral, IV, IM, SC, transdermal, topical, inhalation
 
   @IsDate()
-  startDate: Date;
+  startDate!: Date;
 
   @IsOptional()
   @IsDate()
@@ -68,28 +67,28 @@ export class UpdateMedicationScheduleDto {
 }
 
 export class MedicationScheduleResponseDto {
-  id: string;
-  doctorOrderId: string;
-  inpatientAdmissionId: string;
-  patientId: string;
-  patientName: string;
-  medicationName: string;
-  dosage: string;
-  unit: string;
-  frequency: string;
-  route: string;
-  startDate: Date;
-  endDate: Date;
-  durationDays: number;
-  specialInstructions: string;
-  contraindications: string;
-  allergiesToCheck: string;
-  requiresMonitoring: boolean;
-  monitoringParameters: string;
-  prescribingDoctorId: string;
-  prescribingDoctorName: string;
-  prescribedAt: Date;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id!: string;
+  doctorOrderId!: string;
+  inpatientAdmissionId!: string;
+  patientId!: string;
+  patientName!: string;
+  medicationName!: string;
+  dosage!: string;
+  unit!: string;
+  frequency!: string;
+  route!: string;
+  startDate!: Date;
+  endDate!: Date;
+  durationDays!: number;
+  specialInstructions!: string;
+  contraindications!: string;
+  allergiesToCheck!: string;
+  requiresMonitoring!: boolean;
+  monitoringParameters!: string;
+  prescribingDoctorId!: string;
+  prescribingDoctorName!: string;
+  prescribedAt!: Date;
+  status!: string;
+  createdAt!: Date;
+  updatedAt!: Date;
 }

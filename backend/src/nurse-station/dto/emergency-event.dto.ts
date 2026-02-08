@@ -6,20 +6,20 @@ export class RaiseEmergencyEventDto {
   inpatientAdmissionId?: string;
 
   @IsUUID()
-  patientId: string;
+  patientId!: string;
 
   @IsString()
-  eventType: string; // cardiac arrest, respiratory distress, seizure, anaphylaxis, etc.
+  eventType!: string; // cardiac arrest, respiratory distress, seizure, anaphylaxis, etc.
 
   @IsString()
-  severity: string; // critical, high, medium, low
+  severity!: string; // critical, high, medium, low
 
   @IsOptional()
   @IsString()
   location?: string;
 
   @IsString()
-  description: string;
+  description!: string;
 
   @IsOptional()
   @IsArray()
@@ -28,19 +28,19 @@ export class RaiseEmergencyEventDto {
 
 export class AcknowledgeEmergencyEventDto {
   @IsString()
-  eventId: string;
+  eventId!: string;
 
   @IsOptional()
   @IsString()
   notes?: string;
 }
 
-export class ResolvEmergencyEventDto {
+export class ResolveEmergencyEventDto {
   @IsString()
-  eventId: string;
+  eventId!: string;
 
   @IsString()
-  outcome: string; // patient_stabilized, transferred_to_icu, clinical_death, etc.
+  outcome!: string; // patient_stabilized, transferred_to_icu, clinical_death, etc.
 
   @IsOptional()
   @IsString()
@@ -51,33 +51,33 @@ export class ResolvEmergencyEventDto {
   followUpNotes?: string;
 
   @IsOptional()
-  followUpRequired: boolean;
+  followUpRequired?: boolean;
 }
 
 export class EmergencyEventResponseDto {
-  id: string;
-  inpatientAdmissionId: string;
-  patientId: string;
-  patientName: string;
-  reportedById: string;
-  reportedByName: string;
-  eventType: string;
-  severity: string;
-  location: string;
-  description: string;
-  timeOfEvent: Date;
-  responseStartTime: Date;
-  responseEndTime: Date;
-  doctorsNotifiedIds: string[];
-  notifiedAt: Date;
-  actionsTaken: string;
-  outcome: string;
-  status: string; // reported, acknowledged, in_progress, resolved, escalated
-  resolvingDoctorId: string;
-  resolvingDoctorName: string;
-  resolvedAt: Date;
-  followUpRequired: boolean;
-  followUpNotes: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id!: string;
+  inpatientAdmissionId!: string;
+  patientId!: string;
+  patientName!: string;
+  reportedById!: string;
+  reportedByName!: string;
+  eventType!: string;
+  severity!: string;
+  location!: string;
+  description!: string;
+  timeOfEvent!: Date;
+  responseStartTime!: Date;
+  responseEndTime!: Date;
+  doctorsNotifiedIds!: string[];
+  notifiedAt!: Date;
+  actionsTaken!: string;
+  outcome!: string;
+  status!: string; // reported, acknowledged, in_progress, resolved, escalated
+  resolvingDoctorId!: string;
+  resolvingDoctorName!: string;
+  resolvedAt!: Date;
+  followUpRequired!: boolean;
+  followUpNotes!: string;
+  createdAt!: Date;
+  updatedAt!: Date;
 }

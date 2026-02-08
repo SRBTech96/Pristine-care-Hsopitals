@@ -1,20 +1,19 @@
 import { IsUUID, IsString, IsOptional, IsBoolean, IsDate, ValidateIf } from 'class-validator';
 
-export class CreateInpatientAdmissionDto {
   @IsUUID()
-  patientId: string;
+  patientId!: string;
 
   @IsUUID()
-  bedId: string;
+  bedId!: string;
 
   @IsUUID()
-  wardId: string;
+  wardId!: string;
 
   @IsString()
-  admissionType: string; // emergency, scheduled, transfer
+  admissionType!: string; // emergency, scheduled, transfer
 
   @IsUUID()
-  attendingDoctorId: string;
+  attendingDoctorId!: string;
 
   @IsOptional()
   @IsString()
@@ -48,24 +47,24 @@ export class UpdateInpatientAdmissionDto {
 }
 
 export class InpatientAdmissionResponseDto {
-  id: string;
-  patientId: string;
-  patientName: string;
-  bedId: string;
-  bedCode: string;
-  wardId: string;
-  wardName: string;
-  admissionDate: Date;
-  dischargeDate: Date;
-  admissionType: string;
-  attendingDoctorId: string;
-  attendingDoctorName: string;
-  chiefComplaint: string;
-  admissionNotes: string;
-  dischargeSummary: string;
-  status: string;
-  isIcu: boolean;
-  isNicu: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  id!: string;
+  patientId!: string;
+  patientName!: string;
+  bedId!: string;
+  bedCode!: string;
+  wardId!: string;
+  wardName!: string;
+  admissionDate!: Date;
+  dischargeDate!: Date;
+  admissionType!: string;
+  attendingDoctorId!: string;
+  attendingDoctorName!: string;
+  chiefComplaint!: string;
+  admissionNotes!: string;
+  dischargeSummary!: string;
+  status!: string;
+  isIcu!: boolean;
+  isNicu!: boolean;
+  createdAt!: Date;
+  updatedAt!: Date;
 }
