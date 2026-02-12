@@ -20,12 +20,12 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Auditable } from '../audit/decorators/auditable.decorator';
 import { NurseStationService } from './nurse-station.service';
 import {
-  CreateNurseAssignmentDto,
+  NurseAssignmentDto,
   UpdateNurseAssignmentDto,
   NurseAssignmentResponseDto,
 } from './dto/nurse-assignment.dto';
 import {
-  CreateInpatientAdmissionDto,
+  InpatientAdmissionDto,
   UpdateInpatientAdmissionDto,
   InpatientAdmissionResponseDto,
 } from './dto/inpatient-admission.dto';
@@ -34,7 +34,7 @@ import {
   DoctorOrderResponseDto,
 } from './dto/doctor-order.dto';
 import {
-  CreateMedicationScheduleDto,
+  MedicationScheduleDto,
   UpdateMedicationScheduleDto,
   MedicationScheduleResponseDto,
 } from './dto/medication-schedule.dto';
@@ -64,11 +64,11 @@ export class NurseStationController {
 
   @Post('assignments')
   @Roles('HEAD_NURSE')
-  @Auditable('create', 'nurse_assignment')
+  @Auditable('create')
   @ApiOperation({ summary: 'Assign nurses to ward/floor (HEAD_NURSE only)' })
   @ApiResponse({ status: 201, type: NurseAssignmentResponseDto })
   async createNurseAssignment(
-    @Body() dto: CreateNurseAssignmentDto,
+    @Body() dto: NurseAssignmentDto,
     @CurrentUser() user: any,
   ) {
     return this.nurseStationService.createNurseAssignment(dto, user.id);
@@ -87,7 +87,7 @@ export class NurseStationController {
 
   @Patch('assignments/:id')
   @Roles('HEAD_NURSE')
-  @Auditable('update', 'nurse_assignment')
+  @Auditable('update')
   @ApiOperation({ summary: 'Update nurse assignment (HEAD_NURSE only)' })
   @ApiResponse({ status: 200, type: NurseAssignmentResponseDto })
   async updateNurseAssignment(
@@ -102,11 +102,11 @@ export class NurseStationController {
 
   @Post('admissions')
   @Roles('HEAD_NURSE', 'DOCTOR')
-  @Auditable('create', 'inpatient_admission')
+  @Auditable('create')
   @ApiOperation({ summary: 'Admit patient to bed (HEAD_NURSE, DOCTOR)' })
   @ApiResponse({ status: 201, type: InpatientAdmissionResponseDto })
   async createInpatientAdmission(
-    @Body() dto: CreateInpatientAdmissionDto,
+    @Body() dto: InpatientAdmissionDto,
     @CurrentUser() user: any,
   ) {
     return this.nurseStationService.createInpatientAdmission(dto, user.id);
@@ -140,7 +140,7 @@ export class NurseStationController {
 
   @Patch('admissions/:id/discharge')
   @Roles('HEAD_NURSE', 'DOCTOR')
-  @Auditable('update', 'inpatient_admission')
+  @Auditable('update')
   @ApiOperation({ summary: 'Discharge patient (HEAD_NURSE, DOCTOR)' })
   @ApiResponse({ status: 200, type: InpatientAdmissionResponseDto })
   async dischargePatient(
@@ -155,7 +155,7 @@ export class NurseStationController {
 
   @Post('doctor-orders')
   @Roles('DOCTOR')
-  @Auditable('create', 'doctor_order')
+  @Auditable('create')
   @ApiOperation({ summary: 'Create doctor order (DOCTOR only)' })
   @ApiResponse({ status: 201, type: DoctorOrderResponseDto })
   async createDoctorOrder(
@@ -192,11 +192,11 @@ export class NurseStationController {
 
   @Post('medication-schedules')
   @Roles('DOCTOR')
-  @Auditable('create', 'medication_schedule')
+  @Auditable('create')
   @ApiOperation({ summary: 'Create medication schedule for doctor order (DOCTOR only)' })
   @ApiResponse({ status: 201, type: MedicationScheduleResponseDto })
   async createMedicationSchedule(
-    @Body() dto: CreateMedicationScheduleDto,
+    @Body() dto: MedicationScheduleDto,
     @CurrentUser() user: any,
   ) {
     return this.nurseStationService.createMedicationSchedule(dto, user.id);
@@ -219,7 +219,7 @@ export class NurseStationController {
 
   @Post('medication-administration/execute')
   @Roles('STAFF_NURSE')
-  @Auditable('create', 'medication_administration')
+  @Auditable('create')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Record medication administration (STAFF_NURSE only)' })
   @ApiResponse({ status: 201, type: MedicationAdministrationResponseDto })
@@ -232,7 +232,7 @@ export class NurseStationController {
 
   @Post('medication-administration/skip')
   @Roles('STAFF_NURSE')
-  @Auditable('create', 'medication_administration')
+  @Auditable('create')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Skip medication administration (refused/held/not_given)',
@@ -257,7 +257,7 @@ export class NurseStationController {
 
   @Post('vital-signs')
   @Roles('STAFF_NURSE')
-  @Auditable('create', 'vitals_record')
+  @Auditable('create')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Record patient vital signs (STAFF_NURSE only)' })
   @ApiResponse({ status: 201, type: VitalsRecordResponseDto })
@@ -280,7 +280,7 @@ export class NurseStationController {
 
   @Post('emergency-events')
   @Roles('STAFF_NURSE')
-  @Auditable('create', 'emergency_event')
+  @Auditable('create')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Raise emergency event (STAFF_NURSE only)' })
   @ApiResponse({ status: 201, type: EmergencyEventResponseDto })
@@ -317,7 +317,7 @@ export class NurseStationController {
 
   @Patch('emergency-events/:id/acknowledge')
   @Roles('DOCTOR')
-  @Auditable('update', 'emergency_event')
+  @Auditable('update')
   @ApiOperation({ summary: 'Acknowledge emergency event (DOCTOR only)' })
   @ApiResponse({ status: 200, type: EmergencyEventResponseDto })
   async acknowledgeEmergencyEvent(

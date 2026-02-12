@@ -11,86 +11,86 @@ import { EmergencyEvent } from './emergency-event.entity';
 @Entity('inpatient_admissions')
 export class InpatientAdmission {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  patientId: string;
+  patientId!: string;
 
   @ManyToOne(() => Patient)
   @JoinColumn({ name: 'patient_id' })
-  patient: Patient;
+  patient!: Patient;
 
   @Column()
-  bedId: string;
+  bedId!: string;
 
   @ManyToOne(() => Bed)
   @JoinColumn({ name: 'bed_id' })
-  bed: Bed;
+  bed!: Bed;
 
   @Column()
-  wardId: string;
+  wardId!: string;
 
   @ManyToOne(() => Ward)
   @JoinColumn({ name: 'ward_id' })
-  ward: Ward;
+  ward!: Ward;
 
   @CreateDateColumn()
-  admissionDate: Date;
+  admissionDate!: Date;
 
   @Column({ nullable: true })
-  dischargeDate: Date;
+  dischargeDate: Date | null = null;
 
   @Column()
-  admissionType: string; // emergency, scheduled, transfer
+  admissionType!: string; // emergency, scheduled, transfer
 
   @Column()
-  attendingDoctorId: string;
+  attendingDoctorId!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'attending_doctor_id' })
-  attendingDoctor: User;
+  attendingDoctor!: User;
 
   @Column({ nullable: true })
-  chiefComplaint: string;
+  chiefComplaint: string | null = null;
 
   @Column({ nullable: true })
-  admissionNotes: string;
+  admissionNotes: string | null = null;
 
   @Column({ nullable: true })
-  dischargeSummary: string;
+  dischargeSummary: string | null = null;
 
   @Column({ default: 'active' })
-  status: string; // active, discharged, transferred, deceased
+  status!: string; // active, discharged, transferred, deceased
 
   @Column({ default: false })
-  isIcu: boolean;
+  isIcu!: boolean;
 
   @Column({ default: false })
-  isNicu: boolean;
+  isNicu!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
-  createdBy: User;
+  createdBy!: User;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'updated_by' })
-  updatedBy: User;
+  updatedBy!: User;
 
   @OneToMany(() => DoctorOrder, (order) => order.admission)
-  doctorOrders: DoctorOrder[];
+  doctorOrders!: DoctorOrder[];
 
   @OneToMany(() => MedicationSchedule, (schedule) => schedule.admission)
-  medicationSchedules: MedicationSchedule[];
+  medicationSchedules!: MedicationSchedule[];
 
   @OneToMany(() => VitalsRecord, (record) => record.admission)
-  vitalsRecords: VitalsRecord[];
+  vitalsRecords!: VitalsRecord[];
 
   @OneToMany(() => EmergencyEvent, (event) => event.admission)
-  emergencyEvents: EmergencyEvent[];
+  emergencyEvents!: EmergencyEvent[];
 }

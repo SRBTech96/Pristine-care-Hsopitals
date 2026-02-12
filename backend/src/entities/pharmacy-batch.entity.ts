@@ -3,26 +3,26 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'pharmacy_batches' })
 export class PharmacyBatch {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ name: 'inventory_id', type: 'uuid' })
-  inventoryId: string;
+  inventoryId!: string;
 
   @Column({ name: 'batch_number', length: 100 })
-  batchNumber: string;
+  batchNumber!: string;
 
   @Column({ name: 'expiry_date', type: 'date' })
-  expiryDate: Date;
+  expiryDate!: Date;
 
   @Column({ name: 'quantity', type: 'int' })
-  quantity: number;
+  quantity!: number;
 
   @Column({ name: 'cost_price', type: 'decimal', precision: 12, scale: 2 })
-  costPrice: number;
+  costPrice!: number;
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @Column({ name: 'created_by', type: 'uuid' })
-  createdBy: string;
+  createdBy!: string;
 }

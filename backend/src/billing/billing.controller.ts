@@ -5,7 +5,7 @@ import { CreatePaymentDto, UpdatePaymentStatusDto, PaymentResponseDto } from './
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { Auditable } from '../common/decorators/auditable.decorator';
+import { Auditable } from '../common/decorators/audit.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @Controller('billing')

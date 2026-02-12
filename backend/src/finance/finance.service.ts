@@ -110,12 +110,12 @@ export class FinanceService {
       status: 'recorded',
       notes: dto.notes,
       createdBy: userId,
-      approvedBy: null,
-    });
+      approvedBy: undefined,
+    } as any);
 
     const saved = await this.expenseRepo.save(exp);
-    await this.auditService.logAccess({ action: 'FINANCE_CREATE_EXPENSE', resourceType: 'ExpenseRecord', resourceId: saved.id, userId, details: { expenseNumber: saved.expenseNumber, amount: saved.amount } });
-    return saved;
+    await this.auditService.logAccess({ action: 'FINANCE_CREATE_EXPENSE', resourceType: 'ExpenseRecord', resourceId: (saved as any).id, userId, details: { expenseNumber: (saved as any).expenseNumber, amount: (saved as any).amount } });
+    return saved as any;
   }
 
   async listExpenses(filter: { departmentId?: string; from?: string; to?: string } = {}): Promise<ExpenseRecord[]> {

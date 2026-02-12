@@ -21,19 +21,17 @@ export class DoctorSeederService {
     }
 
     // HM Prasanna - Senior Orthopaedist
-    const doc1 = this.doctorRepo.create({
-      firstName: 'HM',
-      lastName: 'Prasanna',
-      email: 'hm.prasanna@pristinehospital.com',
-      phone: '+91-9876543210',
-      qualifications: ['MD', 'DNB Orthopedics', 'Fellowship in Joint Replacement'],
-      specialization: 'Orthopedics',
-      yearsOfExperience: 18,
+    const doc1Data = {
+      userId: 'user-1',
       registrationNumber: 'ORG-12345-IN',
-      bio: 'Senior Orthopaedist with 18 years of specialized experience in trauma, joint replacement surgery, and sports medicine. Successfully performed 5000+ surgeries with 98% patient satisfaction.',
-    });
+      specializationId: 'spec-1',
+      departmentId: 'dept-1',
+      qualifications: 'MD,DNB Orthopedics,Fellowship in Joint Replacement',
+      yearsOfExperience: 18,
+    };
 
     try {
+      const doc1 = this.doctorRepo.create(doc1Data);
       await this.doctorRepo.save(doc1);
       console.log('✓ Seeded sample doctor: HM Prasanna');
     } catch (error) {

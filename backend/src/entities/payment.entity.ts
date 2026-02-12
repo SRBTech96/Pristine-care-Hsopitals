@@ -29,7 +29,7 @@ export class Payment {
   @Column({ enum: ['pending', 'completed', 'failed', 'refunded'], default: 'pending' })
   status: string;
 
-  @Column({ text: true, nullable: true })
+  @Column({ type: 'text', nullable: true })
   notes: string;
 
   @Column({ type: 'uuid', nullable: true })

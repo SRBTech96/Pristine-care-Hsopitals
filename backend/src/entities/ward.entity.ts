@@ -5,43 +5,43 @@ import { Bed } from './bed.entity';
 @Entity('wards')
 export class Ward {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  name: string; // ICU, General Ward, NICU, OPD
+  name!: string; // ICU, General Ward, NICU, OPD
 
   @Column({ unique: true })
-  code: string; // ICU-01, GW-01, NICU-01
+  code!: string; // ICU-01, GW-01, NICU-01
 
   @Column({ nullable: true })
-  floorNumber: number;
+  floorNumber!: number;
 
   @Column({ nullable: true })
-  building: string;
+  building!: string;
 
   @Column({ default: 0 })
-  totalBeds: number;
+  totalBeds!: number;
 
   @Column({ nullable: true })
-  description: string;
+  description!: string;
 
   @Column({ default: true })
-  isActive: boolean;
+  isActive!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
-  createdBy: User;
+  createdBy!: User;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'updated_by' })
-  updatedBy: User;
+  updatedBy!: User;
 
   @OneToMany(() => Bed, (bed) => bed.ward)
-  beds: Bed[];
+  beds!: Bed[];
 }

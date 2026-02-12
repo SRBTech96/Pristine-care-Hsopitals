@@ -44,7 +44,7 @@ export class Invoice {
   @Column({ type: 'date', nullable: true })
   dueDate: Date;
 
-  @Column({ text: true, nullable: true })
+  @Column({ type: 'text', nullable: true })
   notes: string; // Additional notes/terms
 
   @Column({ type: 'uuid' })

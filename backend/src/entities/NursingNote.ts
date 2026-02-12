@@ -1,8 +1,8 @@
 // backend/src/entities/NursingNote.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn } from 'typeorm';
-import { NurseUser } from './NurseUser';
-import { InpatientAdmission } from './InpatientAdmission';
-import { Ward } from './Ward';
+import { User } from './user.entity';
+import { InpatientAdmission } from './inpatient-admission.entity';
+import { Ward } from './ward.entity';
 
 export enum NoteFormat {
   SOAP = 'soap',
@@ -19,55 +19,55 @@ export enum SoapSection {
 @Entity('nursing_notes')
 export class NursingNote {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'uuid' })
-  patientId: string;
+  patientId!: string;
 
   @ManyToOne(() => InpatientAdmission)
   @JoinColumn({ name: 'patientId' })
-  patient: InpatientAdmission;
+  patient!: InpatientAdmission;
 
   @Column({ type: 'uuid' })
-  wardId: string;
+  wardId!: string;
 
   @ManyToOne(() => Ward)
   @JoinColumn({ name: 'wardId' })
-  ward: Ward;
+  ward!: Ward;
 
   @Column({ type: 'uuid' })
-  nurseId: string;
+  nurseId!: string;
 
-  @ManyToOne(() => NurseUser)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'nurseId' })
-  nurse: NurseUser;
+  nurse!: User;
 
   @Column({ type: 'varchar', enum: NoteFormat })
-  format: NoteFormat;
+  format!: NoteFormat;
 
   // For SOAP notes
   @Column({ type: 'text', nullable: true })
-  subjective: string;
+  subjective: string | null = null;
 
   @Column({ type: 'text', nullable: true })
-  objective: string;
+  objective: string | null = null;
 
   @Column({ type: 'text', nullable: true })
-  assessment: string;
+  assessment: string | null = null;
 
   @Column({ type: 'text', nullable: true })
-  plan: string;
+  plan: string | null = null;
 
   // For free text notes
   @Column({ type: 'text', nullable: true })
-  content: string;
+  content: string | null = null;
 
   @Column({ type: 'varchar', nullable: true })
-  category: string; // e.g., 'pain', 'wound_care', 'behavior', 'general'
+  category: string | null = null; // e.g., 'pain', 'wound_care', 'behavior', 'general'
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @Column({ type: 'text', nullable: true })
-  auditLog: string;
+  auditLog: string | null = null;
 }

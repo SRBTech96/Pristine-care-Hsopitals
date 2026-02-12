@@ -23,7 +23,7 @@ export class AuthService {
     return crypto.createHash('sha256').update(token).digest('hex');
   }
 
-  async validateUser(email: string, plainPassword: string): Promise<User> {
+  async validateUser(email: string, plainPassword: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
     if (!user || !user.passwordHash) return null;
     const ok = await bcrypt.compare(plainPassword, user.passwordHash);

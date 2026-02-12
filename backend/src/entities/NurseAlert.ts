@@ -1,8 +1,8 @@
 // backend/src/entities/NurseAlert.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
-import { NurseUser } from './NurseUser';
-import { Ward } from './Ward';
-import { InpatientAdmission } from './InpatientAdmission';
+import { User } from './user.entity';
+import { Ward } from './ward.entity';
+import { InpatientAdmission } from './inpatient-admission.entity';
 
 export enum AlertType {
   OVERDUE_MEDICATION = 'overdue_medication',
@@ -61,11 +61,11 @@ export class NurseAlert {
   description: string;
 
   @Column({ type: 'uuid', nullable: true })
-  assignedToNurseId: string;
+  assignedToNurseId?: string;
 
-  @ManyToOne(() => NurseUser, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'assignedToNurseId' })
-  assignedToNurse: NurseUser;
+  assignedToNurse: User;
 
   @Column({ type: 'timestamp', nullable: true })
   acknowledgedAt: Date;
@@ -73,9 +73,9 @@ export class NurseAlert {
   @Column({ type: 'uuid', nullable: true })
   acknowledgedByNurseId: string;
 
-  @ManyToOne(() => NurseUser, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'acknowledgedByNurseId' })
-  acknowledgedByNurse: NurseUser;
+  acknowledgedByNurse: User;
 
   @Column({ type: 'timestamp', nullable: true })
   escalatedAt: Date;
@@ -83,9 +83,9 @@ export class NurseAlert {
   @Column({ type: 'uuid', nullable: true })
   escalatedToNurseId: string;
 
-  @ManyToOne(() => NurseUser, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'escalatedToNurseId' })
-  escalatedToNurse: NurseUser;
+  escalatedToNurse: User;
 
   @Column({ type: 'timestamp', nullable: true })
   resolvedAt: Date;

@@ -46,7 +46,7 @@ export class NurseAlertService {
     alert.severity = dto.severity;
     alert.title = dto.title;
     alert.description = dto.description;
-    alert.assignedToNurseId = dto.assignedToNurseId;
+    alert.assignedToNurseId = dto.assignedToNurseId || undefined;
     alert.status = AlertStatus.OPEN;
     alert.auditLog = this.logAudit('Alert created', userId);
 
@@ -104,7 +104,7 @@ export class NurseAlertService {
     return this.alertRepository.save(alert);
   }
 
-  async getAlertsByWard(wardId: string, status?: AlertStatus): Promise<NurseAlert[]> {
+  async getAlertsByWard(wardId: string, status?: string, severity?: string, limit: number = 50, offset: number = 0): Promise<NurseAlert[]> {
     const query = this.alertRepository.createQueryBuilder('alert')
       .where('alert.wardId = :wardId', { wardId })
       .orderBy('alert.severity', 'DESC')
@@ -116,10 +116,10 @@ export class NurseAlertService {
       query.andWhere('alert.status = :status', { status });
     }
 
-    return query.getMany();
+    return query.skip(offset).take(limit).getMany();
   }
 
-  async getAlertsByNurse(nurseId: string, status?: AlertStatus): Promise<NurseAlert[]> {
+  async getAlertsByNurse(nurseId: string, status?: string, limit: number = 50, offset: number = 0): Promise<NurseAlert[]> {
     const query = this.alertRepository.createQueryBuilder('alert')
       .where('alert.assignedToNurseId = :nurseId', { nurseId })
       .orderBy('alert.severity', 'DESC')
@@ -130,7 +130,20 @@ export class NurseAlertService {
       query.andWhere('alert.status = :status', { status });
     }
 
-    return query.getMany();
+    return query.skip(offset).take(limit).getMany();
+  }
+
+  async getAlertById(alertId: string): Promise<NurseAlert> {
+    const alert = await this.alertRepository.findOne({
+      where: { id: alertId },
+      relations: ['patient', 'assignedToNurse', 'ward'],
+    });
+
+    if (!alert) {
+      throw new Error('Alert not found');
+    }
+
+    return alert;
   }
 
   async getOpenAlerts(wardId: string): Promise<NurseAlert[]> {

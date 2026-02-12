@@ -17,7 +17,7 @@ export class Doctor {
   @Column({ name: 'department_id', type: 'uuid' })
   departmentId: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'simple-array' })
   qualifications: string;
 
   @Column({ name: 'years_of_experience', type: 'int' })

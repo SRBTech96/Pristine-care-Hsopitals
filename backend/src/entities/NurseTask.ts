@@ -1,8 +1,8 @@
 // backend/src/entities/NurseTask.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
-import { NurseUser } from './NurseUser';
-import { Ward } from './Ward';
-import { InpatientAdmission } from './InpatientAdmission';
+import { User } from './user.entity';
+import { Ward } from './ward.entity';
+import { InpatientAdmission } from './inpatient-admission.entity';
 
 export enum TaskType {
   MEDICATION = 'medication',
@@ -50,9 +50,9 @@ export class NurseTask {
   @Column({ type: 'uuid' })
   assignedToNurseId: string;
 
-  @ManyToOne(() => NurseUser)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'assignedToNurseId' })
-  assignedToNurse: NurseUser;
+  assignedToNurse: User;
 
   @Column({ type: 'varchar', enum: TaskType })
   type: TaskType;
@@ -63,33 +63,33 @@ export class NurseTask {
   @Column({ type: 'varchar', enum: TaskStatus, default: TaskStatus.PENDING })
   status: TaskStatus;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   title: string;
 
   @Column({ type: 'text', nullable: true })
-  description: string;
-
-  @Column({ type: 'timestamp' })
-  scheduledTime: Date;
+  description?: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  dueTime: Date;
+  scheduledTime?: Date;
 
   @Column({ type: 'timestamp', nullable: true })
-  completedAt: Date;
+  dueTime?: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  completedAt?: Date;
 
   @Column({ type: 'uuid', nullable: true })
-  createdByNurseId: string;
+  createdByNurseId?: string;
 
-  @ManyToOne(() => NurseUser, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'createdByNurseId' })
-  createdByNurse: NurseUser;
+  createdByNurse?: User;
 
   @Column({ type: 'text', nullable: true })
-  completionNotes: string;
+  completionNotes?: string;
 
   @Column({ type: 'simple-json', nullable: true })
-  metadata: Record<string, any>; // Additional task-specific data
+  metadata?: Record<string, any>; // Additional task-specific data
 
   @CreateDateColumn()
   createdAt: Date;

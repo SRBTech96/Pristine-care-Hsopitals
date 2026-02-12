@@ -43,13 +43,19 @@ export class NursingNoteService {
     note.format = dto.format;
 
     if (dto.format === NoteFormat.SOAP) {
-      note.subjective = dto.subjective;
-      note.objective = dto.objective;
-      note.assessment = dto.assessment;
-      note.plan = dto.plan;
+      note.subjective = dto.subjective ?? '';
+      note.objective = dto.objective ?? '';
+      note.assessment = dto.assessment ?? '';
+      note.plan = dto.plan ?? '';
+      note.content = '';
+      note.category = '';
     } else {
-      note.content = dto.content;
-      note.category = dto.category;
+      note.content = dto.content ?? '';
+      note.category = dto.category ?? '';
+      note.subjective = '';
+      note.objective = '';
+      note.assessment = '';
+      note.plan = '';
     }
 
     note.auditLog = this.logAudit('Note created', userId);
@@ -101,7 +107,7 @@ export class NursingNoteService {
     });
   }
 
-  async getNoteById(id: string): Promise<NursingNote> {
+  async getNoteById(id: string): Promise<NursingNote | null> {
     return this.noteRepository.findOne({
       where: { id },
       relations: ['patient', 'nurse'],

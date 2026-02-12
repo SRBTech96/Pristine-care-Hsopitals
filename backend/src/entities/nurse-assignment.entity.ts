@@ -5,53 +5,53 @@ import { Ward } from './ward.entity';
 @Entity('nurse_assignments')
 export class NurseAssignment {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  nurseId: string;
+  nurseId!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'nurse_id' })
-  nurse: User;
+  nurse!: User;
 
   @Column({ nullable: true })
-  wardId: string;
+  wardId: string | null = null;
 
   @ManyToOne(() => Ward, { nullable: true })
   @JoinColumn({ name: 'ward_id' })
-  ward: Ward | null;
+  ward: Ward | null = null;
 
   @Column({ nullable: true })
-  floorNumber: number;
+  floorNumber: number | null = null;
 
   @Column({ type: 'jsonb', nullable: true })
-  assignedBeds: string[]; // JSON array of bed IDs or ranges
+  assignedBeds: string[] | null = null;
 
   @Column({ nullable: true })
-  shiftStartTime: string; // TIME format
+  shiftStartTime: string | null = null;
 
   @Column({ nullable: true })
-  shiftEndTime: string; // TIME format
+  shiftEndTime: string | null = null;
 
   @Column({ nullable: true })
-  shiftDate: Date;
+  shiftDate: Date | null = null;
 
   @Column()
-  assignedById: string;
+  assignedById!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'assigned_by_id' })
-  assignedBy: User; // Head Nurse
+  assignedBy!: User; // Head Nurse
 
   @Column({ default: 'active' })
-  status: string; // active, completed, cancelled
+  status!: string; // active, completed, cancelled
 
   @Column({ nullable: true })
-  notes: string;
+  notes: string | null = null;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

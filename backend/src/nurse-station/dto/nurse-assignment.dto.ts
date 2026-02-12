@@ -1,5 +1,7 @@
-import { IsUUID, IsString, IsOptional, IsArray, IsDate, IsTime } from 'class-validator';
+import { IsUUID, IsString, IsOptional, IsArray, IsDate } from 'class-validator';
 
+
+export class NurseAssignmentDto {
   @IsUUID()
   nurseId!: string;
 
@@ -49,16 +51,16 @@ export class NurseAssignmentResponseDto {
   id!: string;
   nurseId!: string;
   nurseeName!: string;
-  wardId!: string;
-  wardName!: string;
-  floorNumber!: number;
-  assignedBeds!: string[];
-  shiftStartTime!: string;
-  shiftEndTime!: string;
-  shiftDate!: Date;
+  wardId?: string | null;
+  wardName?: string | null;
+  floorNumber?: number | null;
+  assignedBeds?: string[] | null;
+  shiftStartTime?: string | null;
+  shiftEndTime?: string | null;
+  shiftDate?: Date | null;
   assignedById!: string;
   status!: string;
-  notes!: string;
+  notes?: string | null;
   createdAt!: Date;
   updatedAt!: Date;
 }

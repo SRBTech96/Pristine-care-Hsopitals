@@ -13,7 +13,7 @@ import {
   BadRequestException,
   Request,
 } from '@nestjs/common';
-import { NursingNoteService } from '../services/NursingNoteService';
+import { NursingNoteService, CreateNursingNoteDTO } from '../services/NursingNoteService';
 
 @Controller('nursing-notes')
 export class NursingNoteController {
@@ -22,7 +22,7 @@ export class NursingNoteController {
   @Post()
   @HttpCode(201)
   async createNote(
-    @Body() dto: Record<string, unknown>,
+    @Body() dto: CreateNursingNoteDTO,
     @Req() req: Request & { user?: { id?: string } }
   ): Promise<object> {
     try {
@@ -71,20 +71,5 @@ export class NursingNoteController {
     }
   }
 
-  @Delete(':noteId')
-  async deleteNote(
-    @Param('noteId') noteId: string,
-    @Req() req: Request & { user?: { id?: string } }
-  ): Promise<object> {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        throw new BadRequestException('User ID not found in request');
-      }
-      const note = await this.nursingNoteService.deleteNote(noteId, userId);
-      return { success: true, message: 'Note deleted', data: note };
-    } catch (error: unknown) {
-      throw new BadRequestException((error as Error)?.message || 'Failed to delete note');
-    }
-  }
+  // Delete endpoint removed: NursingNoteService does not implement deleteNote. Implement if needed.
 }

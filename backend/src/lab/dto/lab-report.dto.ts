@@ -23,11 +23,11 @@ export class ApproveLabReportDto {
 }
 
 export class LabReportResponseDto {
-  id: string;
-  reportNumber: string;
-  orderId: string;
-  status: string;
-  reportDate: Date;
+  id!: string;
+  reportNumber!: string;
+  orderId!: string;
+  status!: string;
+  reportDate!: Date;
   approvalDate?: Date;
   publishedAt?: Date;
 }

@@ -21,12 +21,12 @@ import {
   Bed,
 } from '../entities';
 import {
-  CreateNurseAssignmentDto,
+  NurseAssignmentDto,
   UpdateNurseAssignmentDto,
   NurseAssignmentResponseDto,
 } from './dto/nurse-assignment.dto';
 import {
-  CreateInpatientAdmissionDto,
+  InpatientAdmissionDto,
   UpdateInpatientAdmissionDto,
   InpatientAdmissionResponseDto,
 } from './dto/inpatient-admission.dto';
@@ -36,7 +36,7 @@ import {
   ApproveDoctorOrderDto,
 } from './dto/doctor-order.dto';
 import {
-  CreateMedicationScheduleDto,
+  MedicationScheduleDto,
   UpdateMedicationScheduleDto,
   MedicationScheduleResponseDto,
 } from './dto/medication-schedule.dto';
@@ -75,7 +75,7 @@ export class NurseStationService {
   // ===== NURSE ASSIGNMENTS =====
 
   async createNurseAssignment(
-    dto: CreateNurseAssignmentDto,
+    dto: NurseAssignmentDto,
     headNurseId: string,
   ): Promise<NurseAssignment> {
     // Verify nurse exists
@@ -129,7 +129,7 @@ export class NurseStationService {
   // ===== INPATIENT ADMISSIONS =====
 
   async createInpatientAdmission(
-    dto: CreateInpatientAdmissionDto,
+    dto: InpatientAdmissionDto,
     userId: string,
   ): Promise<InpatientAdmission> {
     // Verify patient exists
@@ -245,7 +245,7 @@ export class NurseStationService {
 
     admission.status = 'discharged';
     admission.dischargeDate = new Date();
-    admission.dischargeSummary = dto.dischargeSummary;
+    admission.dischargeSummary = dto.dischargeSummary ?? null;
     admission.updatedBy = { id: userId } as any;
 
     const updated = await this.admissionRepo.save(admission);
@@ -253,6 +253,7 @@ export class NurseStationService {
     // Update bed to vacant
     if (admission.bed) {
       admission.bed.status = 'vacant';
+      // Ensure currentPatientId and admissionDate are nullable in entity
       admission.bed.currentPatientId = null;
       admission.bed.admissionDate = null;
       admission.bed.updatedBy = { id: userId } as any;
@@ -332,7 +333,7 @@ export class NurseStationService {
   // ===== MEDICATION SCHEDULES =====
 
   async createMedicationSchedule(
-    dto: CreateMedicationScheduleDto,
+    dto: MedicationScheduleDto,
     doctorId: string,
   ): Promise<MedicationSchedule> {
     // Verify doctor order exists

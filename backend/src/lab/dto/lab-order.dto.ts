@@ -33,10 +33,10 @@ export class UpdateLabOrderStatusDto {
 }
 
 export class LabOrderResponseDto {
-  id: string;
-  orderNumber: string;
-  patientId: string;
-  testId: string;
-  status: string;
-  orderDate: Date;
+  id!: string;
+  orderNumber!: string;
+  patientId!: string;
+  testId!: string;
+  status!: string;
+  orderDate!: Date;
 }

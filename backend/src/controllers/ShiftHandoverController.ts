@@ -112,8 +112,11 @@ export class ShiftHandoverController {
       }
 
       const handover = await this.shiftHandoverService.reviewHandover(
-        handoverId,
-        reviewNotes,
+        {
+          handoverId,
+          reviewedByNurseId: userId,
+          reviewNotes,
+        },
         userId,
       );
 
@@ -136,12 +139,7 @@ export class ShiftHandoverController {
     @Query('offset') offset?: string,
   ): Promise<any> {
     try {
-      const handovers = await this.shiftHandoverService.getHandoversByWard(
-        wardId,
-        status || undefined,
-        parseInt(limit || '50', 10),
-        parseInt(offset || '0', 10),
-      );
+      const handovers = await this.shiftHandoverService.getHandoversByWard(wardId);
 
       return {
         success: true,

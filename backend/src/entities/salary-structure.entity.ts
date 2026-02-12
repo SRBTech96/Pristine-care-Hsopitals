@@ -3,19 +3,19 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'salary_structures' })
 export class SalaryStructure {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ name: 'employee_id', type: 'uuid' })
-  employeeId: string;
+  employeeId!: string;
 
   @Column({ name: 'effective_from', type: 'date' })
-  effectiveFrom: Date;
+  effectiveFrom!: Date;
 
   @Column({ name: 'effective_till', type: 'date', nullable: true })
   effectiveTill?: Date;
 
   @Column({ name: 'base_salary', type: 'decimal', precision: 12, scale: 2 })
-  baseSalary: number;
+  baseSalary!: number;
 
   // Allowances (JSON for flexibility)
   @Column({ name: 'allowances', type: 'jsonb', nullable: true })
@@ -30,19 +30,19 @@ export class SalaryStructure {
   grossSalary?: number;
 
   @Column({ name: 'is_active', default: true })
-  isActive: boolean;
+  isActive!: boolean;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @Column({ name: 'updated_at', type: 'timestamptz', default: () => 'NOW()' })
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @Column({ name: 'created_by', type: 'uuid' })
-  createdBy: string;
+  createdBy!: string;
 
   @Column({ name: 'approved_by', type: 'uuid', nullable: true })
   approvedBy?: string;

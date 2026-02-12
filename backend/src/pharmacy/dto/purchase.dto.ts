@@ -2,16 +2,16 @@ import { IsUUID, IsNumber, IsOptional, IsString, IsDateString } from 'class-vali
 
 export class CreatePurchaseDto {
   @IsUUID()
-  inventoryId: string;
+  inventoryId!: string;
 
   @IsUUID()
-  batchId: string;
+  batchId!: string;
 
   @IsNumber()
-  quantity: number;
+  quantity!: number;
 
   @IsNumber()
-  unitCost: number;
+  unitCost!: number;
 
   @IsOptional()
   @IsString()
@@ -23,10 +23,10 @@ export class CreatePurchaseDto {
 }
 
 export class PurchaseResponseDto {
-  id: string;
-  purchaseNumber: string;
-  inventoryId: string;
-  batchId: string;
-  quantity: number;
-  totalCost: number;
+  id!: string;
+  purchaseNumber!: string;
+  inventoryId!: string;
+  batchId!: string;
+  quantity!: number;
+  totalCost!: number;
 }

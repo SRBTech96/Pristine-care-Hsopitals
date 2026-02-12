@@ -2,25 +2,25 @@ import { IsUUID, IsString, IsDateString, IsNumber } from 'class-validator';
 
 export class CreateBatchDto {
   @IsUUID()
-  inventoryId: string;
+  inventoryId!: string;
 
   @IsString()
-  batchNumber: string;
+  batchNumber!: string;
 
   @IsDateString()
-  expiryDate: string;
+  expiryDate!: string;
 
   @IsNumber()
-  quantity: number;
+  quantity!: number;
 
   @IsNumber()
-  costPrice: number;
+  costPrice!: number;
 }
 
 export class BatchResponseDto {
-  id: string;
-  inventoryId: string;
-  batchNumber: string;
-  expiryDate: Date;
-  quantity: number;
+  id!: string;
+  inventoryId!: string;
+  batchNumber!: string;
+  expiryDate!: Date;
+  quantity!: number;
 }

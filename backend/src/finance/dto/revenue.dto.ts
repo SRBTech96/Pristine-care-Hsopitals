@@ -18,7 +18,7 @@ export class CreateRevenueDto {
   departmentId?: string;
 
   @IsNumber()
-  amount: number;
+  amount!: number;
 
   @IsOptional()
   @IsNumber()
@@ -30,7 +30,7 @@ export class CreateRevenueDto {
 
   @IsString()
   @IsEnum(['cash', 'bank', 'upi', 'card'])
-  paymentMethod: string;
+  paymentMethod!: string;
 
   @IsOptional()
   @IsString()
@@ -46,16 +46,16 @@ export class CreateRevenueDto {
 }
 
 export class RevenueResponseDto {
-  id: string;
-  receiptNumber: string;
+  id!: string;
+  receiptNumber!: string;
   patientId?: string;
   appointmentId?: string;
   doctorId?: string;
   departmentId?: string;
-  amount: number;
-  discountAmount: number;
-  finalAmount: number;
-  paymentMethod: string;
-  paymentDate: Date;
-  status: string;
+  amount!: number;
+  discountAmount!: number;
+  finalAmount!: number;
+  paymentMethod!: string;
+  paymentDate!: Date;
+  status!: string;
 }

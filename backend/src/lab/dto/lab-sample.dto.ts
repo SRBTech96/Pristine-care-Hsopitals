@@ -17,9 +17,9 @@ export class CollectSampleDto {
 }
 
 export class LabSampleResponseDto {
-  id: string;
-  orderId: string;
-  sampleCode: string;
-  collectionDate: Date;
-  sampleQuality: string;
+  id!: string;
+  orderId!: string;
+  sampleCode!: string;
+  collectionDate!: Date;
+  sampleQuality!: string;
 }

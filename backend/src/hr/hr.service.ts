@@ -88,8 +88,8 @@ export class HrService {
       ...dto,
       createdBy: userId,
       updatedBy: userId,
-    });
-    return this.salaryStructureRepository.save(salary);
+    } as any);
+    return this.salaryStructureRepository.save(salary) as any;
   }
 
   async getActiveSalaryStructure(employeeId: string): Promise<SalaryStructure> {
@@ -138,9 +138,9 @@ export class HrService {
     }
 
     // Calculate net salary
-    const leaveDeduction = dto.unpaidLeaveDays * (salaryStructure.baseSalary / 30);
+    const leaveDeduction = (dto.unpaidLeaveDays || 0) * ((salaryStructure.baseSalary || 0) / 30);
     const netSalary =
-      salaryStructure.grossSalary -
+      (salaryStructure.grossSalary || 0) -
       (dto.deductions || 0) -
       leaveDeduction +
       (dto.bonusAmount || 0);
@@ -296,7 +296,7 @@ export class HrService {
       unpaid: Infinity,
     };
 
-    const balance = {};
+    const balance: Record<string, any> = {};
     for (const [leaveType, limit] of Object.entries(leaveLimits)) {
       const used = yearLeaves
         .filter((l) => l.leaveType === leaveType)

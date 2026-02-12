@@ -8,7 +8,7 @@ export class BedStatusHistory {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ name: 'bed_id' })
   bedId: string;
 
   @ManyToOne(() => Bed, (bed) => bed.statusHistory)

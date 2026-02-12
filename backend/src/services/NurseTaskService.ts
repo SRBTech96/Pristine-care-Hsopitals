@@ -45,10 +45,10 @@ export class NurseTaskService {
     task.type = dto.type;
     task.priority = dto.priority;
     task.title = dto.title;
-    task.description = dto.description;
+    task.description = dto.description || undefined;
     task.scheduledTime = dto.scheduledTime;
-    task.dueTime = dto.dueTime;
-    task.metadata = dto.metadata;
+    task.dueTime = dto.dueTime || undefined;
+    task.metadata = dto.metadata || undefined;
     task.createdByNurseId = userId;
     task.status = TaskStatus.PENDING;
     task.auditLog = this.logAudit('Task created', userId);
@@ -67,7 +67,7 @@ export class NurseTaskService {
 
     const oldStatus = task.status;
     task.status = dto.status;
-    task.completionNotes = dto.completionNotes;
+    task.completionNotes = dto.completionNotes || undefined;
 
     if (dto.status === TaskStatus.COMPLETED) {
       task.completedAt = new Date();
@@ -153,15 +153,12 @@ export class NurseTaskService {
         statuses: [TaskStatus.PENDING, TaskStatus.IN_PROGRESS, TaskStatus.OVERDUE],
       })
       .leftJoinAndSelect('task.patient', 'patient')
-      .orderBy('CASE WHEN task.status = :overdue THEN 0 ELSE 1 END', 'ASC', {
-        overdue: TaskStatus.OVERDUE,
-      })
-      .addOrderBy('task.priority', 'DESC')
+      .orderBy('task.priority', 'DESC')
       .addOrderBy('task.scheduledTime', 'ASC')
       .getMany();
   }
 
-  async getTaskById(id: string): Promise<NurseTask> {
+  async getTaskById(id: string): Promise<NurseTask | null> {
     return this.taskRepository.findOne({
       where: { id },
       relations: ['patient', 'assignedToNurse', 'createdByNurse'],

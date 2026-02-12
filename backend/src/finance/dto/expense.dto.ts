@@ -2,21 +2,21 @@ import { IsString, IsNumber, IsOptional, IsUUID, IsDateString } from 'class-vali
 
 export class CreateExpenseDto {
   @IsString()
-  category: string;
+  category!: string;
 
   @IsOptional()
   @IsString()
   vendor?: string;
 
   @IsNumber()
-  amount: number;
+  amount!: number;
 
   @IsOptional()
   @IsUUID()
   departmentId?: string;
 
   @IsString()
-  paymentMethod: string; // cash, bank, upi, card
+  paymentMethod!: string; // cash, bank, upi, card
 
   @IsOptional()
   @IsString()
@@ -32,13 +32,13 @@ export class CreateExpenseDto {
 }
 
 export class ExpenseResponseDto {
-  id: string;
-  expenseNumber: string;
-  category: string;
+  id!: string;
+  expenseNumber!: string;
+  category!: string;
   vendor?: string;
-  amount: number;
+  amount!: number;
   departmentId?: string;
-  paymentMethod: string;
-  expenseDate: Date;
-  status: string;
+  paymentMethod!: string;
+  expenseDate!: Date;
+  status!: string;
 }

@@ -250,14 +250,14 @@ export class BedsService {
 
     // Record status change in history
     const history = this.historyRepo.create({
-      bed: { id } as any,
+      bedId: id,
       previousStatus,
       newStatus: dto.status,
       previousPatientId,
       newPatientId: dto.patientId || null,
       changedBy: { id: userId } as any,
       changeReason: dto.changeReason,
-    });
+    } as any);
     await this.historyRepo.save(history);
 
     // Log audit
@@ -315,8 +315,8 @@ export class BedsService {
         wardName: ward?.name || 'Unknown',
         category: ward?.code || '',
         totalBeds: wardBeds.length,
-        occupiedBeds: wardBeds.filter(b => b.status === BedStatus.OCCUPIED).length,
-        vacantBeds: wardBeds.filter(b => b.status === BedStatus.VACANT).length,
+        occupiedBeds: wardBeds.filter((b: any) => b.status === BedStatus.OCCUPIED).length,
+        vacantBeds: wardBeds.filter((b: any) => b.status === BedStatus.VACANT).length,
       });
     }
 

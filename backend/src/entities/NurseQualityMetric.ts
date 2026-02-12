@@ -1,7 +1,7 @@
 // backend/src/entities/NurseQualityMetric.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, JoinColumn } from 'typeorm';
-import { NurseUser } from './NurseUser';
-import { Ward } from './Ward';
+import { User } from './user.entity';
+import { Ward } from './ward.entity';
 
 @Entity('nurse_quality_metrics')
 export class NurseQualityMetric {
@@ -18,9 +18,9 @@ export class NurseQualityMetric {
   @Column({ type: 'uuid' })
   nurseId: string;
 
-  @ManyToOne(() => NurseUser)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'nurseId' })
-  nurse: NurseUser;
+  nurse: User;
 
   @Column({ type: 'date' })
   metricDate: Date;

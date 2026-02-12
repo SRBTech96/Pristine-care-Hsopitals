@@ -1,5 +1,8 @@
-import { IsUUID, IsString, IsOptional, IsBoolean, IsDate, ValidateIf } from 'class-validator';
 
+import { IsUUID, IsString, IsOptional, IsBoolean, IsDate } from 'class-validator';
+
+
+export class InpatientAdmissionDto {
   @IsUUID()
   patientId!: string;
 
@@ -51,17 +54,17 @@ export class InpatientAdmissionResponseDto {
   patientId!: string;
   patientName!: string;
   bedId!: string;
-  bedCode!: string;
+  bedCode?: string | null;
   wardId!: string;
-  wardName!: string;
+  wardName?: string | null;
   admissionDate!: Date;
-  dischargeDate!: Date;
+  dischargeDate?: Date | null;
   admissionType!: string;
   attendingDoctorId!: string;
-  attendingDoctorName!: string;
-  chiefComplaint!: string;
-  admissionNotes!: string;
-  dischargeSummary!: string;
+  attendingDoctorName?: string | null;
+  chiefComplaint?: string | null;
+  admissionNotes?: string | null;
+  dischargeSummary?: string | null;
   status!: string;
   isIcu!: boolean;
   isNicu!: boolean;

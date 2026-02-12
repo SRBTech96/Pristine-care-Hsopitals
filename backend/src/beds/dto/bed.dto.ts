@@ -57,10 +57,10 @@ export class BedResponseDto {
   roomNumber: string;
   bedPosition: string;
   status: string;
-  currentPatientId: string;
-  currentPatientName: string;
+  currentPatientId?: string | null;
+  currentPatientName?: string | null;
   assignedToUserId: string;
-  admissionDate: Date;
+  admissionDate?: Date | null;
   estimatedDischargeDate: Date;
   specialRequirements: string;
   isActive: boolean;

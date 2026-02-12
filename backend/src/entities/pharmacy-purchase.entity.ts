@@ -3,35 +3,35 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'pharmacy_purchases' })
 export class PharmacyPurchase {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ name: 'purchase_number', length: 100, unique: true })
-  purchaseNumber: string;
+  purchaseNumber!: string;
 
   @Column({ name: 'inventory_id', type: 'uuid' })
-  inventoryId: string;
+  inventoryId!: string;
 
   @Column({ name: 'batch_id', type: 'uuid' })
-  batchId: string;
+  batchId!: string;
 
   @Column({ type: 'int' })
-  quantity: number;
+  quantity!: number;
 
   @Column({ name: 'unit_cost', type: 'decimal', precision: 12, scale: 2 })
-  unitCost: number;
+  unitCost!: number;
 
   @Column({ name: 'total_cost', type: 'decimal', precision: 12, scale: 2 })
-  totalCost: number;
+  totalCost!: number;
 
   @Column({ name: 'vendor', length: 200, nullable: true })
-  vendor?: string;
+  vendor!: string | null;
 
   @Column({ name: 'purchase_date', type: 'date', default: () => 'CURRENT_DATE' })
-  purchaseDate: Date;
+  purchaseDate!: Date;
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @Column({ name: 'created_by', type: 'uuid' })
-  createdBy: string;
+  createdBy!: string;
 }

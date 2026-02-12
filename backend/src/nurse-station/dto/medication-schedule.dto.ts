@@ -1,5 +1,8 @@
+
 import { IsUUID, IsString, IsOptional, IsBoolean, IsDate } from 'class-validator';
 
+
+export class MedicationScheduleDto {
   @IsUUID()
   doctorOrderId!: string;
 

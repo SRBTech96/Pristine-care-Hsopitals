@@ -22,10 +22,10 @@ export class CreateLabTestDto {
 }
 
 export class LabTestResponseDto {
-  id: string;
-  testCode: string;
-  testName: string;
-  sampleType: string;
-  turnaroundTimeHours: number;
-  cost: number;
+  id!: string;
+  testCode!: string;
+  testName!: string;
+  sampleType!: string;
+  turnaroundTimeHours!: number;
+  cost!: number;
 }

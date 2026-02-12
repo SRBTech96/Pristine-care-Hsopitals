@@ -40,16 +40,10 @@ export class NurseAlertController {
         throw new BadRequestException('User ID not found in request');
       }
 
-      const alert = await this.nurseAlertService.createAlert({
-        wardId,
-        nurseId,
-        patientId,
-        alertType,
-        severity,
-        message,
-        metadata,
-        createdBy: userId,
-      });
+      const alert = await this.nurseAlertService.createAlert(
+        { wardId, patientId, type: alertType, severity, title: message, description: message, assignedToNurseId: nurseId },
+        userId,
+      );
 
       return {
         success: true,
@@ -77,8 +71,7 @@ export class NurseAlertController {
       }
 
       const alert = await this.nurseAlertService.acknowledgeAlert(
-        alertId,
-        acknowledgedNotes,
+        { alertId, acknowledgedByNurseId: userId },
         userId,
       );
 
@@ -108,9 +101,7 @@ export class NurseAlertController {
       }
 
       const alert = await this.nurseAlertService.escalateAlert(
-        alertId,
-        reason,
-        escalateTo || 'HEAD_NURSE',
+        { alertId, escalatedToNurseId: escalateTo || 'HEAD_NURSE' },
         userId,
       );
 
@@ -140,8 +131,7 @@ export class NurseAlertController {
       }
 
       const alert = await this.nurseAlertService.resolveAlert(
-        alertId,
-        resolutionNotes,
+        { alertId, resolutionNotes },
         userId,
       );
 

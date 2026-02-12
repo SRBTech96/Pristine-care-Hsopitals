@@ -10,77 +10,77 @@ export type BedStatus = 'vacant' | 'occupied' | 'maintenance' | 'reserved';
 @Entity('beds')
 export class Bed {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ unique: true })
-  bedCode: string; // ICU-01-A, NICU-02-B, GW-03-C
+  bedCode!: string; // ICU-01-A, NICU-02-B, GW-03-C
 
   @Column()
-  wardId: string;
+  wardId!: string;
 
   @Column()
-  roomCategoryId: string;
+  roomCategoryId!: string;
 
   @ManyToOne(() => Ward, (ward) => ward.beds)
   @JoinColumn({ name: 'ward_id' })
-  ward: Ward;
+  ward!: Ward;
 
   @ManyToOne(() => RoomCategory, (roomCategory) => roomCategory.beds)
   @JoinColumn({ name: 'room_category_id' })
-  roomCategory: RoomCategory;
+  roomCategory!: RoomCategory;
 
   @Column({ nullable: true })
-  roomNumber: string; // Physical room number if applicable
+  roomNumber!: string; // Physical room number if applicable
 
   @Column({ nullable: true })
-  floorNumber: number; // Inherited from ward
+  floorNumber!: number; // Inherited from ward
 
   @Column({ nullable: true })
-  bedPosition: string; // A, B, C, D (for multi-bed rooms)
+  bedPosition!: string; // A, B, C, D (for multi-bed rooms)
 
   @Column({ default: 'vacant' })
-  status: BedStatus; // vacant, occupied, maintenance, reserved
+  status!: BedStatus; // vacant, occupied, maintenance, reserved
 
   @Column({ nullable: true })
-  currentPatientId: string;
+  currentPatientId!: string | null;
 
   @ManyToOne(() => Patient, { nullable: true })
   @JoinColumn({ name: 'current_patient_id' })
-  currentPatient: Patient | null;
+  currentPatient!: Patient | null;
 
   @Column({ nullable: true })
-  assignedToUserId: string;
+  assignedToUserId!: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'assigned_to_user_id' })
-  assignedToUser: User | null;
+  assignedToUser!: User | null;
 
   @Column({ nullable: true })
-  admissionDate: Date; // When patient admitted to bed
+  admissionDate!: Date | null; // When patient admitted to bed
 
   @Column({ nullable: true })
-  estimatedDischargeDate: Date;
+  estimatedDischargeDate!: Date;
 
   @Column({ nullable: true })
-  specialRequirements: string; // Oxygen, Dialysis, Ventilator, etc.
+  specialRequirements!: string; // Oxygen, Dialysis, Ventilator, etc.
 
   @Column({ default: true })
-  isActive: boolean;
+  isActive!: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'created_by' })
-  createdBy: User;
+  createdBy!: User;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'updated_by' })
-  updatedBy: User;
+  updatedBy!: User;
 
   @OneToMany(() => BedStatusHistory, (history) => history.bed)
-  statusHistory: BedStatusHistory[];
+  statusHistory!: BedStatusHistory[];
 }

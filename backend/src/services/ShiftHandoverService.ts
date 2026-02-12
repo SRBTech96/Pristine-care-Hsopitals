@@ -1,8 +1,8 @@
 // backend/src/services/ShiftHandoverService.ts
 import { Repository } from 'typeorm';
 import { ShiftHandover, HandoverStatus } from '../entities/ShiftHandover';
-import { NurseUser } from '../entities/NurseUser';
-import { Ward } from '../entities/Ward';
+import { User } from '../entities/user.entity';
+import { Ward } from '../entities/ward.entity';
 
 export interface CreateHandoverDTO {
   wardId: string;
@@ -108,7 +108,7 @@ export class ShiftHandoverService {
     });
   }
 
-  async getHandoverById(id: string): Promise<ShiftHandover> {
+  async getHandoverById(id: string): Promise<ShiftHandover | null> {
     return this.handoverRepository.findOne({
       where: { id },
       relations: ['outgoingNurse', 'incomingNurse', 'reviewedByNurse', 'ward'],

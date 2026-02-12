@@ -2,17 +2,17 @@ import { IsUUID, IsNumber, IsDateString, IsOptional, IsBoolean } from 'class-val
 
 export class CreateSalaryStructureDto {
   @IsUUID()
-  employeeId: string;
+  employeeId!: string;
 
   @IsDateString()
-  effectiveFrom: string;
+  effectiveFrom!: string;
 
   @IsOptional()
   @IsDateString()
   effectiveTill?: string;
 
   @IsNumber()
-  baseSalary: number;
+  baseSalary!: number;
 
   @IsOptional()
   allowances?: {
@@ -40,12 +40,12 @@ export class CreateSalaryStructureDto {
 }
 
 export class SalaryStructureResponseDto {
-  id: string;
-  employeeId: string;
-  baseSalary: number;
-  grossSalary: number;
-  effectiveFrom: Date;
+  id!: string;
+  employeeId!: string;
+  baseSalary!: number;
+  grossSalary?: number;
+  effectiveFrom!: Date;
   effectiveTill?: Date;
-  isActive: boolean;
+  isActive!: boolean;
   approvedBy?: string;
 }

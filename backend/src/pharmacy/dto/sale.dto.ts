@@ -2,17 +2,17 @@ import { IsUUID, IsNumber, IsOptional, IsString, IsEnum } from 'class-validator'
 
 export class CreateSaleDto {
   @IsUUID()
-  inventoryId: string;
+  inventoryId!: string;
 
   @IsOptional()
   @IsUUID()
   batchId?: string;
 
   @IsNumber()
-  quantity: number;
+  quantity!: number;
 
   @IsNumber()
-  unitPrice: number;
+  unitPrice!: number;
 
   @IsOptional()
   @IsNumber()
@@ -36,7 +36,7 @@ export class CreateSaleDto {
 
   @IsString()
   @IsEnum(['cash','bank','upi','card'])
-  paymentMethod: string;
+  paymentMethod!: string;
 
   @IsOptional()
   @IsString()
@@ -44,12 +44,12 @@ export class CreateSaleDto {
 }
 
 export class SaleResponseDto {
-  id: string;
-  invoiceNumber: string;
-  inventoryId: string;
+  id!: string;
+  invoiceNumber!: string;
+  inventoryId!: string;
   batchId?: string;
-  quantity: number;
-  finalAmount: number;
-  paymentMethod: string;
-  saleDate: Date;
+  quantity!: number;
+  finalAmount!: number;
+  paymentMethod!: string;
+  saleDate!: Date;
 }

@@ -9,6 +9,7 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -39,6 +40,8 @@ import {
   OfferLetterResponseDto,
 } from './dto/offer-letter.dto';
 
+@ApiTags('HR')
+@ApiBearerAuth()
 @Controller('hr')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class HrController {
@@ -49,41 +52,54 @@ export class HrController {
   @Post('employees')
   @Roles('ADMIN', 'HR_MANAGER')
   @Auditable('HR_CREATE_EMPLOYEE')
+  @ApiOperation({ summary: 'Create employee' })
+  @ApiResponse({ status: 201, type: EmployeeResponseDto })
   async createEmployee(
     @Body() dto: CreateEmployeeDto,
     @CurrentUser() user: any,
   ): Promise<EmployeeResponseDto> {
-    return this.hrService.createEmployee(dto, user.id);
+    const entity = await this.hrService.createEmployee(dto, user.id);
+    return { ...entity };
   }
 
   @Get('employees/:id')
   @Roles('ADMIN', 'HR_MANAGER', 'DOCTOR', 'STAFF')
   @Auditable('HR_VIEW_EMPLOYEE')
+  @ApiOperation({ summary: 'Get employee' })
+  @ApiResponse({ status: 200, type: EmployeeResponseDto })
   async getEmployee(@Param('id') employeeId: string): Promise<EmployeeResponseDto> {
-    return this.hrService.getEmployee(employeeId);
+    const entity = await this.hrService.getEmployee(employeeId);
+    return { ...entity };
   }
 
   @Get('employees')
   @Roles('ADMIN', 'HR_MANAGER')
   @Auditable('HR_LIST_EMPLOYEES')
+  @ApiOperation({ summary: 'List employees' })
+  @ApiResponse({ status: 200, type: [EmployeeResponseDto] })
   async listEmployees(
     @Query('departmentId') departmentId?: string,
   ): Promise<EmployeeResponseDto[]> {
     if (departmentId) {
-      return this.hrService.listEmployeesByDepartment(departmentId);
+      const items = await this.hrService.listEmployeesByDepartment(departmentId);
+      return items.map(entity => ({ ...entity }));
     }
-    return this.hrService.listAllEmployees();
+    const items = await this.hrService.listAllEmployees();
+    return items.map(entity => ({ ...entity }));
   }
 
   @Patch('employees/:id')
   @Roles('ADMIN', 'HR_MANAGER')
   @Auditable('HR_UPDATE_EMPLOYEE')
+  @ApiOperation({ summary: 'Update employee' })
+  @ApiResponse({ status: 200, type: EmployeeResponseDto })
   async updateEmployee(
     @Param('id') employeeId: string,
     @Body() dto: UpdateEmployeeDto,
     @CurrentUser() user: any,
   ): Promise<EmployeeResponseDto> {
-    return this.hrService.updateEmployee(employeeId, dto, user.id);
+    const entity = await this.hrService.updateEmployee(employeeId, dto, user.id);
+    return { ...entity };
   }
 
   // ===== SALARY STRUCTURES =====
@@ -95,7 +111,17 @@ export class HrController {
     @Body() dto: CreateSalaryStructureDto,
     @CurrentUser() user: any,
   ): Promise<SalaryStructureResponseDto> {
-    return this.hrService.createSalaryStructure(dto, user.id);
+    const entity = await this.hrService.createSalaryStructure(dto, user.id);
+    return {
+      id: entity.id,
+      employeeId: entity.employeeId,
+      baseSalary: entity.baseSalary,
+      grossSalary: entity.grossSalary,
+      effectiveFrom: entity.effectiveFrom,
+      effectiveTill: entity.effectiveTill,
+      isActive: entity.isActive,
+      approvedBy: entity.approvedBy,
+    };
   }
 
   @Get('salary-structures/:employeeId')
@@ -104,7 +130,17 @@ export class HrController {
   async getSalaryStructures(
     @Param('employeeId') employeeId: string,
   ): Promise<SalaryStructureResponseDto[]> {
-    return this.hrService.listSalaryStructures(employeeId);
+    const entities = await this.hrService.listSalaryStructures(employeeId);
+    return entities.map(entity => ({
+      id: entity.id,
+      employeeId: entity.employeeId,
+      baseSalary: entity.baseSalary,
+      grossSalary: entity.grossSalary,
+      effectiveFrom: entity.effectiveFrom,
+      effectiveTill: entity.effectiveTill,
+      isActive: entity.isActive,
+      approvedBy: entity.approvedBy,
+    }));
   }
 
   // ===== PAYROLL =====
