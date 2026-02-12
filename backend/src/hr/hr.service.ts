@@ -139,6 +139,12 @@ export class HrService {
 
     // Calculate net salary
     const leaveDeduction = (dto.unpaidLeaveDays || 0) * ((salaryStructure.baseSalary || 0) / 30);
+    
+    // Calculate total allowances if it's a JSON object, otherwise use 0
+    const permitAllowancesTotal = salaryStructure.allowances
+      ? Object.values(salaryStructure.allowances as Record<string, number>).reduce((sum, val) => sum + (typeof val === 'number' ? val : 0), 0)
+      : 0;
+
     const netSalary =
       (salaryStructure.grossSalary || 0) -
       (dto.deductions || 0) -
@@ -149,7 +155,7 @@ export class HrService {
       employeeId,
       monthYear,
       baseSalary: salaryStructure.baseSalary,
-      allowances: salaryStructure.allowances,
+      allowances: permitAllowancesTotal, // ✅ Sum of allowances from salary structure
       deductions: dto.deductions || 0,
       grossSalary: salaryStructure.grossSalary,
       netSalary: Math.max(0, netSalary),

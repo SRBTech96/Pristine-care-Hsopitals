@@ -30,7 +30,7 @@ export class Doctor {
   isAvailable: boolean;
 
   @Column({ name: 'availability_schedule', type: 'jsonb', nullable: true })
-  availabilitySchedule?: any;
+  availabilitySchedule?: Record<string, any> | null; // ✅ JSONB type with proper typing
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
   createdAt: Date;

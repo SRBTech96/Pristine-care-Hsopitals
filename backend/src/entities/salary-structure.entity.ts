@@ -17,13 +17,13 @@ export class SalaryStructure {
   @Column({ name: 'base_salary', type: 'decimal', precision: 12, scale: 2 })
   baseSalary!: number;
 
-  // Allowances (JSON for flexibility)
+  // Allowances (JSON for flexibility) - ✅ JSONB with proper typing
   @Column({ name: 'allowances', type: 'jsonb', nullable: true })
-  allowances?: any; // { house_rent: 10000, medical: 5000, travel: 3000 }
+  allowances?: Record<string, number> | null; // { house_rent: 10000, medical: 5000, travel: 3000 }
 
-  // Deductions (JSON for flexibility)
+  // Deductions (JSON for flexibility) - ✅ JSONB with proper typing
   @Column({ name: 'deductions', type: 'jsonb', nullable: true })
-  deductions?: any; // { pf: 1800, gratuity: 500, loan: 2000 }
+  deductions?: Record<string, number> | null; // { pf: 1800, gratuity: 500, loan: 2000 }
 
   // Gross salary = base + allowances - deductions
   @Column({ name: 'gross_salary', type: 'decimal', precision: 12, scale: 2, nullable: true })

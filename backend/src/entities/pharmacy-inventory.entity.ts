@@ -1,5 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+/**
+ * PharmacyInventory Entity
+ * Represents pharmaceutical products in hospital inventory
+ * PostgreSQL compatible with proper column types
+ */
 @Entity({ name: 'pharmacy_inventory' })
 export class PharmacyInventory {
   @PrimaryGeneratedColumn('uuid')
@@ -9,18 +14,16 @@ export class PharmacyInventory {
   sku!: string; // internal SKU or drug code
 
   @Column({ name: 'name', length: 200 })
-  name!: string;
+  name!: string; // Drug name
 
   @Column({ name: 'manufacturer', length: 200, nullable: true })
-  manufacturer!: string | null;
+  manufacturer!: string | null; // ✅ Correctly typed as VARCHAR, not Object
 
   @Column({ name: 'unit_price', type: 'decimal', precision: 12, scale: 2 })
   unitPrice!: number; // default selling price
 
   @Column({ name: 'hsn_code', length: 50, nullable: true })
-  hsnCode!: string | null;
-
-  @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
+  hsnCode!: string | null; // HSN (Harmonized System of Nomenclature) code
   createdAt!: Date;
 
   @Column({ name: 'updated_at', type: 'timestamptz', default: () => 'NOW()' })

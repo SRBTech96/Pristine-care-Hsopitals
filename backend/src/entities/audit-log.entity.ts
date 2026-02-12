@@ -21,10 +21,10 @@ export class AuditLog {
   actorRole: string;
 
   @Column({ name: 'old_values', type: 'jsonb', nullable: true })
-  oldValues?: any;
+  oldValues?: Record<string, any> | null; // ✅ JSONB type - old field values
 
   @Column({ name: 'new_values', type: 'jsonb', nullable: true })
-  newValues?: any;
+  newValues?: Record<string, any> | null; // ✅ JSONB type - new field values
 
   @Column({ name: 'changes_summary', type: 'text', nullable: true })
   changesSummary?: string;
