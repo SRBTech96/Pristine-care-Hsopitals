@@ -14,17 +14,18 @@ export class PharmacyInventory {
   sku!: string; // internal SKU or drug code
 
   @Column({ name: 'name', type: 'varchar', length: 200 })
-  name!: string; // Drug name
+  name!: string;
 
-  // EXTREME SAFE AUTO-FIX: manufacturer must be JSONB for object compatibility
-  @Column({ name: 'manufacturer', type: 'jsonb', nullable: true })
-  manufacturer!: Record<string, any> | null; // ✅ Correctly typed as JSONB
+  @Column({ name: 'manufacturer', type: 'varchar', length: 200, nullable: true })
+  manufacturer!: string | null;
 
   @Column({ name: 'unit_price', type: 'decimal', precision: 12, scale: 2 })
   unitPrice!: number; // default selling price
 
   @Column({ name: 'hsn_code', type: 'varchar', length: 50, nullable: true })
-  hsnCode!: string | null; // HSN (Harmonized System of Nomenclature) code
+  hsnCode!: string | null;
+
+  @Column({ name: 'created_at', type: 'timestamp', default: () => 'NOW()' })
   createdAt!: Date;
 
   @Column({ name: 'updated_at', type: 'timestamp', default: () => 'NOW()' })
