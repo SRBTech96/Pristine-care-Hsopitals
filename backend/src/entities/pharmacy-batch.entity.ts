@@ -8,7 +8,7 @@ export class PharmacyBatch {
   @Column({ name: 'inventory_id', type: 'uuid' })
   inventoryId!: string;
 
-  @Column({ name: 'batch_number', length: 100 })
+  @Column({ name: 'batch_number', type: 'varchar', length: 100 })
   batchNumber!: string;
 
   @Column({ name: 'expiry_date', type: 'date' })

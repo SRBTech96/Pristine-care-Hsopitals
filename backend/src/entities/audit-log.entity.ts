@@ -5,19 +5,19 @@ export class AuditLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'entity_type', length: 100 })
+  @Column({ name: 'entity_type', type: 'varchar', length: 100 })
   entityType: string;
 
   @Column({ name: 'entity_id', type: 'uuid' })
   entityId: string;
 
-  @Column({ length: 50 })
+  @Column({ type: 'varchar', length: 50 })
   action: string;
 
   @Column({ name: 'actor_id', type: 'uuid' })
   actorId: string;
 
-  @Column({ name: 'actor_role', length: 50 })
+  @Column({ name: 'actor_role', type: 'varchar', length: 50 })
   actorRole: string;
 
   @Column({ name: 'old_values', type: 'jsonb', nullable: true })
@@ -35,10 +35,10 @@ export class AuditLog {
   @Column({ name: 'user_agent', type: 'text', nullable: true })
   userAgent?: string;
 
-  @Column({ name: 'request_id', length: 100, nullable: true })
+  @Column({ name: 'request_id', type: 'varchar', length: 100, nullable: true })
   requestId?: string;
 
-  @Column({ length: 50, default: 'info' })
+  @Column({ type: 'varchar', length: 50, default: 'info' })
   severity: string;
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })

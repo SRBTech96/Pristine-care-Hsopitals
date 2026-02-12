@@ -5,17 +5,17 @@ export class LabTest {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'test_code', length: 50, unique: true })
+  @Column({ name: 'test_code', type: 'varchar', length: 50, unique: true })
   testCode: string;
 
-  @Column({ name: 'test_name', length: 200 })
+  @Column({ name: 'test_name', type: 'varchar', length: 200 })
   testName: string;
 
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  @Column({ name: 'sample_type', length: 100 })
-  sampleType: string; // blood, urine, saliva, tissue, etc.
+  @Column({ name: 'sample_type', type: 'varchar', length: 100 })
+  sampleType: string;
 
   @Column({ name: 'turnaround_time_hours', type: 'int' })
   turnaroundTimeHours: number;

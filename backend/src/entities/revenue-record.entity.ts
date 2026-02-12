@@ -5,7 +5,7 @@ export class RevenueRecord {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ name: 'receipt_number', length: 50, unique: true })
+  @Column({ name: 'receipt_number', type: 'varchar', length: 50, unique: true })
   receiptNumber!: string;
 
   @Column({ name: 'patient_id', type: 'uuid', nullable: true })
@@ -32,8 +32,8 @@ export class RevenueRecord {
   @Column({ name: 'discount_approval_id', type: 'uuid', nullable: true })
   discountApprovalId?: string;
 
-  @Column({ name: 'payment_method', length: 20 })
-  paymentMethod!: string; // cash, bank, upi, card
+  @Column({ name: 'payment_method', type: 'varchar', length: 20 })
+  paymentMethod!: string;
 
   @Column({ name: 'payment_reference', type: 'text', nullable: true })
   paymentReference?: string;
@@ -41,8 +41,8 @@ export class RevenueRecord {
   @Column({ name: 'payment_date', type: 'timestamptz', default: () => 'NOW()' })
   paymentDate!: Date;
 
-  @Column({ length: 20, default: 'collected' })
-  status!: string; // collected, pending, refunded
+  @Column({ type: 'varchar', length: 20, default: 'collected' })
+  status!: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

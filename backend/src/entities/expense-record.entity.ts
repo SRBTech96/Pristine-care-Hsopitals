@@ -5,13 +5,13 @@ export class ExpenseRecord {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'expense_number', length: 50, unique: true })
+  @Column({ name: 'expense_number', type: 'varchar', length: 50, unique: true })
   expenseNumber: string;
 
-  @Column({ length: 100 })
-  category: string; // salaries, supplies, maintenance, utilities, other
+  @Column({ type: 'varchar', length: 100 })
+  category: string;
 
-  @Column({ length: 200, nullable: true })
+  @Column({ type: 'varchar', length: 200, nullable: true })
   vendor?: string;
 
   @Column({ type: 'decimal', precision: 12, scale: 2 })
@@ -20,8 +20,8 @@ export class ExpenseRecord {
   @Column({ name: 'department_id', type: 'uuid', nullable: true })
   departmentId?: string;
 
-  @Column({ name: 'payment_method', length: 20 })
-  paymentMethod: string; // cash, bank, upi, card
+  @Column({ name: 'payment_method', type: 'varchar', length: 20 })
+  paymentMethod: string;
 
   @Column({ name: 'payment_reference', type: 'text', nullable: true })
   paymentReference?: string;
@@ -29,8 +29,8 @@ export class ExpenseRecord {
   @Column({ name: 'expense_date', type: 'date', default: () => 'CURRENT_DATE' })
   expenseDate: Date;
 
-  @Column({ length: 20, default: 'recorded' })
-  status: string; // recorded, approved, paid
+  @Column({ type: 'varchar', length: 20, default: 'recorded' })
+  status: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

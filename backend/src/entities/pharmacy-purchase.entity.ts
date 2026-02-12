@@ -5,7 +5,7 @@ export class PharmacyPurchase {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ name: 'purchase_number', length: 100, unique: true })
+  @Column({ name: 'purchase_number', type: 'varchar', length: 100, unique: true })
   purchaseNumber!: string;
 
   @Column({ name: 'inventory_id', type: 'uuid' })
@@ -23,7 +23,7 @@ export class PharmacyPurchase {
   @Column({ name: 'total_cost', type: 'decimal', precision: 12, scale: 2 })
   totalCost!: number;
 
-  @Column({ name: 'vendor', length: 200, nullable: true })
+  @Column({ name: 'vendor', type: 'varchar', length: 200, nullable: true })
   vendor!: string | null;
 
   @Column({ name: 'purchase_date', type: 'date', default: () => 'CURRENT_DATE' })

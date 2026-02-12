@@ -11,7 +11,7 @@ export class DataAccessLog {
   @Column({ name: 'patient_id', type: 'uuid', nullable: true })
   patientId?: string;
 
-  @Column({ name: 'access_type', length: 50 })
+  @Column({ name: 'access_type', type: 'varchar', length: 50 })
   accessType: string;
 
   @Column({ name: 'resource_type', length: 100 })
@@ -29,7 +29,7 @@ export class DataAccessLog {
   @Column({ name: 'success', default: true })
   success: boolean;
 
-  @Column({ name: 'result_code', length: 50, nullable: true })
+  @Column({ name: 'result_code', type: 'varchar', length: 50, nullable: true })
   resultCode?: string;
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })

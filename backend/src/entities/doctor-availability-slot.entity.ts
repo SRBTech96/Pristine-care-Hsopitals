@@ -18,11 +18,11 @@ export class DoctorAvailabilitySlot {
   dayOfWeek: number;
 
   // Start time as HH:mm (e.g., "09:00")
-  @Column({ name: 'start_time', length: 5 })
+  @Column({ name: 'start_time', type: 'varchar', length: 5 })
   startTime: string;
 
   // End time as HH:mm (e.g., "17:00")
-  @Column({ name: 'end_time', length: 5 })
+  @Column({ name: 'end_time', type: 'varchar', length: 5 })
   endTime: string;
 
   // Slot duration in minutes (e.g., 30 for 30-min slots)

@@ -8,7 +8,7 @@ export class Doctor {
   @Column({ name: 'user_id', type: 'uuid', unique: true })
   userId: string;
 
-  @Column({ name: 'registration_number', length: 50, unique: true })
+  @Column({ name: 'registration_number', type: 'varchar', length: 50, unique: true })
   registrationNumber: string;
 
   @Column({ name: 'specialization_id', type: 'uuid' })

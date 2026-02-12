@@ -37,18 +37,18 @@ export class PayrollRecord {
   @Column({ name: 'bonus_amount', type: 'decimal', precision: 12, scale: 2, nullable: true })
   bonusAmount?: number;
 
-  @Column({ name: 'bonus_reason', length: 255, nullable: true })
+  @Column({ name: 'bonus_reason', type: 'varchar', length: 255, nullable: true })
   bonusReason?: string;
 
   // Status workflow
-  @Column({ length: 50, default: 'pending' })
-  status!: string; // pending, processed, paid, failed
+  @Column({ type: 'varchar', length: 50, default: 'pending' })
+  status!: string;
 
   @Column({ name: 'payment_date', type: 'timestamptz', nullable: true })
   paymentDate?: Date;
 
-  @Column({ name: 'payment_reference', length: 100, nullable: true })
-  paymentReference?: string; // Bank transfer ID
+  @Column({ name: 'payment_reference', type: 'varchar', length: 100, nullable: true })
+  paymentReference?: string;
 
   @Column({ type: 'text', nullable: true })
   remarks?: string;

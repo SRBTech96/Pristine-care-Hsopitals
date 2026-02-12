@@ -5,7 +5,7 @@ export class PharmacySale {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ name: 'invoice_number', length: 100, unique: true })
+  @Column({ name: 'invoice_number', type: 'varchar', length: 100, unique: true })
   invoiceNumber!: string;
 
   @Column({ name: 'inventory_id', type: 'uuid' })
@@ -41,8 +41,8 @@ export class PharmacySale {
   @Column({ name: 'doctor_id', type: 'uuid', nullable: true })
   doctorId!: string | null;
 
-  @Column({ name: 'payment_method', length: 20 })
-  paymentMethod!: string; // cash, bank, upi, card
+  @Column({ name: 'payment_method', type: 'varchar', length: 20 })
+  paymentMethod!: string;
 
   @Column({ name: 'payment_reference', type: 'text', nullable: true })
   paymentReference!: string | null;

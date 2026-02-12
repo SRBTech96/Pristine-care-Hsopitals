@@ -17,8 +17,8 @@ export class VisitAttribution {
   @Column({ name: 'lead_id', type: 'uuid', nullable: true })
   leadId?: string; // If this visit was converted from a lead
 
-  @Column({ name: 'attribution_type', length: 50 })
-  attributionType: string; // direct, referral, lead_conversion, email_campaign
+  @Column({ name: 'attribution_type', type: 'varchar', length: 50 })
+  attributionType: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

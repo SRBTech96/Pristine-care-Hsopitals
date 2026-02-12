@@ -14,11 +14,11 @@ export class FollowUp {
   @Column({ name: 'scheduled_date', type: 'timestamptz' })
   scheduledDate: Date;
 
-  @Column({ name: 'follow_up_type', length: 50 })
-  followUpType: string; // call, email, sms, in_person_visit
+  @Column({ name: 'follow_up_type', type: 'varchar', length: 50 })
+  followUpType: string;
 
-  @Column({ length: 50, default: 'pending' })
-  status: string; // pending, completed, missed, cancelled
+  @Column({ type: 'varchar', length: 50, default: 'pending' })
+  status: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

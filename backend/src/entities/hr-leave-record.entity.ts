@@ -8,8 +8,8 @@ export class HrLeaveRecord {
   @Column({ name: 'employee_id', type: 'uuid' })
   employeeId: string;
 
-  @Column({ name: 'leave_type', length: 50 })
-  leaveType: string; // sick, casual, earned, unpaid, maternity, attendance_bonus
+  @Column({ name: 'leave_type', type: 'varchar', length: 50 })
+  leaveType: string;
 
   @Column({ name: 'start_date', type: 'date' })
   startDate: Date;
@@ -23,8 +23,8 @@ export class HrLeaveRecord {
   @Column({ type: 'text', nullable: true })
   reason?: string;
 
-  @Column({ length: 50, default: 'pending' })
-  status: string; // pending, approved, rejected, cancelled
+  @Column({ type: 'varchar', length: 50, default: 'pending' })
+  status: string;
 
   @Column({ name: 'approval_comments', type: 'text', nullable: true })
   approvalComments?: string;

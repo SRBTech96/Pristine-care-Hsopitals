@@ -8,7 +8,7 @@ export class LabReport {
   @Column({ name: 'order_id', type: 'uuid' })
   orderId: string;
 
-  @Column({ name: 'report_number', length: 100, unique: true })
+  @Column({ name: 'report_number', type: 'varchar', length: 100, unique: true })
   reportNumber: string;
 
   @Column({ type: 'text' })
@@ -29,8 +29,8 @@ export class LabReport {
   @Column({ name: 'approval_date', type: 'timestamptz', nullable: true })
   approvalDate?: Date;
 
-  @Column({ length: 50, default: 'draft' })
-  status: string; // draft, pending_approval, approved, published
+  @Column({ type: 'varchar', length: 50, default: 'draft' })
+  status: string;
 
   @Column({ name: 'published_at', type: 'timestamptz', nullable: true })
   publishedAt?: Date;

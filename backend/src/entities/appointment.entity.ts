@@ -5,7 +5,7 @@ export class Appointment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'appointment_number', length: 50, unique: true })
+  @Column({ name: 'appointment_number', type: 'varchar', length: 50, unique: true })
   appointmentNumber: string;
 
   @Column({ name: 'patient_id', type: 'uuid' })
@@ -23,7 +23,7 @@ export class Appointment {
   @Column({ name: 'duration_minutes', type: 'int' })
   durationMinutes: number;
 
-  @Column({ length: 50, default: 'scheduled' })
+  @Column({ type: 'varchar', length: 50, default: 'scheduled' })
   status: string;
 
   @Column({ name: 'room_number', length: 50, nullable: true })

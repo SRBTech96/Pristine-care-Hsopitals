@@ -5,23 +5,23 @@ export class PatientLead {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 100 })
+  @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ type: 'varchar', length: 20, nullable: true })
   phone?: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   email?: string;
 
-  @Column({ length: 100, nullable: true })
-  source?: string; // referral, website, walk-in, advertisement, employee_referral
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  source?: string;
 
-  @Column({ length: 50, default: 'new' })
-  status: string; // new, contacted, qualified, converted, lost
+  @Column({ type: 'varchar', length: 50, default: 'new' })
+  status: string;
 
-  @Column({ name: 'interested_in', length: 255, nullable: true })
-  interestedIn?: string; // specialization or department
+  @Column({ name: 'interested_in', type: 'varchar', length: 255, nullable: true })
+  interestedIn?: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

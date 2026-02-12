@@ -5,7 +5,7 @@ export class LabOrder {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'order_number', length: 100, unique: true })
+  @Column({ name: 'order_number', type: 'varchar', length: 100, unique: true })
   orderNumber: string;
 
   @Column({ name: 'patient_id', type: 'uuid' })
@@ -26,8 +26,8 @@ export class LabOrder {
   @Column({ name: 'required_date', type: 'date' })
   requiredDate: Date;
 
-  @Column({ length: 50, default: 'pending' })
-  status: string; // pending, sample_collected, processing, report_ready, completed, cancelled
+  @Column({ type: 'varchar', length: 50, default: 'pending' })
+  status: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

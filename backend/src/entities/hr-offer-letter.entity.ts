@@ -11,7 +11,7 @@ export class HrOfferLetter {
   @Column({ name: 'offer_date', type: 'date' })
   offerDate: Date;
 
-  @Column({ name: 'designation', length: 100 })
+  @Column({ name: 'designation', type: 'varchar', length: 100 })
   designation: string;
 
   @Column({ name: 'department_id', type: 'uuid' })
@@ -35,8 +35,8 @@ export class HrOfferLetter {
   @Column({ name: 'signing_date', type: 'date', nullable: true })
   signingDate?: Date;
 
-  @Column({ length: 50, default: 'draft' })
-  status: string; // draft, sent, accepted, rejected, signed, expired
+  @Column({ type: 'varchar', length: 50, default: 'draft' })
+  status: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

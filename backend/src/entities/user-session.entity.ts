@@ -10,7 +10,7 @@ export class UserSession {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ name: 'token_hash', length: 255 })
+  @Column({ name: 'token_hash', type: 'varchar', length: 255 })
   tokenHash: string;
 
   @Column({ name: 'ip_address', type: 'inet', nullable: true })

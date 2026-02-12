@@ -8,7 +8,7 @@ export class LabSample {
   @Column({ name: 'order_id', type: 'uuid' })
   orderId: string;
 
-  @Column({ name: 'sample_code', length: 100, unique: true })
+  @Column({ name: 'sample_code', type: 'varchar', length: 100, unique: true })
   sampleCode: string;
 
   @Column({ name: 'collection_date', type: 'timestamptz' })
@@ -17,8 +17,8 @@ export class LabSample {
   @Column({ name: 'collector_id', type: 'uuid' })
   collectorId: string;
 
-  @Column({ name: 'sample_quality', length: 50, default: 'good' })
-  sampleQuality: string; // good, degraded, contaminated, insufficient
+  @Column({ name: 'sample_quality', type: 'varchar', length: 50, default: 'good' })
+  sampleQuality: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

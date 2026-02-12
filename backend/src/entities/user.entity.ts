@@ -6,19 +6,19 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 255, unique: true })
+  @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ type: 'varchar', length: 20, nullable: true })
   phone?: string;
 
-  @Column({ length: 100, name: 'first_name' })
+  @Column({ type: 'varchar', length: 100, name: 'first_name' })
   firstName: string;
 
-  @Column({ length: 100, name: 'last_name' })
+  @Column({ type: 'varchar', length: 100, name: 'last_name' })
   lastName: string;
 
-  @Column({ length: 255, name: 'password_hash' })
+  @Column({ type: 'varchar', length: 255, name: 'password_hash' })
   passwordHash: string;
 
   @Column({ name: 'is_active', default: true })

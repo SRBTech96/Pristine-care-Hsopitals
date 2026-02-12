@@ -5,7 +5,7 @@ export class DiscountApproval {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'target_type', length: 100 })
+  @Column({ name: 'target_type', type: 'varchar', length: 100 })
   targetType: string; // appointment, patient_lead, bundle, service
 
   @Column({ name: 'target_id', type: 'uuid' })
@@ -29,7 +29,7 @@ export class DiscountApproval {
   @Column({ name: 'expires_at', type: 'timestamptz', nullable: true })
   expiresAt?: Date;
 
-  @Column({ length: 50, default: 'approved' })
+  @Column({ type: 'varchar', length: 50, default: 'approved' })
   status: string; // pending, approved, rejected, expired, used
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
