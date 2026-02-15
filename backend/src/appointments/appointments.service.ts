@@ -78,6 +78,14 @@ export class AppointmentsService {
     return this.toDto(saved);
   }
 
+  async findByDoctor(doctorId: string): Promise<AppointmentResponseDto[]> {
+    const rows = await this.appointmentsRepo.find({
+      where: { doctorId },
+      order: { scheduledAt: 'ASC' }
+    });
+    return rows.map((a) => this.toDto(a));
+  }
+
   private toDto(a: Appointment): AppointmentResponseDto {
     return {
       id: a.id,

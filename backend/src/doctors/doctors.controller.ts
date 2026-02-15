@@ -1,8 +1,10 @@
-import { Controller, Get, Param, UseGuards, UsePipes, ValidationPipe, Query } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, UsePipes, ValidationPipe, Query, Req } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Auditable } from '../common/decorators/audit.decorator';
 import { DoctorsService } from './doctors.service';
+import { Roles } from '../auth/roles.decorator';
+import { Request } from 'express';
 
 @Controller('doctors')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -21,6 +23,18 @@ export class DoctorsController {
   }
 
   /**
+   * GET /api/doctors/me
+   * Get doctor profile for the logged-in doctor
+   */
+  @Get('me')
+  @Roles('DOCTOR')
+  @Auditable({ entityType: 'doctors', accessType: 'view', resourceType: 'doctor_profile' })
+  async getMyProfile(@Req() req: Request) {
+    const user = (req as any).user;
+    return this.doctorsService.findByUserId(user.id);
+  }
+
+  /**
    * GET /api/doctors/:id
    * Get doctor profile by doctor ID
    * Accessible to: PATIENT (to view), DOCTOR (self), ADMIN
@@ -30,6 +44,7 @@ export class DoctorsController {
   async getDoctorProfile(@Param('id') id: string) {
     return this.doctorsService.findById(id);
   }
+
 
   /**
    * GET /api/doctors/:id/availability

@@ -105,4 +105,15 @@ export class AuthService {
     } as AuditLog);
     return true;
   }
+
+  async getProfile(userId: string) {
+    const user = await this.usersService.findById(userId);
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role?.name || 'UNKNOWN'
+    };
+  }
 }

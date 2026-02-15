@@ -8,6 +8,7 @@ import { Auditable } from '../common/decorators/audit.decorator';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto, CancelAppointmentDto } from './dto/update-appointment.dto';
+import { Roles } from '../auth/roles.decorator';
 
 @Controller('appointments')
 @UseGuards(JwtAuthGuard, RolesGuard, OwnershipGuard)
@@ -54,5 +55,12 @@ export class AppointmentsController {
   ) {
     const user = (req as any).user;
     return this.appointmentsService.cancel(id, dto, user.id);
+  }
+
+  @Get('doctor/:doctorId')
+  @Roles('DOCTOR', 'ADMIN')
+  @Auditable({ entityType: 'appointments', accessType: 'list', resourceType: 'appointments' })
+  async listByDoctor(@Param('doctorId') doctorId: string) {
+    return this.appointmentsService.findByDoctor(doctorId);
   }
 }
