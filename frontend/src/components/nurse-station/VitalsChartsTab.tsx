@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InpatientAdmission } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
 import { Activity, AlertCircle, TrendingUp, TrendingDown } from 'lucide-react';
@@ -26,18 +26,14 @@ export default function VitalsChartsTab({ admission }: VitalsChartsTabProps) {
   const [timeRange, setTimeRange] = useState<'6h' | '12h' | '24h' | '7d'>('24h');
   const [latestVitals, setLatestVitals] = useState<VitalRecord | null>(null);
 
-  useEffect(() => {
-    loadVitals();
-  }, [admission.id, timeRange]);
-
-  const loadVitals = async () => {
+  const loadVitals = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.getAdmissionVitals(
+      const data = await nurseStationAPI.getAdmissionVitals(
         admission.id,
         timeRange
       );
-      const vitalsData = response.data || [];
+      const vitalsData = data || [];
       setVitals(vitalsData);
       if (vitalsData.length > 0) {
         setLatestVitals(vitalsData[vitalsData.length - 1]);
@@ -47,7 +43,11 @@ export default function VitalsChartsTab({ admission }: VitalsChartsTabProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [admission.id, timeRange]);
+
+  useEffect(() => {
+    loadVitals();
+  }, [loadVitals]);
 
   const getVitalStatus = (value: number | undefined, vitalType: string) => {
     if (!value) return 'unknown';

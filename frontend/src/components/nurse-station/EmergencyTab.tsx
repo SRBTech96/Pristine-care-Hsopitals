@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InpatientAdmission, EmergencyEvent } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
 import { AlertCircle, AlertTriangle } from 'lucide-react';
@@ -37,18 +37,14 @@ export default function EmergencyTab({ admission, userRole }: EmergencyTabProps)
     description: '',
   });
 
-  useEffect(() => {
-    loadEvents();
-  }, [admission.id]);
-
-  const loadEvents = async () => {
+  const loadEvents = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listEmergencyEvents(
+      const data = await nurseStationAPI.listEmergencyEvents(
         admission.wardId,
         'reported'
       );
-      const patientEvents = response.data.filter(
+      const patientEvents = data.filter(
         (e: any) => e.patientId === admission.patientId
       );
       setEvents(patientEvents || []);
@@ -57,7 +53,11 @@ export default function EmergencyTab({ admission, userRole }: EmergencyTabProps)
     } finally {
       setLoading(false);
     }
-  };
+  }, [admission.patientId, admission.wardId]);
+
+  useEffect(() => {
+    loadEvents();
+  }, [loadEvents]);
 
   const handleRaiseEvent = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -33,10 +33,10 @@ export default function NurseStationLayout({ user }: NurseStationLayoutProps) {
   const loadWards = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listWards();
-      setWards(response.data);
-      if (response.data.length > 0) {
-        setSelectedWardId(response.data[0].id);
+      const data = await nurseStationAPI.listWards();
+      setWards(data);
+      if (data.length > 0) {
+        setSelectedWardId(data[0].id);
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load wards');
@@ -48,8 +48,8 @@ export default function NurseStationLayout({ user }: NurseStationLayoutProps) {
   const loadBeds = useCallback(async () => {
     if (!selectedWardId) return;
     try {
-      const response = await nurseStationAPI.listBeds(selectedWardId);
-      setBeds(response.data);
+      const data = await nurseStationAPI.listBeds(selectedWardId);
+      setBeds(data);
     } catch (err: any) {
       console.error('Failed to load beds:', err);
     }
@@ -58,8 +58,8 @@ export default function NurseStationLayout({ user }: NurseStationLayoutProps) {
   const loadAdmissions = useCallback(async () => {
     if (!selectedWardId) return;
     try {
-      const response = await nurseStationAPI.listInpatientAdmissions(selectedWardId, 'active');
-      setAdmissions(response.data);
+      const data = await nurseStationAPI.listInpatientAdmissions(selectedWardId, 'active');
+      setAdmissions(data);
     } catch (err: any) {
       console.error('Failed to load admissions:', err);
     }

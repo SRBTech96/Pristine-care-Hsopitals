@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InpatientAdmission, MedicationSchedule, MedicationAdministration } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
 import { AlertCircle, Check, X, Clock } from 'lucide-react';
@@ -31,24 +31,24 @@ export default function MedicationsTab({
   const isStaffNurse = userRole.includes('STAFF_NURSE');
   const canExecuteMeds = isStaffNurse;
 
-  useEffect(() => {
-    loadMedications();
-  }, [admission.id]);
-
-  const loadMedications = async () => {
+  const loadMedications = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listMedicationSchedules(
+      const data = await nurseStationAPI.listMedicationSchedules(
         admission.id,
         'active'
       );
-      setMedications(response.data || []);
+      setMedications(data || []);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load medications');
     } finally {
       setLoading(false);
     }
-  };
+  }, [admission.id]);
+
+  useEffect(() => {
+    loadMedications();
+  }, [loadMedications]);
 
   const handleGiveMedication = async (scheduleId: string) => {
     if (!canExecuteMeds) return;

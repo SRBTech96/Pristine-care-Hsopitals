@@ -39,8 +39,8 @@ export default function VitalsTab({ admission, userRole }: VitalsTabProps) {
   const loadVitals = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listPatientVitals(admission.id);
-      setVitals(response.data || []);
+      const data = await nurseStationAPI.listPatientVitals(admission.id);
+      setVitals(data || []);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load vitals');
     } finally {

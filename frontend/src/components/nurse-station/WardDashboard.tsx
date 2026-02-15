@@ -51,8 +51,8 @@ export default function WardDashboard({
         nurseStationAPI.listInpatientAdmissions(wardId),
         nurseStationAPI.getWard(wardId),
       ]);
-      setAdmissions(admissionsRes.data || []);
-      setWard(wardRes.data || null);
+      setAdmissions(admissionsRes || []);
+      setWard(wardRes || null);
     } catch (err: any) {
       setError('Failed to load ward data');
       console.error(err);

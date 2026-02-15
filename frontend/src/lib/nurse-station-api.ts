@@ -23,173 +23,212 @@ class NurseStationAPI {
   }
 
   // Nurse Assignments
-  async createNurseAssignment(data: any) {
-    return this.api.post('/assignments', data);
+  async createNurseAssignment(data: any): Promise<any> {
+    const res = await this.api.post('/assignments', data);
+    return res.data;
   }
 
-  async listNurseAssignments(wardId?: string, nurseId?: string) {
-    return this.api.get('/assignments', {
+  async listNurseAssignments(wardId?: string, nurseId?: string): Promise<any> {
+    const res = await this.api.get('/assignments', {
       params: { wardId, nurseId },
     });
+    return res.data;
   }
 
-  async updateNurseAssignment(id: string, data: any) {
-    return this.api.patch(`/assignments/${id}`, data);
+  async updateNurseAssignment(id: string, data: any): Promise<any> {
+    const res = await this.api.patch(`/assignments/${id}`, data);
+    return res.data;
   }
 
   // Inpatient Admissions
-  async createInpatientAdmission(data: any) {
-    return this.api.post('/admissions', data);
+  async createInpatientAdmission(data: any): Promise<any> {
+    const res = await this.api.post('/admissions', data);
+    return res.data;
   }
 
-  async listInpatientAdmissions(wardId?: string, status?: string, isIcu?: boolean, isNicu?: boolean) {
-    return this.api.get('/admissions', {
+  async listInpatientAdmissions(
+    wardId?: string,
+    status?: string,
+    isIcu?: boolean,
+    isNicu?: boolean
+  ): Promise<any> {
+    const res = await this.api.get('/admissions', {
       params: { wardId, status, isIcu, isNicu },
     });
+    return res.data;
   }
 
-  async getInpatientAdmission(id: string) {
-    return this.api.get(`/admissions/${id}`);
+  async getInpatientAdmission(id: string): Promise<any> {
+    const res = await this.api.get(`/admissions/${id}`);
+    return res.data;
   }
 
-  async dischargePatient(id: string, data: any) {
-    return this.api.patch(`/admissions/${id}/discharge`, data);
+  async dischargePatient(id: string, data: any): Promise<any> {
+    const res = await this.api.patch(`/admissions/${id}/discharge`, data);
+    return res.data;
   }
 
   // Doctor Orders
-  async createDoctorOrder(data: any) {
-    return this.api.post('/doctor-orders', data);
+  async createDoctorOrder(data: any): Promise<any> {
+    const res = await this.api.post('/doctor-orders', data);
+    return res.data;
   }
 
-  async listDoctorOrders(admissionId: string, status?: string, orderType?: string) {
-    return this.api.get('/doctor-orders', {
+  async listDoctorOrders(admissionId: string, status?: string, orderType?: string): Promise<any> {
+    const res = await this.api.get('/doctor-orders', {
       params: { admissionId, status, orderType },
     });
+    return res.data;
   }
 
-  async getDoctorOrder(id: string) {
-    return this.api.get(`/doctor-orders/${id}`);
+  async getDoctorOrder(id: string): Promise<any> {
+    const res = await this.api.get(`/doctor-orders/${id}`);
+    return res.data;
   }
 
   // Medication Schedules
-  async createMedicationSchedule(data: any) {
-    return this.api.post('/medication-schedules', data);
+  async createMedicationSchedule(data: any): Promise<any> {
+    const res = await this.api.post('/medication-schedules', data);
+    return res.data;
   }
 
-  async listMedicationSchedules(admissionId: string, status?: string) {
-    return this.api.get('/medication-schedules', {
+  async listMedicationSchedules(admissionId: string, status?: string): Promise<any> {
+    const res = await this.api.get('/medication-schedules', {
       params: { admissionId, status },
     });
+    return res.data;
   }
 
   // Medication Administration
-  async executeMedication(data: any) {
-    return this.api.post('/medication-administration/execute', data);
+  async executeMedication(data: any): Promise<any> {
+    const res = await this.api.post('/medication-administration/execute', data);
+    return res.data;
   }
 
-  async skipMedication(data: any) {
-    return this.api.post('/medication-administration/skip', data);
+  async skipMedication(data: any): Promise<any> {
+    const res = await this.api.post('/medication-administration/skip', data);
+    return res.data;
   }
 
-  async getMedicationAdministration(id: string) {
-    return this.api.get(`/medication-administration/${id}`);
+  async getMedicationAdministration(id: string): Promise<any> {
+    const res = await this.api.get(`/medication-administration/${id}`);
+    return res.data;
   }
 
   // Vital Signs
-  async recordVitals(data: any) {
-    return this.api.post('/vital-signs', data);
+  async recordVitals(data: any): Promise<any> {
+    const res = await this.api.post('/vital-signs', data);
+    return res.data;
   }
 
-  async listPatientVitals(admissionId: string) {
-    return this.api.get('/vital-signs', {
+  async listPatientVitals(admissionId: string): Promise<any> {
+    const res = await this.api.get('/vital-signs', {
       params: { admissionId },
     });
+    return res.data;
   }
 
-  async getAdmissionVitals(admissionId: string, timeRange: '6h' | '12h' | '24h' | '7d') {
-    return this.api.get(`/vital-signs/${admissionId}`, {
+  async getAdmissionVitals(admissionId: string, timeRange: '6h' | '12h' | '24h' | '7d'): Promise<any> {
+    const res = await this.api.get(`/vital-signs/${admissionId}`, {
       params: { timeRange },
     });
+    return res.data;
   }
 
   // Emergency Events
-  async raiseEmergencyEvent(data: any) {
-    return this.api.post('/emergency-events', data);
+  async raiseEmergencyEvent(data: any): Promise<any> {
+    const res = await this.api.post('/emergency-events', data);
+    return res.data;
   }
 
-  async listEmergencyEvents(wardId?: string, status?: string, severity?: string) {
-    return this.api.get('/emergency-events', {
+  async listEmergencyEvents(wardId?: string, status?: string, severity?: string): Promise<any> {
+    const res = await this.api.get('/emergency-events', {
       params: { wardId, status, severity },
     });
+    return res.data;
   }
 
-  async getEmergencyEvent(id: string) {
-    return this.api.get(`/emergency-events/${id}`);
+  async getEmergencyEvent(id: string): Promise<any> {
+    const res = await this.api.get(`/emergency-events/${id}`);
+    return res.data;
   }
 
-  async acknowledgeEmergencyEvent(id: string) {
-    return this.api.patch(`/emergency-events/${id}/acknowledge`);
+  async acknowledgeEmergencyEvent(id: string): Promise<any> {
+    const res = await this.api.patch(`/emergency-events/${id}/acknowledge`);
+    return res.data;
   }
 
   // Supply Requests
-  async requestSupply(data: any) {
-    return this.api.post('/supply-requests', data);
+  async requestSupply(data: any): Promise<any> {
+    const res = await this.api.post('/supply-requests', data);
+    return res.data;
   }
 
-  async listSupplyRequests(wardId?: string, status?: string) {
-    return this.api.get('/supply-requests', {
+  async listSupplyRequests(wardId?: string, status?: string): Promise<any> {
+    const res = await this.api.get('/supply-requests', {
       params: { wardId, status },
     });
+    return res.data;
   }
 
-  async fulfillSupplyRequest(id: string) {
-    return this.api.patch(`/supply-requests/${id}/fulfill`);
+  async fulfillSupplyRequest(id: string): Promise<any> {
+    const res = await this.api.patch(`/supply-requests/${id}/fulfill`);
+    return res.data;
   }
 
   // Nurse Handovers
-  async createNurseHandover(data: any) {
-    return this.api.post('/nurse-handovers', data);
+  async createNurseHandover(data: any): Promise<any> {
+    const res = await this.api.post('/nurse-handovers', data);
+    return res.data;
   }
 
-  async listNurseHandovers(wardId?: string, nurseId?: string) {
-    return this.api.get('/nurse-handovers', {
+  async listNurseHandovers(wardId?: string, nurseId?: string): Promise<any> {
+    const res = await this.api.get('/nurse-handovers', {
       params: { wardId, nurseId },
     });
+    return res.data;
   }
 
-  async getNurseHandover(id: string) {
-    return this.api.get(`/nurse-handovers/${id}`);
+  async getNurseHandover(id: string): Promise<any> {
+    const res = await this.api.get(`/nurse-handovers/${id}`);
+    return res.data;
   }
 
   // Ward Communication
-  async sendWardMessage(data: any) {
-    return this.api.post('/ward-messages', data);
+  async sendWardMessage(data: any): Promise<any> {
+    const res = await this.api.post('/ward-messages', data);
+    return res.data;
   }
 
-  async listWardMessages(wardId: string, patientId?: string) {
-    return this.api.get('/ward-messages', {
+  async listWardMessages(wardId: string, patientId?: string): Promise<any> {
+    const res = await this.api.get('/ward-messages', {
       params: { wardId, patientId },
     });
+    return res.data;
   }
 
   // Beds
-  async listBeds(wardId?: string, status?: string) {
-    return this.api.get('/beds', {
+  async listBeds(wardId?: string, status?: string): Promise<any> {
+    const res = await this.api.get('/beds', {
       params: { wardId, status },
     });
+    return res.data;
   }
 
-  async getBed(id: string) {
-    return this.api.get(`/beds/${id}`);
+  async getBed(id: string): Promise<any> {
+    const res = await this.api.get(`/beds/${id}`);
+    return res.data;
   }
 
   // Wards
-  async listWards() {
-    return this.api.get('/wards');
+  async listWards(): Promise<any> {
+    const res = await this.api.get('/wards');
+    return res.data;
   }
 
-  async getWard(id: string) {
-    return this.api.get(`/wards/${id}`);
+  async getWard(id: string): Promise<any> {
+    const res = await this.api.get(`/wards/${id}`);
+    return res.data;
   }
 }
 

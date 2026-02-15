@@ -21,8 +21,8 @@ export function useNurseStation({
   const loadAdmissions = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listInpatientAdmissions(wardId);
-      setAdmissions(response.data || []);
+      const data = await nurseStationAPI.listInpatientAdmissions(wardId);
+      setAdmissions(data || []);
       setError(null);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load admissions');
@@ -35,10 +35,8 @@ export function useNurseStation({
   const getAdmission = useCallback(
     async (admissionId: string) => {
       try {
-        const response = await nurseStationAPI.getInpatientAdmission(
-          admissionId
-        );
-        return response.data;
+        const data = await nurseStationAPI.getInpatientAdmission(admissionId);
+        return data;
       } catch (err: any) {
         setError('Failed to load admission');
         return null;
@@ -140,11 +138,8 @@ export function useNurseStation({
   const getVitals = useCallback(
     async (admissionId: string, timeRange: '6h' | '12h' | '24h' | '7d') => {
       try {
-        const response = await nurseStationAPI.getAdmissionVitals(
-          admissionId,
-          timeRange
-        );
-        return response.data || [];
+        const data = await nurseStationAPI.getAdmissionVitals(admissionId, timeRange);
+        return data || [];
       } catch (err: any) {
         setError('Failed to load vital signs');
         return [];
@@ -157,11 +152,8 @@ export function useNurseStation({
   const getEmergencies = useCallback(
     async (status?: string) => {
       try {
-        const response = await nurseStationAPI.listEmergencyEvents(
-          wardId,
-          status
-        );
-        return response.data || [];
+        const data = await nurseStationAPI.listEmergencyEvents(wardId, status);
+        return data || [];
       } catch (err: any) {
         setError('Failed to load emergency events');
         return [];
@@ -255,9 +247,8 @@ export function usePatient(admissionId: string) {
   const loadPatient = useCallback(async () => {
     try {
       setLoading(true);
-      const response =
-        await nurseStationAPI.getInpatientAdmission(admissionId);
-      setAdmission(response.data);
+      const data = await nurseStationAPI.getInpatientAdmission(admissionId);
+      setAdmission(data);
       setError(null);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load patient');
@@ -287,11 +278,8 @@ export function usePatientVitals(admissionId: string) {
   const loadVitals = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.getAdmissionVitals(
-        admissionId,
-        timeRange
-      );
-      setVitals(response.data || []);
+      const data = await nurseStationAPI.getAdmissionVitals(admissionId, timeRange);
+      setVitals(data || []);
       setError(null);
     } catch (err: any) {
       setError('Failed to load vital signs');
@@ -351,11 +339,8 @@ export function useEmergencyEvents(wardId: string) {
   const loadEvents = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listEmergencyEvents(
-        wardId,
-        filter
-      );
-      setEvents(response.data || []);
+      const data = await nurseStationAPI.listEmergencyEvents(wardId, filter);
+      setEvents(data || []);
       setError(null);
     } catch (err: any) {
       setError('Failed to load emergency events');
@@ -426,11 +411,8 @@ export function useWardMessages(wardId: string, patientId?: string) {
   const loadMessages = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listWardMessages(
-        wardId,
-        patientId
-      );
-      setMessages(response.data || []);
+      const data = await nurseStationAPI.listWardMessages(wardId, patientId);
+      setMessages(data || []);
       setError(null);
     } catch (err: any) {
       setError('Failed to load messages');

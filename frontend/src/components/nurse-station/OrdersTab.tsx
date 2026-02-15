@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InpatientAdmission, DoctorOrder } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
 import { AlertCircle } from 'lucide-react';
@@ -14,24 +14,24 @@ export default function OrdersTab({ admission }: OrdersTabProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadOrders();
-  }, [admission.id]);
-
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listDoctorOrders(
+      const data = await nurseStationAPI.listDoctorOrders(
         admission.id,
         'active'
       );
-      setOrders(response.data || []);
+      setOrders(data || []);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load orders');
     } finally {
       setLoading(false);
     }
-  };
+  }, [admission.id]);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
 
   const getOrderTypeColor = (type: string) => {
     const colors: { [key: string]: string } = {

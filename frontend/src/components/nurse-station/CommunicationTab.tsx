@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InpatientAdmission, Ward } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
 import { MessageSquare, Send, AlertCircle, Phone, Mail, Clock } from 'lucide-react';
@@ -39,14 +39,7 @@ export default function CommunicationTab({
     'general'
   );
 
-  useEffect(() => {
-    loadMessages();
-    // Set up auto-refresh every 10 seconds
-    const interval = setInterval(loadMessages, 10000);
-    return () => clearInterval(interval);
-  }, [admission.id]);
-
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async () => {
     try {
       setLoading(false);
       // Simulating message fetch
@@ -77,7 +70,13 @@ export default function CommunicationTab({
     } catch (err: any) {
       setError('Failed to load messages');
     }
-  };
+  }, [admission.id]);
+
+  useEffect(() => {
+    loadMessages();
+    const interval = setInterval(loadMessages, 10000);
+    return () => clearInterval(interval);
+  }, [loadMessages]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();

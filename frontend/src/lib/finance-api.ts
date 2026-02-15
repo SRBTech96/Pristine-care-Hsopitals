@@ -119,12 +119,20 @@ class FinanceApiClient {
   }
 
   // Export endpoints (server will prepare files)
-  async exportReportPdf(report: string, params: Record<string, any>) {
-    throw new Error("Backend export not available");
+  async exportReportPdf(report: string, params: Record<string, any>): Promise<Blob> {
+    const res = await this.client.get(`/finance/reports/${report}/export/pdf`, {
+      params,
+      responseType: "blob",
+    });
+    return res.data as Blob;
   }
 
-  async exportReportExcel(report: string, params: Record<string, any>) {
-    throw new Error("Backend export not available");
+  async exportReportExcel(report: string, params: Record<string, any>): Promise<Blob> {
+    const res = await this.client.get(`/finance/reports/${report}/export/excel`, {
+      params,
+      responseType: "blob",
+    });
+    return res.data as Blob;
   }
 }
 

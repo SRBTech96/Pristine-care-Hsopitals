@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InpatientAdmission, NurseHandover } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
 import { Briefcase, Plus, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
@@ -48,15 +48,11 @@ export default function HandoverTab({
 
   const [taskInput, setTaskInput] = useState('');
 
-  useEffect(() => {
-    loadHandovers();
-  }, [admission.id]);
-
-  const loadHandovers = async () => {
+  const loadHandovers = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listNurseHandovers(wardId);
-      const patientHandovers = response.data.filter(
+      const data = await nurseStationAPI.listNurseHandovers(wardId);
+      const patientHandovers = data.filter(
         (h: any) => h.patientId === admission.patientId
       );
       setHandovers(patientHandovers || []);
@@ -65,7 +61,11 @@ export default function HandoverTab({
     } finally {
       setLoading(false);
     }
-  };
+  }, [admission.patientId, wardId]);
+
+  useEffect(() => {
+    loadHandovers();
+  }, [loadHandovers]);
 
   const handleAddTask = () => {
     if (taskInput.trim()) {

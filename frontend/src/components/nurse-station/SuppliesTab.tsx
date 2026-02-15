@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InpatientAdmission, SupplyRequest } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
 import { Package, Plus, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
@@ -43,15 +43,11 @@ export default function SuppliesTab({
     notes: '',
   });
 
-  useEffect(() => {
-    loadRequests();
-  }, [admission.id]);
-
-  const loadRequests = async () => {
+  const loadRequests = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await nurseStationAPI.listSupplyRequests(wardId);
-      const patientRequests = response.data.filter(
+      const data = await nurseStationAPI.listSupplyRequests(wardId);
+      const patientRequests = data.filter(
         (r: any) => r.patientId === admission.patientId
       );
       setRequests(patientRequests || []);
@@ -60,7 +56,11 @@ export default function SuppliesTab({
     } finally {
       setLoading(false);
     }
-  };
+  }, [admission.id, wardId]);
+
+  useEffect(() => {
+    loadRequests();
+  }, [loadRequests]);
 
   const handleSubmitRequest = async (e: React.FormEvent) => {
     e.preventDefault();
