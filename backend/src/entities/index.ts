@@ -6,6 +6,8 @@ export * from './data-access-log.entity';
 export * from './patient.entity';
 export * from './appointment.entity';
 export * from './doctor.entity';
+export * from './department.entity';
+export * from './specialization.entity';
 export * from './doctor-availability-slot.entity';
 export * from './patient-lead.entity';
 export * from './follow-up.entity';

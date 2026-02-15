@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { DepartmentGroup } from "@/types";
 import { groupDoctorsByDepartment } from "@/lib/doctor-utils";
-import apiClient from "@/lib/api-client";
+import { appointmentApi } from "@/lib/appointment-api";
 import { DepartmentSection } from "./DepartmentSection";
 import { AlertCircle, Loader } from "lucide-react";
 
@@ -25,7 +25,19 @@ export const DoctorListing: React.FC<DoctorListingProps> = ({
       try {
         setLoading(true);
         setError(null);
-        const doctors = await apiClient.fetchDoctors();
+        const publicDoctors = await appointmentApi.listPublicDoctors();
+        const doctors = publicDoctors.map((doc) => ({
+          id: doc.id,
+          firstName: doc.firstName,
+          lastName: doc.lastName,
+          email: doc.email,
+          phone: doc.phone || "",
+          qualifications: [],
+          specialization: doc.specializationName,
+          yearsOfExperience: doc.yearsOfExperience,
+          registrationNumber: undefined,
+          bio: undefined,
+        }));
         const grouped = groupDoctorsByDepartment(doctors);
         setDepartments(grouped);
       } catch (err) {

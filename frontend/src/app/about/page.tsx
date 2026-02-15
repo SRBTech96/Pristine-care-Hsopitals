@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { generateMetadata, pageMetadata } from "@/lib/seo";
 import { Award, Users, Heart, TrendingUp } from "lucide-react";
 
@@ -190,9 +191,12 @@ export default function AboutPage() {
             Schedule an appointment with our specialists and take the first step toward
             better health.
           </p>
-          <button className="inline-block bg-white text-pristine-600 font-semibold px-8 py-3 rounded-lg hover:bg-pristine-50 transition-colors">
+          <Link
+            href="/appointments"
+            className="inline-block bg-white text-pristine-600 font-semibold px-8 py-3 rounded-lg hover:bg-pristine-50 transition-colors"
+          >
             Book Appointment
-          </button>
+          </Link>
         </div>
       </section>
     </main>

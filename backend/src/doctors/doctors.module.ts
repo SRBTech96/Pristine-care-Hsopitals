@@ -5,11 +5,12 @@ import { DoctorAvailabilitySlot } from '../entities/doctor-availability-slot.ent
 import { AuditModule } from '../audit/audit.module';
 import { DoctorsService } from './doctors.service';
 import { DoctorsController } from './doctors.controller';
+import { PublicDoctorsController } from './public-doctors.controller';
 import { DoctorSeederService } from './doctor-seeder.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Doctor, DoctorAvailabilitySlot]), AuditModule],
-  controllers: [DoctorsController],
+  controllers: [DoctorsController, PublicDoctorsController],
   providers: [DoctorsService, DoctorSeederService],
   exports: [DoctorsService]
 })

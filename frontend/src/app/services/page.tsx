@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { generateMetadata, pageMetadata } from "@/lib/seo";
 import {
   Stethoscope,
@@ -206,12 +207,18 @@ export default function ServicesPage() {
             Contact us today to schedule an appointment or get more information about our services.
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <button className="bg-white text-pristine-600 font-semibold px-8 py-3 rounded-lg hover:bg-pristine-50 transition-colors">
+            <Link
+              href="/appointments"
+              className="bg-white text-pristine-600 font-semibold px-8 py-3 rounded-lg hover:bg-pristine-50 transition-colors"
+            >
               Book Appointment
-            </button>
-            <button className="border-2 border-white text-white font-semibold px-8 py-3 rounded-lg hover:bg-white hover:text-pristine-600 transition-colors">
+            </Link>
+            <a
+              href="tel:+919876543210"
+              className="border-2 border-white text-white font-semibold px-8 py-3 rounded-lg hover:bg-white hover:text-pristine-600 transition-colors"
+            >
               Call Us
-            </button>
+            </a>
           </div>
         </div>
       </section>

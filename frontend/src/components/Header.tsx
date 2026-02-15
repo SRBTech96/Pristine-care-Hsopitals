@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 
 export const Header: React.FC = () => {
@@ -65,9 +66,9 @@ export const Header: React.FC = () => {
           </nav>
 
           {/* CTA Button */}
-          <button className="btn btn-primary hidden sm:inline-flex">
+          <Link href="/appointments" className="btn btn-primary hidden sm:inline-flex">
             Book Appointment
-          </button>
+          </Link>
         </div>
       </div>
     </header>

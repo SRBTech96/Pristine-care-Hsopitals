@@ -56,7 +56,7 @@ export default function SuppliesTab({
     } finally {
       setLoading(false);
     }
-  }, [admission.id, wardId]);
+  }, [admission.patientId, wardId]);
 
   useEffect(() => {
     loadRequests();

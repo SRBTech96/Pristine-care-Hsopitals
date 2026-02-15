@@ -70,7 +70,7 @@ export default function CommunicationTab({
     } catch (err: any) {
       setError('Failed to load messages');
     }
-  }, [admission.id]);
+  }, []);
 
   useEffect(() => {
     loadMessages();

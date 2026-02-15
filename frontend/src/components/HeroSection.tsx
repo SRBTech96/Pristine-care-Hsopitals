@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { ChevronRight, Stethoscope, Users, Award } from "lucide-react";
 
 export const HeroSection: React.FC = () => {
@@ -27,10 +28,13 @@ export const HeroSection: React.FC = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-white text-pristine-700 px-6 py-3 rounded-lg font-semibold hover:bg-pristine-50 smooth-transition flex items-center justify-center gap-2">
+              <Link
+                href="/appointments"
+                className="bg-white text-pristine-700 px-6 py-3 rounded-lg font-semibold hover:bg-pristine-50 smooth-transition flex items-center justify-center gap-2"
+              >
                 Book Appointment
                 <ChevronRight className="w-4 h-4" />
-              </button>
+              </Link>
               <button className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-pristine-700 smooth-transition">
                 Learn More
               </button>
