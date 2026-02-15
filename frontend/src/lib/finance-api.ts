@@ -22,57 +22,109 @@ class FinanceApiClient {
     });
   }
 
-  async getDailyRevenue(startDate?: string, endDate?: string) {
-    const res = await this.client.get<RevenueSummary[]>(`/reports/revenue/daily`, {
-      params: { startDate, endDate },
+  private toDateKey(value: string | Date): string {
+    const d = new Date(value);
+    return d.toISOString().slice(0, 10);
+  }
+
+  private toMonthKey(value: string | Date): string {
+    const d = new Date(value);
+    return d.toISOString().slice(0, 7);
+  }
+
+  private async listRevenue(startDate?: string, endDate?: string) {
+    const res = await this.client.get<any[]>(`/finance/revenues`, {
+      params: { from: startDate, to: endDate },
     });
-    return res.data;
+    return res.data || [];
+  }
+
+  private async listExpenses(startDate?: string, endDate?: string) {
+    const res = await this.client.get<any[]>(`/finance/expenses`, {
+      params: { from: startDate, to: endDate },
+    });
+    return res.data || [];
+  }
+
+  async getDailyRevenue(startDate?: string, endDate?: string) {
+    const rows = await this.listRevenue(startDate, endDate);
+    const totals = new Map<string, number>();
+    rows.forEach((r) => {
+      const key = this.toDateKey(r.paymentDate);
+      totals.set(key, (totals.get(key) || 0) + Number(r.finalAmount || 0));
+    });
+    return Array.from(totals.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, total]) => ({ date, total }));
   }
 
   async getMonthlyRevenue(year?: number) {
-    const res = await this.client.get<RevenueSummary[]>(`/reports/revenue/monthly`, {
-      params: { year },
+    const from = year ? `${year}-01-01` : undefined;
+    const to = year ? `${year}-12-31` : undefined;
+    const rows = await this.listRevenue(from, to);
+    const totals = new Map<string, number>();
+    rows.forEach((r) => {
+      const key = this.toMonthKey(r.paymentDate);
+      totals.set(key, (totals.get(key) || 0) + Number(r.finalAmount || 0));
     });
-    return res.data;
+    return Array.from(totals.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, total]) => ({ date, total }));
   }
 
   async getRevenueByDoctor(startDate?: string, endDate?: string) {
-    const res = await this.client.get<RevenueByEntity[]>(`/reports/revenue/by-doctor`, {
-      params: { startDate, endDate },
+    const res = await this.client.get<any[]>(`/finance/reports/doctor`, {
+      params: { from: startDate, to: endDate },
     });
-    return res.data;
+    return (res.data || []).map((row) => ({
+      key: row.doctorId,
+      amount: Number(row.total || 0),
+    }));
   }
 
   async getRevenueByDepartment(startDate?: string, endDate?: string) {
-    const res = await this.client.get<RevenueByEntity[]>(`/reports/revenue/by-department`, {
-      params: { startDate, endDate },
+    const res = await this.client.get<any[]>(`/finance/reports/department`, {
+      params: { from: startDate, to: endDate },
     });
-    return res.data;
+    return (res.data || []).map((row) => ({
+      key: row.departmentId,
+      amount: Number(row.total || 0),
+    }));
   }
 
   async getExpenses(startDate?: string, endDate?: string) {
-    const res = await this.client.get<RevenueSummary[]>(`/reports/expenses`, {
-      params: { startDate, endDate },
+    const rows = await this.listExpenses(startDate, endDate);
+    const totals = new Map<string, number>();
+    rows.forEach((e) => {
+      const key = this.toDateKey(e.expenseDate);
+      totals.set(key, (totals.get(key) || 0) + Number(e.amount || 0));
     });
-    return res.data;
+    return Array.from(totals.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, total]) => ({ date, total }));
   }
 
   async getPnL(startDate?: string, endDate?: string) {
-    const res = await this.client.get<{ revenue: number; expenses: number; profit: number }>(`/reports/pnl`, {
-      params: { startDate, endDate },
-    });
-    return res.data;
+    const [revenues, expenses] = await Promise.all([
+      this.listRevenue(startDate, endDate),
+      this.listExpenses(startDate, endDate),
+    ]);
+    const revenueTotal = revenues.reduce((sum, r) => sum + Number(r.finalAmount || 0), 0);
+    const expenseTotal = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+    return {
+      revenue: revenueTotal,
+      expenses: expenseTotal,
+      profit: revenueTotal - expenseTotal,
+    };
   }
 
   // Export endpoints (server will prepare files)
   async exportReportPdf(report: string, params: Record<string, any>) {
-    const res = await this.client.post(`/reports/export/pdf/${report}`, params, { responseType: "blob" });
-    return res.data;
+    throw new Error("Backend export not available");
   }
 
   async exportReportExcel(report: string, params: Record<string, any>) {
-    const res = await this.client.post(`/reports/export/excel/${report}`, params, { responseType: "blob" });
-    return res.data;
+    throw new Error("Backend export not available");
   }
 }
 

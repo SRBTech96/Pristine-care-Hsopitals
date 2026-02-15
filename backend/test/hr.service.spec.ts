@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { HrService } from './hr.service';
-import { HrEmployee } from '../entities/hr-employee.entity';
-import { SalaryStructure } from '../entities/salary-structure.entity';
-import { PayrollRecord } from '../entities/payroll-record.entity';
-import { HrLeaveRecord } from '../entities/hr-leave-record.entity';
-import { HrOfferLetter } from '../entities/hr-offer-letter.entity';
-import { AuditService } from '../audit/audit.service';
+import { HrService } from '../src/hr/hr.service';
+import { HrEmployee } from '../src/entities/hr-employee.entity';
+import { SalaryStructure } from '../src/entities/salary-structure.entity';
+import { PayrollRecord } from '../src/entities/payroll-record.entity';
+import { HrLeaveRecord } from '../src/entities/hr-leave-record.entity';
+import { HrOfferLetter } from '../src/entities/hr-offer-letter.entity';
+import { AuditService } from '../src/audit/audit.service';
 import { DataSource } from 'typeorm';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 

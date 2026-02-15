@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PatientsController } from '../src/patients/patients.controller';
 import { PatientsService } from '../src/patients/patients.service';
 import { AuditService } from '../src/audit/audit.service';
+import { JwtAuthGuard } from '../src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../src/auth/guards/roles.guard';
+import { OwnershipGuard } from '../src/auth/guards/ownership.guard';
 
 describe('PatientsController', () => {
   let controller: PatientsController;
@@ -20,7 +23,14 @@ describe('PatientsController', () => {
         { provide: PatientsService, useValue: patientsService },
         { provide: AuditService, useValue: auditService }
       ]
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue({ canActivate: jest.fn(() => true) })
+      .overrideGuard(RolesGuard)
+      .useValue({ canActivate: jest.fn(() => true) })
+      .overrideGuard(OwnershipGuard)
+      .useValue({ canActivate: jest.fn(() => true) })
+      .compile();
 
     controller = module.get<PatientsController>(PatientsController);
   });
