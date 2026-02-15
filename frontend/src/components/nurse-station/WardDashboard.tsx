@@ -76,8 +76,8 @@ export default function WardDashboard({
     if (
       searchQuery &&
       !admission.patientName
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase()) &&
+        ?.toLowerCase()
+        ?.includes(searchQuery.toLowerCase()) &&
       !admission.patientId.includes(searchQuery)
     ) {
       return false;
@@ -87,13 +87,13 @@ export default function WardDashboard({
 
   filteredAdmissions.sort((a, b) => {
     if (sortBy === 'name') {
-      return a.patientName.localeCompare(b.patientName);
+      return (a.patientName || '').localeCompare(b.patientName || '');
     } else if (sortBy === 'bed') {
       return parseInt(a.bedId) - parseInt(b.bedId);
     } else if (sortBy === 'admission') {
       return (
-        new Date(b.admissionDateTime).getTime() -
-        new Date(a.admissionDateTime).getTime()
+        new Date(b.admissionDateTime || b.admissionDate).getTime() -
+        new Date(a.admissionDateTime || a.admissionDate).getTime()
       );
     }
     return 0;
@@ -123,7 +123,7 @@ export default function WardDashboard({
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-1">Ward Dashboard</h1>
-            <p className="text-blue-100">{ward?.wardName || 'Ward'}</p>
+            <p className="text-blue-100">{ward?.name || 'Ward'}</p>
           </div>
           <button
             onClick={loadWardData}

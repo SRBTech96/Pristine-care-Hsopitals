@@ -62,7 +62,7 @@ export const FinanceDashboard: React.FC = () => {
               revenueByDoctor: byDoctor,
               revenueByDepartment: byDept,
               expenses,
-              pnl,
+              pnl: pnl ?? undefined,
             }}
             filters={filters}
           />

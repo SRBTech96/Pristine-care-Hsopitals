@@ -1,4 +1,6 @@
 // backend/src/services/NursingNoteService.ts
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NursingNote, NoteFormat } from '../entities/NursingNote';
 
@@ -24,8 +26,9 @@ export interface UpdateNursingNoteDTO {
   content?: string;
 }
 
+@Injectable()
 export class NursingNoteService {
-  constructor(private noteRepository: Repository<NursingNote>) {}
+  constructor(@InjectRepository(NursingNote) private noteRepository: Repository<NursingNote>) {}
 
   private logAudit(message: string, userId: string): string {
     return JSON.stringify({

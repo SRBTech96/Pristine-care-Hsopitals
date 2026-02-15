@@ -14,12 +14,13 @@ export default function NurseStationPage() {
   const [currentUser, setCurrentUser] = useState<{
     id: string;
     firstName: string;
+    lastName: string;
   } | null>(null);
 
   useEffect(() => {
     // In a real app, you would fetch the current user from auth context
     // For now, using mock data
-    setCurrentUser({ id: 'nurse-1', firstName: 'Sarah' });
+    setCurrentUser({ id: 'nurse-1', firstName: 'Sarah', lastName: 'Johnson' });
     setLoading(false);
   }, []);
 

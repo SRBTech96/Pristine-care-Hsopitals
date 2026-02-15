@@ -29,23 +29,12 @@ export default function NurseStationLayout({ user }: NurseStationLayoutProps) {
   const isStaffNurse = user.roles.includes('STAFF_NURSE');
   const isDoctor = user.roles.includes('DOCTOR');
 
-  // Check permission
-  if (!isHeadNurse && !isStaffNurse && !isDoctor) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-center">
-          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
-          <p className="text-gray-600">You do not have permission to access this module.</p>
-        </div>
-      </div>
-    );
-  }
-
   // Load wards on mount
   useEffect(() => {
-    loadWards();
-  }, []);
+    if (isHeadNurse || isStaffNurse || isDoctor) {
+      loadWards();
+    }
+  }, [isHeadNurse, isStaffNurse, isDoctor]);
 
   // Load beds when ward is selected
   useEffect(() => {
@@ -65,6 +54,19 @@ export default function NurseStationLayout({ user }: NurseStationLayoutProps) {
       return () => clearInterval(interval);
     }
   }, [selectedWardId]);
+
+  // Check permission
+  if (!isHeadNurse && !isStaffNurse && !isDoctor) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
+          <p className="text-gray-600">You do not have permission to access this module.</p>
+        </div>
+      </div>
+    );
+  }
 
   const loadWards = async () => {
     try {

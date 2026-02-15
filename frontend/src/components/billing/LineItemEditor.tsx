@@ -32,7 +32,7 @@ export const LineItemEditor: React.FC<LineItemEditorProps> = ({
     quantity: 1,
     unitPrice: 0,
     taxRate: 18,
-    serviceType: "consultation",
+    serviceType: "consultation" as "medication" | "procedure" | "investigation" | "consultation" | "bed_charge" | "other",
   });
   const [error, setError] = useState<string | null>(null);
 

@@ -5,7 +5,7 @@ export class Invoice {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
   invoiceNumber: string; // Format: INV-YYYY-MMMM-XXXXX
 
   @Column({ type: 'uuid', nullable: true })
@@ -35,7 +35,7 @@ export class Invoice {
   @Column({ type: 'decimal', precision: 12, scale: 2, nullable: true })
   balanceDue: number; // totalAmount - paidAmount
 
-  @Column({ enum: ['draft', 'issued', 'partially_paid', 'fully_paid', 'overdue', 'cancelled'], default: 'draft' })
+  @Column({ type: 'varchar', length: 20, enum: ['draft', 'issued', 'partially_paid', 'fully_paid', 'overdue', 'cancelled'], default: 'draft' })
   status: string;
 
   @Column({ type: 'date' })

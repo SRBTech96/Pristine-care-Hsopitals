@@ -40,3 +40,8 @@ export * from './medication-schedule.entity';
 export * from './medication-administration.entity';
 export * from './vitals-record.entity';
 export * from './emergency-event.entity';
+export * from './NurseAlert';
+export * from './NurseTask';
+export * from './NursingNote';
+export * from './NurseQualityMetric';
+export * from './ShiftHandover';

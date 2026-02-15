@@ -14,10 +14,10 @@ export class DataAccessLog {
   @Column({ name: 'access_type', type: 'varchar', length: 50 })
   accessType: string;
 
-  @Column({ name: 'resource_type', length: 100 })
+  @Column({ name: 'resource_type', type: 'varchar', length: 100 })
   resourceType: string;
 
-  @Column({ name: 'resource_id', length: 100, nullable: true })
+  @Column({ name: 'resource_id', type: 'varchar', length: 100, nullable: true })
   resourceId?: string;
 
   @Column({ type: 'text', nullable: true })
@@ -26,7 +26,7 @@ export class DataAccessLog {
   @Column({ name: 'ip_address', type: 'inet', nullable: true })
   ipAddress?: string;
 
-  @Column({ name: 'success', default: true })
+  @Column({ name: 'success', type: 'boolean', default: true })
   success: boolean;
 
   @Column({ name: 'result_code', type: 'varchar', length: 50, nullable: true })

@@ -8,41 +8,41 @@ export class BedStatusHistory {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'bed_id' })
+  @Column({ name: 'bed_id', type: 'uuid' })
   bedId: string;
 
   @ManyToOne(() => Bed, (bed) => bed.statusHistory)
   @JoinColumn({ name: 'bed_id' })
   bed: Bed;
 
-  @Column()
+  @Column({ type: 'varchar', length: 50 })
   previousStatus: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 50 })
   newStatus: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   previousPatientId: string;
 
   @ManyToOne(() => Patient, { nullable: true })
   @JoinColumn({ name: 'previous_patient_id' })
   previousPatient: Patient | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   newPatientId: string;
 
   @ManyToOne(() => Patient, { nullable: true })
   @JoinColumn({ name: 'new_patient_id' })
   newPatient: Patient | null;
 
-  @Column()
+  @Column({ type: 'uuid' })
   changedById: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'changed_by' })
   changedBy: User;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   changeReason: string;
 
   @CreateDateColumn()

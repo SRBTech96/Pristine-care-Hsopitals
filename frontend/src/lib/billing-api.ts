@@ -14,8 +14,7 @@ import {
   ApiResponse,
 } from "@/types";
 import { apiCache } from "./api-cache";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+import { CORE_API_BASE_URL } from "./api-config";
 
 class BillingApiClient {
   private client: AxiosInstance;
@@ -23,7 +22,7 @@ class BillingApiClient {
 
   constructor() {
     this.client = axios.create({
-      baseURL: API_BASE_URL,
+      baseURL: CORE_API_BASE_URL,
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",
@@ -37,8 +36,6 @@ class BillingApiClient {
    * Search patients by name or ID
    */
   async searchPatients(query: string): Promise<Patient[]> {
-    const cacheKey = `patients:search:${query.toLowerCase()}`;
-
     try {
       const response = await this.client.get<ApiResponse<Patient[]>>("/patients", {
         params: { search: query },
@@ -54,8 +51,6 @@ class BillingApiClient {
    * Get patient by ID
    */
   async getPatient(patientId: string): Promise<Patient | null> {
-    const cacheKey = `patient:${patientId}`;
-
     try {
       const response = await this.client.get<ApiResponse<Patient>>(
         `/patients/${patientId}`
@@ -82,7 +77,7 @@ class BillingApiClient {
   }): Promise<Invoice[]> {
     try {
       const response = await this.client.get<ApiResponse<Invoice[]>>(
-        "/invoices",
+        "/billing/invoices",
         { params: filters }
       );
       return response.data.data || [];
@@ -98,7 +93,7 @@ class BillingApiClient {
   async getInvoice(invoiceId: string): Promise<Invoice | null> {
     try {
       const response = await this.client.get<ApiResponse<Invoice>>(
-        `/invoices/${invoiceId}`
+        `/billing/invoices/${invoiceId}`
       );
       return response.data.data || null;
     } catch (error) {
@@ -131,7 +126,7 @@ class BillingApiClient {
       const total = subtotal + taxAmount - (data.discountAmount || 0);
 
       const response = await this.client.post<ApiResponse<Invoice>>(
-        "/invoices",
+        "/billing/invoices",
         {
           patientId: data.patientId,
           lineItems: data.lineItems,
@@ -165,7 +160,7 @@ class BillingApiClient {
   ): Promise<Invoice | null> {
     try {
       const response = await this.client.put<ApiResponse<Invoice>>(
-        `/invoices/${invoiceId}`,
+        `/billing/invoices/${invoiceId}`,
         data
       );
 
@@ -184,7 +179,7 @@ class BillingApiClient {
    */
   async deleteInvoice(invoiceId: string): Promise<boolean> {
     try {
-      await this.client.delete(`/invoices/${invoiceId}`);
+      await this.client.delete(`/billing/invoices/${invoiceId}`);
       this.invalidateInvoiceCache();
       return true;
     } catch (error) {
@@ -206,7 +201,7 @@ class BillingApiClient {
       const total = item.quantity * item.unitPrice * (1 + item.taxRate / 100);
 
       const response = await this.client.post<ApiResponse<InvoiceLineItem>>(
-        `/invoices/${invoiceId}/line-items`,
+        `/billing/invoices/${invoiceId}/line-items`,
         { ...item, total }
       );
 
@@ -228,7 +223,7 @@ class BillingApiClient {
   ): Promise<InvoiceLineItem | null> {
     try {
       const response = await this.client.put<ApiResponse<InvoiceLineItem>>(
-        `/invoices/${invoiceId}/line-items/${itemId}`,
+        `/billing/invoices/${invoiceId}/line-items/${itemId}`,
         data
       );
 
@@ -246,7 +241,7 @@ class BillingApiClient {
   async deleteLineItem(invoiceId: string, itemId: string): Promise<boolean> {
     try {
       await this.client.delete(
-        `/invoices/${invoiceId}/line-items/${itemId}`
+        `/billing/invoices/${invoiceId}/line-items/${itemId}`
       );
 
       this.invalidateInvoiceCache();
@@ -270,7 +265,7 @@ class BillingApiClient {
       }
 
       const response = await this.client.post<ApiResponse<Payment>>(
-        "/payments",
+        "/billing/payments",
         data
       );
 
@@ -291,7 +286,7 @@ class BillingApiClient {
   async getPayments(invoiceId: string): Promise<Payment[]> {
     try {
       const response = await this.client.get<ApiResponse<Payment[]>>(
-        `/invoices/${invoiceId}/payments`
+        `/billing/invoices/${invoiceId}/payments`
       );
       return response.data.data || [];
     } catch (error) {
@@ -305,7 +300,7 @@ class BillingApiClient {
    */
   async deletePayment(paymentId: string): Promise<boolean> {
     try {
-      await this.client.delete(`/payments/${paymentId}`);
+      await this.client.delete(`/billing/payments/${paymentId}`);
       this.invalidateInvoiceCache();
       return true;
     } catch (error) {

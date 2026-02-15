@@ -104,7 +104,7 @@ export const ContactForm: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold text-green-900">Thank you!</h3>
             <p className="text-green-700 mt-1">
-              We've received your message and will get back to you soon.
+              We&apos;ve received your message and will get back to you soon.
             </p>
           </div>
         </div>
@@ -233,7 +233,7 @@ export const ContactForm: React.FC = () => {
       </button>
 
       <p className="text-sm text-gray-600 text-center">
-        We'll get back to you within 24 hours during business hours.
+        We&apos;ll get back to you within 24 hours during business hours.
       </p>
     </form>
   );

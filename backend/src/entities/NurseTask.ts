@@ -88,7 +88,7 @@ export class NurseTask {
   @Column({ type: 'text', nullable: true })
   completionNotes?: string;
 
-  @Column({ type: 'simple-json', nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, any>; // Additional task-specific data
 
   @CreateDateColumn()

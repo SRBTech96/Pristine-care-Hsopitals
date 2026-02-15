@@ -6,19 +6,19 @@ export class RoomCategory {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 100 })
   name: string; // ICU, NICU, General, Private, Deluxe
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', length: 20, unique: true })
   code: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ default: 1 })
+  @Column({ type: 'int', default: 1 })
   capacity: number; // beds per room
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
   @CreateDateColumn()

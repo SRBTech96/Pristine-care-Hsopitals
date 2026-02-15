@@ -13,21 +13,21 @@ export class InpatientAdmission {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   patientId!: string;
 
   @ManyToOne(() => Patient)
   @JoinColumn({ name: 'patient_id' })
   patient!: Patient;
 
-  @Column()
+  @Column({ type: 'uuid' })
   bedId!: string;
 
   @ManyToOne(() => Bed)
   @JoinColumn({ name: 'bed_id' })
   bed!: Bed;
 
-  @Column()
+  @Column({ type: 'uuid' })
   wardId!: string;
 
   @ManyToOne(() => Ward)
@@ -37,35 +37,35 @@ export class InpatientAdmission {
   @CreateDateColumn()
   admissionDate!: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   dischargeDate: Date | null = null;
 
-  @Column()
+  @Column({ type: 'varchar', length: 20 })
   admissionType!: string; // emergency, scheduled, transfer
 
-  @Column()
+  @Column({ type: 'uuid' })
   attendingDoctorId!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'attending_doctor_id' })
   attendingDoctor!: User;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   chiefComplaint: string | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   admissionNotes: string | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   dischargeSummary: string | null = null;
 
-  @Column({ default: 'active' })
+  @Column({ type: 'varchar', length: 20, default: 'active' })
   status!: string; // active, discharged, transferred, deceased
 
-  @Column({ default: false })
+  @Column({ type: 'boolean', default: false })
   isIcu!: boolean;
 
-  @Column({ default: false })
+  @Column({ type: 'boolean', default: false })
   isNicu!: boolean;
 
   @CreateDateColumn()

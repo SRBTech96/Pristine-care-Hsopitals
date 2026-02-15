@@ -239,7 +239,7 @@ export const NurseTaskQueueComponent: React.FC<{
                         className="flex items-start justify-between cursor-pointer"
                         onClick={() =>
                           setExpandedTask(
-                            expandedTask === task.id ? null : task.id
+                            expandedTask === task.id ? null : task.id ?? null
                           )
                         }
                       >
@@ -325,7 +325,9 @@ export const NurseTaskQueueComponent: React.FC<{
                   <div
                     className="flex items-start justify-between cursor-pointer"
                     onClick={() =>
-                      setExpandedTask(expandedTask === task.id ? null : task.id)
+                      setExpandedTask(
+                        expandedTask === task.id ? null : task.id ?? null
+                      )
                     }
                   >
                     <div className="flex items-start gap-3 flex-1">

@@ -54,7 +54,7 @@ import {
 
 @ApiTags('Nurse Station')
 @ApiBearerAuth()
-@Controller('api/nurse-station')
+@Controller('nurse-station')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class NurseStationController {

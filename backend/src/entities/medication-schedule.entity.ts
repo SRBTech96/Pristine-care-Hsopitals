@@ -9,60 +9,60 @@ export class MedicationSchedule {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   doctorOrderId: string;
 
   @ManyToOne(() => DoctorOrder, (order) => order.medicationSchedules)
   @JoinColumn({ name: 'doctor_order_id' })
   doctorOrder: DoctorOrder;
 
-  @Column()
+  @Column({ type: 'uuid' })
   inpatientAdmissionId: string;
 
   @ManyToOne(() => InpatientAdmission, (admission) => admission.medicationSchedules)
   @JoinColumn({ name: 'inpatient_admission_id' })
   admission: InpatientAdmission;
 
-  @Column()
+  @Column({ type: 'varchar', length: 200 })
   medicationName: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 100 })
   dosage: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 20 })
   unit: string; // mg, ml, units, tablets, etc.
 
-  @Column()
+  @Column({ type: 'varchar', length: 50 })
   frequency: string; // once daily, twice daily, every 6 hours, as needed, etc.
 
-  @Column()
+  @Column({ type: 'varchar', length: 50 })
   route: string; // oral, IV, IM, SC, transdermal, topical, inhalation
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   startDate: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   endDate: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   durationDays: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   specialInstructions: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   contraindications: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   allergiesToCheck: string;
 
-  @Column({ default: false })
+  @Column({ type: 'boolean', default: false })
   requiresMonitoring: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   monitoringParameters: string; // e.g., Blood Pressure, Heart Rate, etc.
 
-  @Column()
+  @Column({ type: 'uuid' })
   prescribingDoctorId: string;
 
   @ManyToOne(() => User)
@@ -72,7 +72,7 @@ export class MedicationSchedule {
   @CreateDateColumn()
   prescribedAt: Date;
 
-  @Column({ default: 'active' })
+  @Column({ type: 'varchar', length: 20, default: 'active' })
   status: string; // active, completed, cancelled, paused
 
   @CreateDateColumn()

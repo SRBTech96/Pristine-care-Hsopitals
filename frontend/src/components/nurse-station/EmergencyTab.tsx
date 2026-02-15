@@ -49,7 +49,7 @@ export default function EmergencyTab({ admission, userRole }: EmergencyTabProps)
         'reported'
       );
       const patientEvents = response.data.filter(
-        (e) => e.patientId === admission.patientId
+        (e: any) => e.patientId === admission.patientId
       );
       setEvents(patientEvents || []);
     } catch (err: any) {

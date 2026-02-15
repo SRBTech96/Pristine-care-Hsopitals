@@ -8,77 +8,77 @@ export class EmergencyEvent {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   inpatientAdmissionId: string;
 
   @ManyToOne(() => InpatientAdmission, (admission) => admission.emergencyEvents, { nullable: true })
   @JoinColumn({ name: 'inpatient_admission_id' })
   admission: InpatientAdmission | null;
 
-  @Column()
+  @Column({ type: 'uuid' })
   patientId: string;
 
   @ManyToOne(() => Patient)
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 
-  @Column()
+  @Column({ type: 'uuid' })
   reportedById: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'reported_by_id' })
   reportedBy: User; // Staff Nurse
 
-  @Column()
+  @Column({ type: 'varchar', length: 50 })
   eventType: string; // cardiac arrest, respiratory distress, seizure, anaphylaxis, severe bleeding, code blue, etc.
 
-  @Column()
+  @Column({ type: 'varchar', length: 20 })
   severity: string; // critical, high, medium, low
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   location: string; // Ward/Bed where event occurred
 
-  @Column()
+  @Column({ type: 'text' })
   description: string;
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   timeOfEvent: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   responseStartTime: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   responseEndTime: Date;
 
   @Column({ type: 'jsonb', nullable: true })
   doctorsNotifiedIds: string[]; // JSON array of doctor IDs notified
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   notifiedAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   actionsTaken: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   outcome: string; // patient_stabilized, transferred_to_icu, clinical_death, etc.
 
-  @Column({ default: 'reported' })
+  @Column({ type: 'varchar', length: 20, default: 'reported' })
   status: string; // reported, acknowledged, in_progress, resolved, escalated
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   resolvingDoctorId: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'resolving_doctor_id' })
   resolvingDoctor: User | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   resolvedAt: Date;
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   followUpRequired: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   followUpNotes: string;
 
   @CreateDateColumn()

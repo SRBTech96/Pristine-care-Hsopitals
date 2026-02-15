@@ -1,8 +1,7 @@
-import type { NextConfig } from "next";
-
-const config: NextConfig = {
+/** @type {import('next').NextConfig} */
+const config = {
   reactStrictMode: true,
-  
+
   // Image optimization for production
   images: {
     remotePatterns: [

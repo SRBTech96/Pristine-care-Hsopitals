@@ -62,11 +62,23 @@ export interface InpatientAdmission {
   chiefComplaint: string;
   admissionNotes: string | null;
   dischargeSummary: string | null;
-  status: 'active' | 'discharged' | 'transferred' | 'deceased';
+  status: 'active' | 'discharged' | 'transferred' | 'deceased' | 'critical' | 'stable' | 'ready_for_discharge' | 'in_treatment';
   isIcu: boolean;
   isNicu: boolean;
   createdAt: string;
   updatedAt: string;
+  // Denormalized / computed fields (may come from API joins)
+  patientName?: string;
+  patientAge?: number;
+  patientGender?: string;
+  dateOfBirth?: string;
+  admissionDateTime?: string;
+  primaryDiagnosis?: string;
+  medicalHistory?: string;
+  allergies?: string;
+  currentMedications?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
   // Populated fields
   patient?: Patient;
   bed?: Bed;
@@ -151,7 +163,7 @@ export interface MedicationAdministration {
   scheduledTime: string;
   administeredTime: string | null;
   administeredById: string | null;
-  status: 'pending' | 'administered' | 'refused' | 'held' | 'delayed' | 'not_given';
+  status: 'pending' | 'administered' | 'refused' | 'held' | 'delayed' | 'not_given' | 'withheld';
   reasonIfNotGiven: string | null;
   actualDosage: number | null;
   routeUsed: string | null;
@@ -288,4 +300,52 @@ export interface MedicationStatus {
   administeredBy?: string;
   administeredAt?: string;
   reason?: string;
+}
+
+export interface NurseHandover {
+  id: string;
+  wardId: string;
+  patientId?: string;
+  inpatientAdmissionId?: string;
+  nurseId?: string;
+  outgoingNurseId?: string;
+  incomingNurseId?: string;
+  status: 'pending' | 'acknowledged' | 'reviewed';
+  handoverTemplate?: string;
+  handoverDateTime?: string;
+  keyPoints?: string;
+  clinicalUpdate?: string;
+  clinicalNotes?: string;
+  tasksPending?: string[];
+  riskAlerts?: string;
+  familyReferrals?: string;
+  bedLocation?: string;
+  pendingMedications?: string;
+  criticalPatients?: string;
+  pendingLabs?: string;
+  patientIds?: string[];
+  acknowledgedAt?: string;
+  reviewedByNurseId?: string;
+  reviewedAt?: string;
+  reviewNotes?: string;
+  nurse?: { firstName: string; lastName: string };
+  toShift?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SupplyRequest {
+  id: string;
+  wardId: string;
+  itemName: string;
+  category: string;
+  quantity: number;
+  urgency: 'low' | 'medium' | 'high' | 'critical';
+  status: 'pending' | 'approved' | 'fulfilled' | 'rejected' | 'cancelled';
+  requestDateTime: string;
+  fulfilledDateTime?: string;
+  notes?: string;
+  requestedById?: string;
+  createdAt: string;
+  updatedAt: string;
 }

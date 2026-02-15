@@ -1,4 +1,6 @@
 // backend/src/services/NurseTaskService.ts
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NurseTask, TaskType, TaskPriority, TaskStatus } from '../entities/NurseTask';
 
@@ -26,8 +28,9 @@ export interface AssignTaskDTO {
   assignedToNurseId: string;
 }
 
+@Injectable()
 export class NurseTaskService {
-  constructor(private taskRepository: Repository<NurseTask>) {}
+  constructor(@InjectRepository(NurseTask) private taskRepository: Repository<NurseTask>) {}
 
   private logAudit(message: string, userId: string): string {
     return JSON.stringify({

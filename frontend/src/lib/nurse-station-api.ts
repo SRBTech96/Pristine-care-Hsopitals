@@ -1,13 +1,12 @@
 import axios, { AxiosInstance } from 'axios';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+import { CORE_API_BASE_URL } from './api-config';
 
 class NurseStationAPI {
   private api: AxiosInstance;
 
   constructor() {
     this.api = axios.create({
-      baseURL: `${API_BASE_URL}/api/nurse-station`,
+      baseURL: `${CORE_API_BASE_URL}/nurse-station`,
       headers: {
         'Content-Type': 'application/json',
       },

@@ -175,7 +175,7 @@ export const NursingNotesComponent: React.FC<{
             <div className="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Subjective (Patient's report)
+                  Subjective (Patient&apos;s report)
                 </label>
                 <textarea
                   value={soapData.subjective || ''}

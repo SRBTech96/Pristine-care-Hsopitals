@@ -17,7 +17,7 @@ export class Doctor {
   @Column({ name: 'department_id', type: 'uuid' })
   departmentId: string;
 
-  @Column({ type: 'simple-array' })
+  @Column({ type: 'text' })
   qualifications: string;
 
   @Column({ name: 'years_of_experience', type: 'int' })
@@ -26,7 +26,7 @@ export class Doctor {
   @Column({ name: 'consultation_fee', type: 'decimal', precision: 10, scale: 2, nullable: true })
   consultationFee?: number;
 
-  @Column({ name: 'is_available', default: true })
+  @Column({ name: 'is_available', type: 'boolean', default: true })
   isAvailable: boolean;
 
   @Column({ name: 'availability_schedule', type: 'jsonb', nullable: true })

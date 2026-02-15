@@ -1,4 +1,5 @@
 import axios from "axios";
+import { CORE_API_BASE_URL } from "./api-config";
 
 export interface RevenueByEntity {
   key: string;
@@ -15,7 +16,7 @@ class FinanceApiClient {
 
   constructor() {
     this.client = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
+      baseURL: CORE_API_BASE_URL,
       timeout: 15000,
       headers: { "Content-Type": "application/json" },
     });

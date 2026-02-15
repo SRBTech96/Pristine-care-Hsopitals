@@ -1,4 +1,6 @@
 // backend/src/services/NurseAlertService.ts
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NurseAlert, AlertType, AlertSeverity, AlertStatus } from '../entities/NurseAlert';
 
@@ -27,8 +29,9 @@ export interface ResolveAlertDTO {
   resolutionNotes: string;
 }
 
+@Injectable()
 export class NurseAlertService {
-  constructor(private alertRepository: Repository<NurseAlert>) {}
+  constructor(@InjectRepository(NurseAlert) private alertRepository: Repository<NurseAlert>) {}
 
   private logAudit(message: string, userId: string): string {
     return JSON.stringify({

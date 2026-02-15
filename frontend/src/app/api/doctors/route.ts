@@ -94,8 +94,6 @@ export async function GET(request: NextRequest) {
         // Cache for 10 minutes in browser, keep stale for 1 hour
         "Cache-Control":
           "public, s-maxage=600, stale-while-revalidate=3600",
-        // Enable compression
-        "Content-Encoding": "gzip",
       },
     });
   } catch (error) {

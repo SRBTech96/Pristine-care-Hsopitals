@@ -7,36 +7,36 @@ export class VitalsRecord {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   inpatientAdmissionId!: string;
 
   @ManyToOne(() => InpatientAdmission, (admission) => admission.vitalsRecords)
   @JoinColumn({ name: 'inpatient_admission_id' })
   admission!: InpatientAdmission;
 
-  @Column()
+  @Column({ type: 'uuid' })
   recordedById!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'recorded_by_id' })
   recordedBy!: User; // Staff Nurse
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   recordedAt!: Date;
 
   @Column({ type: 'numeric', precision: 4, scale: 1, nullable: true })
   temperatureCelsius!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   heartRateBpm!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   systolicBp!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   diastolicBp!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   respiratoryRateRpm!: number;
 
   @Column({ type: 'numeric', precision: 3, scale: 1, nullable: true })
@@ -51,35 +51,35 @@ export class VitalsRecord {
   @Column({ type: 'numeric', precision: 5, scale: 1, nullable: true })
   heightCm!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   painScore!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   gcsScore!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   consciousnessLevel!: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   urineOutputMl!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   bowelMovementStatus!: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   notes!: string;
 
-  @Column({ default: false })
+  @Column({ type: 'boolean', default: false })
   abnormalFindings!: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   reportedToDoctorId!: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'reported_to_doctor_id' })
   reportedToDoctor!: User | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   reportedAt!: Date;
 
   @CreateDateColumn()

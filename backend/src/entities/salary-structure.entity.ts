@@ -29,7 +29,7 @@ export class SalaryStructure {
   @Column({ name: 'gross_salary', type: 'decimal', precision: 12, scale: 2, nullable: true })
   grossSalary?: number;
 
-  @Column({ name: 'is_active', default: true })
+  @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive!: boolean;
 
   @Column({ type: 'text', nullable: true })

@@ -86,7 +86,7 @@ export const NurseAlertComponent: React.FC<{
   const handleAcknowledgeAlert = (alert: NurseAlert) => {
     console.log('Acknowledging alert:', alert.id, acknowledgedNotes);
     // API call would go here
-    const updatedAlerts = alerts.map((a) =>
+    const updatedAlerts: NurseAlert[] = alerts.map((a) =>
       a.id === alert.id
         ? {
             ...a,
@@ -103,7 +103,7 @@ export const NurseAlertComponent: React.FC<{
 
   const handleEscalateAlert = (alert: NurseAlert) => {
     if (!escalationReason.trim()) {
-      alert('Please provide escalation reason');
+      window.alert('Please provide escalation reason');
       return;
     }
 
@@ -113,7 +113,7 @@ export const NurseAlertComponent: React.FC<{
       escalationReason
     );
     // API call would go here
-    const updatedAlerts = alerts.map((a) =>
+    const updatedAlerts: NurseAlert[] = alerts.map((a) =>
       a.id === alert.id
         ? {
             ...a,

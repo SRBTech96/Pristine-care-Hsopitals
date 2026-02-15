@@ -25,7 +25,7 @@ export function generateMetadata(meta: PageMetadata, baseUrl: string = "https://
     description: meta.description,
     keywords: meta.keywords?.join(", "),
     authors:
-      meta.author || "Pristine Hospital & Research Centre Pvt Ltd",
+      [{ name: meta.author || "Pristine Hospital & Research Centre Pvt Ltd" }],
     robots: {
       index: true,
       follow: true,

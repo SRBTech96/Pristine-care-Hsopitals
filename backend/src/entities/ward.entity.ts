@@ -7,25 +7,25 @@ export class Ward {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 100 })
   name!: string; // ICU, General Ward, NICU, OPD
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', length: 20, unique: true })
   code!: string; // ICU-01, GW-01, NICU-01
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   floorNumber!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   building!: string;
 
-  @Column({ default: 0 })
+  @Column({ type: 'int', default: 0 })
   totalBeds!: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   description!: string;
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
   @CreateDateColumn()

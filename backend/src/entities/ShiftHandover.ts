@@ -50,7 +50,7 @@ export class ShiftHandover {
   @Column({ type: 'text' })
   clinicalNotes!: string;
 
-  @Column({ type: 'simple-array', nullable: true })
+  @Column({ type: 'text', nullable: true })
   patientIds!: string[];
 
   @Column({ type: 'timestamp', nullable: true })

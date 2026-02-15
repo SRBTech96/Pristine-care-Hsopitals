@@ -19,17 +19,19 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   // Seed sample data on startup
-  const doctorSeederService = app.get('DoctorSeederService');
-  if (doctorSeederService) {
-    try {
+  try {
+    const { DoctorSeederService } = await import('./doctors/doctor-seeder.service');
+    const doctorSeederService = app.get(DoctorSeederService, { strict: false });
+    if (doctorSeederService) {
       await doctorSeederService.seedSampleDoctors();
-    } catch (error) {
-      console.error('Failed to seed sample doctors:', error);
     }
+  } catch (error) {
+    console.warn('Doctor seeder not available or failed:', (error as Error).message);
   }
 
-  await app.listen(process.env.PORT ? Number(process.env.PORT) : 3000);
-  console.log(`Server listening on ${await app.getUrl()}`);
+  const port = process.env.PORT ? Number(process.env.PORT) : 3001;
+  await app.listen(port, '0.0.0.0');
+  console.log(`Server listening on port ${port}`);
 }
 
 bootstrap();

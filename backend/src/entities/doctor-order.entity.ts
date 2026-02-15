@@ -8,14 +8,14 @@ export class DoctorOrder {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   inpatientAdmissionId: string;
 
   @ManyToOne(() => InpatientAdmission, (admission) => admission.doctorOrders)
   @JoinColumn({ name: 'inpatient_admission_id' })
   admission: InpatientAdmission;
 
-  @Column()
+  @Column({ type: 'uuid' })
   doctorId: string;
 
   @ManyToOne(() => User)
@@ -25,51 +25,51 @@ export class DoctorOrder {
   @CreateDateColumn()
   orderDate: Date;
 
-  @Column()
+  @Column({ type: 'varchar', length: 50 })
   orderType: string; // medication, procedure, investigation, diet, activity, observation
 
-  @Column()
+  @Column({ type: 'text' })
   description: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   instructions: string;
 
-  @Column({ default: 'normal' })
+  @Column({ type: 'varchar', length: 20, default: 'normal' })
   priority: string; // routine, urgent, stat
 
-  @Column({ default: 'active' })
+  @Column({ type: 'varchar', length: 20, default: 'active' })
   status: string; // active, completed, cancelled, on_hold
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   scheduledDate: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   expectedCompletionDate: Date;
 
-  @Column({ default: false })
+  @Column({ type: 'boolean', default: false })
   approvalsRequired: boolean;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   approvedById: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'approved_by_id' })
   approvedBy: User | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   approvedAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   cancelledById: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'cancelled_by_id' })
   cancelledBy: User | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   cancelledAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   cancellationReason: string;
 
   @CreateDateColumn()

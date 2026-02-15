@@ -21,7 +21,7 @@ export default function ContactPage() {
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
           <p className="text-lg md:text-xl text-pristine-100 max-w-3xl">
             Get in touch with us for appointments, inquiries, or emergency assistance.
-            We're here to help you.
+            We&apos;re here to help you.
           </p>
         </div>
       </section>

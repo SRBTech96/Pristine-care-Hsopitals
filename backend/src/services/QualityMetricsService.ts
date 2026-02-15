@@ -1,4 +1,6 @@
 // backend/src/services/QualityMetricsService.ts
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NurseQualityMetric } from '../entities/NurseQualityMetric';
 
@@ -9,8 +11,9 @@ export interface MetricsQueryDTO {
   endDate: Date;
 }
 
+@Injectable()
 export class QualityMetricsService {
-  constructor(private metricsRepository: Repository<NurseQualityMetric>) {}
+  constructor(@InjectRepository(NurseQualityMetric) private metricsRepository: Repository<NurseQualityMetric>) {}
 
   async createOrUpdateMetrics(
     wardId: string,

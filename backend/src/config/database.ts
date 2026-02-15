@@ -35,7 +35,7 @@ export function getDatabaseConfig(): TypeOrmModuleOptions {
       username: parsed.username,
       password: parsed.password,
       database: parsed.database,
-      ssl: parsed.ssl ? { rejectUnauthorized: false } : false,
+      ssl: { rejectUnauthorized: false },
       synchronize: false,
       logging: process.env.NODE_ENV === 'development',
       retryAttempts: 10,

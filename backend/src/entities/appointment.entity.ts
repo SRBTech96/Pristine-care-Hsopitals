@@ -26,7 +26,7 @@ export class Appointment {
   @Column({ type: 'varchar', length: 50, default: 'scheduled' })
   status: string;
 
-  @Column({ name: 'room_number', length: 50, nullable: true })
+  @Column({ name: 'room_number', type: 'varchar', length: 50, nullable: true })
   roomNumber?: string;
 
   @Column({ name: 'reason_for_visit', type: 'text', nullable: true })

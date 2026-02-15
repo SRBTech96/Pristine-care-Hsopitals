@@ -4,8 +4,7 @@
  */
 
 import { Doctor, ApiResponse } from "@/types";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+import { CORE_API_BASE_URL } from "./api-config";
 
 /**
  * Fetch data on the server with error handling
@@ -16,7 +15,7 @@ async function fetchFromBackend<T>(
   options?: RequestInit
 ): Promise<T | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await fetch(`${CORE_API_BASE_URL}${endpoint}`, {
       ...options,
       // These headers are important for server-side fetching
       headers: {

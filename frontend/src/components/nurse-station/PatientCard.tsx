@@ -84,7 +84,7 @@ export default function PatientCard({
             {/* Patient Name and ID */}
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
-                {admission.patientName.charAt(0)}
+                {(admission.patientName || 'P').charAt(0)}
               </div>
               <div>
                 <p className="font-bold text-lg text-gray-900">
@@ -117,7 +117,7 @@ export default function PatientCard({
                 <p className="text-gray-900">
                   {Math.floor(
                     (Date.now() -
-                      new Date(admission.admissionDateTime).getTime()) /
+                      new Date(admission.admissionDateTime || admission.admissionDate).getTime()) /
                       (1000 * 60 * 60 * 24)
                   )}{' '}
                   days
@@ -201,7 +201,7 @@ export default function PatientCard({
                       <p className="text-gray-600 font-semibold">Admission</p>
                       <p className="text-gray-900">
                         {new Date(
-                          admission.admissionDateTime
+                          admission.admissionDateTime || admission.admissionDate
                         ).toLocaleDateString()}
                       </p>
                     </div>

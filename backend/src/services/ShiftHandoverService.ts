@@ -1,4 +1,6 @@
 // backend/src/services/ShiftHandoverService.ts
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ShiftHandover, HandoverStatus } from '../entities/ShiftHandover';
 import { User } from '../entities/user.entity';
@@ -25,8 +27,9 @@ export interface ReviewHandoverDTO {
   reviewNotes: string;
 }
 
+@Injectable()
 export class ShiftHandoverService {
-  constructor(private handoverRepository: Repository<ShiftHandover>) {}
+  constructor(@InjectRepository(ShiftHandover) private handoverRepository: Repository<ShiftHandover>) {}
 
   private logAudit(message: string, userId: string): string {
     return JSON.stringify({

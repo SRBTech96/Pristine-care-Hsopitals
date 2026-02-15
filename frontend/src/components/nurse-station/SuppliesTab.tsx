@@ -52,7 +52,7 @@ export default function SuppliesTab({
       setLoading(true);
       const response = await nurseStationAPI.listSupplyRequests(wardId);
       const patientRequests = response.data.filter(
-        (r) => r.patientId === admission.patientId
+        (r: any) => r.patientId === admission.patientId
       );
       setRequests(patientRequests || []);
     } catch (err: any) {

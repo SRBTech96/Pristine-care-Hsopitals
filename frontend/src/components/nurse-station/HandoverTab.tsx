@@ -41,7 +41,7 @@ export default function HandoverTab({
     template: '',
     keyPoints: '' as string,
     clinicalUpdate: '',
-    tasksPending: [],
+    tasksPending: [] as string[],
     riskAlerts: '',
     familyReferrals: '',
   });
@@ -57,7 +57,7 @@ export default function HandoverTab({
       setLoading(true);
       const response = await nurseStationAPI.listNurseHandovers(wardId);
       const patientHandovers = response.data.filter(
-        (h) => h.patientId === admission.patientId
+        (h: any) => h.patientId === admission.patientId
       );
       setHandovers(patientHandovers || []);
     } catch (err: any) {
@@ -116,7 +116,7 @@ export default function HandoverTab({
         template: '',
         keyPoints: '',
         clinicalUpdate: '',
-        tasksPending: [],
+        tasksPending: [] as string[],
         riskAlerts: '',
         familyReferrals: '',
       });
@@ -344,7 +344,7 @@ export default function HandoverTab({
                     {handover.handoverTemplate}
                   </p>
                   <p className="text-xs text-gray-600">
-                    {new Date(handover.handoverDateTime).toLocaleString()}
+                    {new Date(handover.handoverDateTime || handover.createdAt).toLocaleString()}
                   </p>
                 </div>
                 <div className="flex items-center gap-1">

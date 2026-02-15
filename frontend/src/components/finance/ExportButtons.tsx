@@ -27,7 +27,7 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({ report, data, filt
         });
         setTimeout(() => setStatus(null), 4000);
       } else {
-        setStatus({ type: "error", message: result.error || "PDF export failed" });
+        setStatus({ type: "error", message: ('error' in result ? result.error : undefined) || "PDF export failed" });
       }
     } catch (err) {
       setStatus({ type: "error", message: String(err) });
@@ -48,7 +48,7 @@ export const ExportButtons: React.FC<ExportButtonsProps> = ({ report, data, filt
         });
         setTimeout(() => setStatus(null), 4000);
       } else {
-        setStatus({ type: "error", message: result.error || "Excel export failed" });
+        setStatus({ type: "error", message: ('error' in result ? result.error : undefined) || "Excel export failed" });
       }
     } catch (err) {
       setStatus({ type: "error", message: String(err) });

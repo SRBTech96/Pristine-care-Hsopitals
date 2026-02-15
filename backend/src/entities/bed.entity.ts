@@ -12,13 +12,13 @@ export class Bed {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
   bedCode!: string; // ICU-01-A, NICU-02-B, GW-03-C
 
-  @Column()
+  @Column({ type: 'uuid' })
   wardId!: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   roomCategoryId!: string;
 
   @ManyToOne(() => Ward, (ward) => ward.beds)
@@ -29,42 +29,42 @@ export class Bed {
   @JoinColumn({ name: 'room_category_id' })
   roomCategory!: RoomCategory;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: true })
   roomNumber!: string; // Physical room number if applicable
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   floorNumber!: number; // Inherited from ward
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 10, nullable: true })
   bedPosition!: string; // A, B, C, D (for multi-bed rooms)
 
-  @Column({ default: 'vacant' })
+  @Column({ type: 'varchar', length: 20, default: 'vacant' })
   status!: BedStatus; // vacant, occupied, maintenance, reserved
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   currentPatientId!: string | null;
 
   @ManyToOne(() => Patient, { nullable: true })
   @JoinColumn({ name: 'current_patient_id' })
   currentPatient!: Patient | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   assignedToUserId!: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'assigned_to_user_id' })
   assignedToUser!: User | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   admissionDate!: Date | null; // When patient admitted to bed
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamptz', nullable: true })
   estimatedDischargeDate!: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   specialRequirements!: string; // Oxygen, Dialysis, Ventilator, etc.
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   isActive!: boolean;
 
   @CreateDateColumn()

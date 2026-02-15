@@ -10,6 +10,17 @@ export class DoctorsController {
   constructor(private doctorsService: DoctorsService) {}
 
   /**
+   * GET /api/doctors/department/:departmentId
+   * List all available doctors in a department
+   * Accessible to: PATIENT (booking), ADMIN
+   */
+  @Get('department/:departmentId')
+  @Auditable({ entityType: 'doctors', accessType: 'list', resourceType: 'doctors' })
+  async getDoctorsByDepartment(@Param('departmentId') departmentId: string) {
+    return this.doctorsService.findByDepartment(departmentId);
+  }
+
+  /**
    * GET /api/doctors/:id
    * Get doctor profile by doctor ID
    * Accessible to: PATIENT (to view), DOCTOR (self), ADMIN
@@ -44,16 +55,5 @@ export class DoctorsController {
       return { error: 'Invalid dayOfWeek (0-6)' };
     }
     return this.doctorsService.getAvailableSlotsForDay(id, day);
-  }
-
-  /**
-   * GET /api/doctors/department/:departmentId
-   * List all available doctors in a department
-   * Accessible to: PATIENT (booking), ADMIN
-   */
-  @Get('department/:departmentId')
-  @Auditable({ entityType: 'doctors', accessType: 'list', resourceType: 'doctors' })
-  async getDoctorsByDepartment(@Param('departmentId') departmentId: string) {
-    return this.doctorsService.findByDepartment(departmentId);
   }
 }

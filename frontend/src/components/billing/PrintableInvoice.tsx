@@ -20,6 +20,7 @@ export const PrintableInvoice: React.FC<PrintableInvoiceProps> = ({
   const [printerType, setPrinterType] = useState<PrinterType>("a4");
   const [printStatus, setPrintStatus] = useState<PrintResult | null>(null);
   const [isPrinting, setIsPrinting] = useState(false);
+  const patient = invoice.patient;
 
   const getPrintableHTML = (): string => {
     const patient = invoice.patient;

@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { Doctor, ApiResponse } from "@/types";
 import { apiCache } from "./api-cache";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+import { CORE_API_BASE_URL } from "./api-config";
 
 class ApiClient {
   private client: AxiosInstance;
@@ -15,7 +14,7 @@ class ApiClient {
 
   constructor() {
     this.client = axios.create({
-      baseURL: API_BASE_URL,
+      baseURL: CORE_API_BASE_URL,
       timeout: 8000,
       headers: {
         "Content-Type": "application/json",

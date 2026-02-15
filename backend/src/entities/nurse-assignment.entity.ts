@@ -7,46 +7,46 @@ export class NurseAssignment {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column()
+  @Column({ type: 'uuid' })
   nurseId!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'nurse_id' })
   nurse!: User;
 
-  @Column({ nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   wardId: string | null = null;
 
   @ManyToOne(() => Ward, { nullable: true })
   @JoinColumn({ name: 'ward_id' })
   ward: Ward | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   floorNumber: number | null = null;
 
   @Column({ type: 'jsonb', nullable: true })
   assignedBeds: string[] | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 5, nullable: true })
   shiftStartTime: string | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 5, nullable: true })
   shiftEndTime: string | null = null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'date', nullable: true })
   shiftDate: Date | null = null;
 
-  @Column()
+  @Column({ type: 'uuid' })
   assignedById!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'assigned_by_id' })
   assignedBy!: User; // Head Nurse
 
-  @Column({ default: 'active' })
+  @Column({ type: 'varchar', length: 20, default: 'active' })
   status!: string; // active, completed, cancelled
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   notes: string | null = null;
 
   @CreateDateColumn()

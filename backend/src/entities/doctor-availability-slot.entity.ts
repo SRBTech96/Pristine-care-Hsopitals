@@ -30,7 +30,7 @@ export class DoctorAvailabilitySlot {
   slotDurationMinutes: number;
 
   // Whether this slot is active (can override per slot)
-  @Column({ name: 'is_active', default: true })
+  @Column({ name: 'is_active', type: 'boolean', default: true })
   isActive: boolean;
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })

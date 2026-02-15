@@ -152,13 +152,13 @@ export default function CommunicationTab({
             {admission.attendingDoctor?.firstName || 'Assigned Doctor'}
           </p>
           <p className="text-xs text-gray-600 mt-0.5">
-            {admission.attendingDoctor?.phoneNumber || 'N/A'}
+            {(admission.attendingDoctor as any)?.phoneNumber || (admission.attendingDoctor as any)?.phone || 'N/A'}
           </p>
         </div>
         <div>
           <p className="text-xs text-gray-600 font-semibold">🏥 Ward</p>
           <p className="text-sm font-medium text-gray-900">
-            {ward?.wardName || 'Ward'}
+            {ward?.name || 'Ward'}
           </p>
           <p className="text-xs text-gray-600 mt-0.5">
             Bed {admission.bedId}

@@ -5,7 +5,7 @@ export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
   paymentNumber: string; // Format: PAY-YYYY-MMMM-XXXXX
 
   @Column({ type: 'uuid' })
@@ -17,7 +17,7 @@ export class Payment {
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   amount: number; // Payment amount (can be partial)
 
-  @Column({ enum: ['cash', 'bank_transfer', 'upi', 'card', 'cheque', 'credit_note'], default: 'cash' })
+  @Column({ type: 'varchar', length: 20, enum: ['cash', 'bank_transfer', 'upi', 'card', 'cheque', 'credit_note'], default: 'cash' })
   paymentMethod: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -26,7 +26,7 @@ export class Payment {
   @Column({ type: 'date' })
   paymentDate: Date;
 
-  @Column({ enum: ['pending', 'completed', 'failed', 'refunded'], default: 'pending' })
+  @Column({ type: 'varchar', length: 20, enum: ['pending', 'completed', 'failed', 'refunded'], default: 'pending' })
   status: string;
 
   @Column({ type: 'text', nullable: true })

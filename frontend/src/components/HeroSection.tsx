@@ -20,7 +20,7 @@ export const HeroSection: React.FC = () => {
               Healthcare Excellence at Every Step
             </h1>
             <p className="text-lg text-pristine-100 mb-8">
-              At Pristine Hospital, we're committed to delivering world-class healthcare services with
+              At Pristine Hospital, we&apos;re committed to delivering world-class healthcare services with
               compassion, expertise, and innovation. Our team of experienced medical professionals is here to
               care for you.
             </p>

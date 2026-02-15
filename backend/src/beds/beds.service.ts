@@ -5,7 +5,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, QueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Bed, Ward, RoomCategory, BedStatusHistory, Patient } from '../entities';
 import {
   CreateBedDto,
