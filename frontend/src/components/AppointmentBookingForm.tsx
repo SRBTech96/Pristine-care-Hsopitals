@@ -51,6 +51,11 @@ export const AppointmentBookingForm: React.FC = () => {
   const [doctorId, setDoctorId] = React.useState("");
   const [selectedDate, setSelectedDate] = React.useState("");
   const [availableTimes, setAvailableTimes] = React.useState<string[]>([]);
+  const [weeklySlots, setWeeklySlots] = React.useState<AvailabilitySlot[]>([]);
+  const [calendarMonth, setCalendarMonth] = React.useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
   const [selectedTime, setSelectedTime] = React.useState("");
   const [loadingDoctors, setLoadingDoctors] = React.useState(true);
   const [loadingTimes, setLoadingTimes] = React.useState(false);
@@ -58,7 +63,7 @@ export const AppointmentBookingForm: React.FC = () => {
   const [success, setSuccess] = React.useState<string | null>(null);
   const [nextAvailable, setNextAvailable] = React.useState<{ date: string; time: string } | null>(null);
 
-  const [fullName, setFullName] = React.useState("");
+  const [patientName, setPatientName] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [reasonForVisit, setReasonForVisit] = React.useState("");
@@ -107,6 +112,20 @@ export const AppointmentBookingForm: React.FC = () => {
     setSelectedDate("");
     setSelectedTime("");
     setAvailableTimes([]);
+    setWeeklySlots([]);
+  }, [doctorId]);
+
+  React.useEffect(() => {
+    const loadWeekly = async () => {
+      if (!doctorId) return;
+      try {
+        const availability = await appointmentApi.getDoctorAvailability(doctorId);
+        setWeeklySlots(availability.slots || []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadWeekly();
   }, [doctorId]);
 
   const loadTimes = React.useCallback(async () => {
@@ -124,9 +143,8 @@ export const AppointmentBookingForm: React.FC = () => {
       if (times.length === 0) {
         setAvailableTimes([]);
 
-        const fullAvailability = await appointmentApi.getDoctorAvailability(doctorId);
         const slotMap = new Map<number, string[]>();
-        fullAvailability.slots.forEach((slot) => {
+        weeklySlots.forEach((slot) => {
           const list = slotMap.get(slot.dayOfWeek) || [];
           list.push(...buildSlotsForDay([slot]));
           slotMap.set(slot.dayOfWeek, list);
@@ -157,7 +175,7 @@ export const AppointmentBookingForm: React.FC = () => {
     } finally {
       setLoadingTimes(false);
     }
-  }, [doctorId, selectedDate]);
+  }, [doctorId, selectedDate, weeklySlots]);
 
   React.useEffect(() => {
     loadTimes();
@@ -173,7 +191,7 @@ export const AppointmentBookingForm: React.FC = () => {
       return;
     }
 
-    if (!fullName || !phone || !email) {
+    if (!patientName || !phone || !email) {
       setError("Please provide your name, phone, and email.");
       return;
     }
@@ -181,7 +199,7 @@ export const AppointmentBookingForm: React.FC = () => {
     setSubmitting(true);
     try {
       const response = await appointmentApi.createAppointmentRequest({
-        fullName,
+        fullName: patientName,
         phone,
         email,
         departmentId,
@@ -192,7 +210,7 @@ export const AppointmentBookingForm: React.FC = () => {
       });
 
       setSuccess(response.message || "Appointment request submitted.");
-      setFullName("");
+      setPatientName("");
       setPhone("");
       setEmail("");
       setReasonForVisit("");
@@ -203,6 +221,29 @@ export const AppointmentBookingForm: React.FC = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const startOfMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+  const startDay = startOfMonth.getDay();
+  const daysInMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate();
+  const availableDays = new Set(weeklySlots.map((slot) => slot.dayOfWeek));
+
+  const calendarCells = Array.from({ length: startDay + daysInMonth }, (_, idx) => {
+    if (idx < startDay) return null;
+    return idx - startDay + 1;
+  });
+
+  const isPastDate = (day: number) => {
+    const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+    date.setHours(0, 0, 0, 0);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return date < now;
+  };
+
+  const isAvailableDay = (day: number) => {
+    const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+    return availableDays.has(date.getDay());
   };
 
   return (
@@ -238,8 +279,8 @@ export const AppointmentBookingForm: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-2">Department</label>
             {loadingDoctors ? (
@@ -279,56 +320,111 @@ export const AppointmentBookingForm: React.FC = () => {
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-800 mb-2">Date</label>
-            <input
-              type="date"
-              min={new Date().toISOString().slice(0, 10)}
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              disabled={!doctorId}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pristine-500 disabled:bg-gray-100"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-800 mb-2">Available Times</label>
-            {loadingTimes ? (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Loader className="w-4 h-4 animate-spin" /> Loading times...
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-gray-800 mb-2">Select Date</label>
+            <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+              <div className="flex items-center justify-between mb-3">
+                <button
+                  type="button"
+                  onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))}
+                  className="text-sm font-semibold text-gray-600 hover:text-pristine-600"
+                >
+                  Prev
+                </button>
+                <div className="text-sm font-semibold text-gray-800">
+                  {calendarMonth.toLocaleString([], { month: "long", year: "numeric" })}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))}
+                  className="text-sm font-semibold text-gray-600 hover:text-pristine-600"
+                >
+                  Next
+                </button>
               </div>
-            ) : (
-              <select
-                value={selectedTime}
-                onChange={(e) => setSelectedTime(e.target.value)}
-                disabled={!selectedDate || availableTimes.length === 0}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pristine-500 disabled:bg-gray-100"
-              >
-                <option value="">
-                  {availableTimes.length === 0 ? "No slots available" : "Select time"}
-                </option>
-                {availableTimes.map((time) => (
-                  <option key={time} value={time}>
-                    {formatTimeDisplay(time)}
-                  </option>
+              <div className="grid grid-cols-7 text-xs text-gray-500 mb-2">
+                {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map((d) => (
+                  <div key={d} className="text-center py-1">{d}</div>
                 ))}
-              </select>
-            )}
-            {!loadingTimes && availableTimes.length === 0 && nextAvailable && (
-              <p className="text-xs text-gray-600 mt-2">
-                Next available: {nextAvailable.date} at {formatTimeDisplay(nextAvailable.time)}
-              </p>
-            )}
+              </div>
+              <div className="grid grid-cols-7 gap-1">
+                {calendarCells.map((day, idx) => {
+                  if (!day) return <div key={idx} />;
+                  const disabled = !doctorId || isPastDate(day);
+                  const available = doctorId && isAvailableDay(day);
+                  const dateValue = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+                  const iso = dateValue.toISOString().slice(0, 10);
+                  const isSelected = selectedDate === iso;
+
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => setSelectedDate(iso)}
+                      className={`rounded-lg py-2 text-xs font-semibold transition ${
+                        isSelected
+                          ? "bg-pristine-600 text-white"
+                          : available
+                          ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                          : "bg-white text-gray-400 border border-gray-200"
+                      } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                      {day}
+                    </button>
+                  );
+                })}
+              </div>
+              {!doctorId && (
+                <p className="text-xs text-gray-500 mt-3">Select a doctor to view availability.</p>
+              )}
+            </div>
           </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-800 mb-2">Available Times</label>
+          {loadingTimes ? (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Loader className="w-4 h-4 animate-spin" /> Loading times...
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {availableTimes.length === 0 && (
+                <div className="col-span-2 md:col-span-4 text-sm text-gray-500">
+                  No slots available for the selected date.
+                </div>
+              )}
+              {availableTimes.map((time) => (
+                <button
+                  key={time}
+                  type="button"
+                  onClick={() => setSelectedTime(time)}
+                  className={`rounded-lg border px-3 py-2 text-sm font-semibold transition ${
+                    selectedTime === time
+                      ? "bg-pristine-600 text-white border-pristine-600"
+                      : "bg-white border-gray-200 text-gray-700 hover:border-pristine-400"
+                  }`}
+                >
+                  {formatTimeDisplay(time)}
+                </button>
+              ))}
+            </div>
+          )}
+          {!loadingTimes && availableTimes.length === 0 && nextAvailable && (
+            <p className="text-xs text-gray-600 mt-2">
+              Next available: {nextAvailable.date} at {formatTimeDisplay(nextAvailable.time)}
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-800 mb-2">Full Name</label>
+            <label className="block text-sm font-medium text-gray-800 mb-2">Patient Name</label>
             <input
               type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              value={patientName}
+              onChange={(e) => setPatientName(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pristine-500"
               placeholder="Your name"
             />

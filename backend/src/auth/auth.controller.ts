@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../common/dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { BootstrapAdminDto } from './dto/bootstrap-admin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,11 @@ export class AuthController {
   async logout(@Body('refreshToken') refreshToken: string) {
     await this.authService.logout(refreshToken);
     return { ok: true };
+  }
+
+  @Post('bootstrap-admin')
+  async bootstrapAdmin(@Body() dto: BootstrapAdminDto) {
+    return this.authService.bootstrapAdmin(dto);
   }
 
   @Get('me')

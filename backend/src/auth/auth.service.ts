@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -8,6 +8,7 @@ import { UsersService } from '../users/users.service';
 import { User } from '../entities/user.entity';
 import { UserSession } from '../entities/user-session.entity';
 import { AuditLog } from '../entities/audit-log.entity';
+import { BootstrapAdminDto } from './dto/bootstrap-admin.dto';
 
 @Injectable()
 export class AuthService {
@@ -115,5 +116,40 @@ export class AuthService {
       lastName: user.lastName,
       role: user.role?.name || 'UNKNOWN'
     };
+  }
+
+  async bootstrapAdmin(dto: BootstrapAdminDto) {
+    const expected = process.env.BOOTSTRAP_ADMIN_SECRET;
+    if (!expected || dto.secret !== expected) {
+      throw new UnauthorizedException('Invalid bootstrap secret');
+    }
+
+    const existingAdminCount = await this.usersRepo
+      .createQueryBuilder('u')
+      .innerJoin('u.role', 'r')
+      .where('r.name = :name', { name: 'ADMIN' })
+      .getCount();
+
+    if (existingAdminCount > 0) {
+      throw new BadRequestException('Admin already exists');
+    }
+
+    let role = await this.usersService.getRoleByName('ADMIN');
+    if (!role) {
+      role = await this.usersService.createRole({ name: 'ADMIN', description: 'System administrator' });
+    }
+
+    const passwordHash = await bcrypt.hash(dto.password, 10);
+    const user = this.usersRepo.create({
+      email: dto.email,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      passwordHash,
+      role,
+      isActive: true
+    });
+
+    const saved = await this.usersRepo.save(user);
+    return { id: saved.id, email: saved.email, role: role.name };
   }
 }
