@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   InpatientAdmission,
   Ward,
@@ -44,14 +44,7 @@ export default function WardDashboard({
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'bed' | 'admission'>('bed');
 
-  useEffect(() => {
-    loadWardData();
-    // Set up auto-refresh every 30 seconds
-    const interval = setInterval(loadWardData, 30000);
-    return () => clearInterval(interval);
-  }, [wardId]);
-
-  const loadWardData = async () => {
+  const loadWardData = useCallback(async () => {
     try {
       setLoading(true);
       const [admissionsRes, wardRes] = await Promise.all([
@@ -66,7 +59,13 @@ export default function WardDashboard({
     } finally {
       setLoading(false);
     }
-  };
+  }, [wardId]);
+
+  useEffect(() => {
+    loadWardData();
+    const interval = setInterval(loadWardData, 30000);
+    return () => clearInterval(interval);
+  }, [loadWardData]);
 
   // Filter and sort admissions
   let filteredAdmissions = admissions.filter((admission) => {

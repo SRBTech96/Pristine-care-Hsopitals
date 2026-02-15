@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AlertCircle, Users, Home, LogOut } from 'lucide-react';
 import { Ward, User, InpatientAdmission, Bed } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
@@ -30,18 +30,54 @@ export default function NurseStationLayout({ user }: NurseStationLayoutProps) {
   const isDoctor = user.roles.includes('DOCTOR');
 
   // Load wards on mount
+  const loadWards = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await nurseStationAPI.listWards();
+      setWards(response.data);
+      if (response.data.length > 0) {
+        setSelectedWardId(response.data[0].id);
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to load wards');
+    } finally {
+      setLoading(false);
+    }
+  }, [setLoading, setWards, setSelectedWardId]);
+
+  const loadBeds = useCallback(async () => {
+    if (!selectedWardId) return;
+    try {
+      const response = await nurseStationAPI.listBeds(selectedWardId);
+      setBeds(response.data);
+    } catch (err: any) {
+      console.error('Failed to load beds:', err);
+    }
+  }, [selectedWardId]);
+
+  const loadAdmissions = useCallback(async () => {
+    if (!selectedWardId) return;
+    try {
+      const response = await nurseStationAPI.listInpatientAdmissions(selectedWardId, 'active');
+      setAdmissions(response.data);
+    } catch (err: any) {
+      console.error('Failed to load admissions:', err);
+    }
+  }, [selectedWardId]);
+
+  // Load wards on mount
   useEffect(() => {
     if (isHeadNurse || isStaffNurse || isDoctor) {
       loadWards();
     }
-  }, [isHeadNurse, isStaffNurse, isDoctor]);
+  }, [isHeadNurse, isStaffNurse, isDoctor, loadWards]);
 
   // Load beds when ward is selected
   useEffect(() => {
     if (selectedWardId) {
       loadBeds();
     }
-  }, [selectedWardId]);
+  }, [selectedWardId, loadBeds]);
 
   // Set up auto-refresh (every 30 seconds)
   useEffect(() => {
@@ -53,7 +89,7 @@ export default function NurseStationLayout({ user }: NurseStationLayoutProps) {
       setRefreshInterval(interval);
       return () => clearInterval(interval);
     }
-  }, [selectedWardId]);
+  }, [selectedWardId, loadBeds, loadAdmissions]);
 
   // Check permission
   if (!isHeadNurse && !isStaffNurse && !isDoctor) {
@@ -67,42 +103,6 @@ export default function NurseStationLayout({ user }: NurseStationLayoutProps) {
       </div>
     );
   }
-
-  const loadWards = async () => {
-    try {
-      setLoading(true);
-      const response = await nurseStationAPI.listWards();
-      setWards(response.data);
-      if (response.data.length > 0) {
-        // Auto-select first ward for staff nurse, first in list for head nurse
-        setSelectedWardId(response.data[0].id);
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load wards');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadBeds = async () => {
-    if (!selectedWardId) return;
-    try {
-      const response = await nurseStationAPI.listBeds(selectedWardId);
-      setBeds(response.data);
-    } catch (err: any) {
-      console.error('Failed to load beds:', err);
-    }
-  };
-
-  const loadAdmissions = async () => {
-    if (!selectedWardId) return;
-    try {
-      const response = await nurseStationAPI.listInpatientAdmissions(selectedWardId, 'active');
-      setAdmissions(response.data);
-    } catch (err: any) {
-      console.error('Failed to load admissions:', err);
-    }
-  };
 
   const handleBedClick = async (bedId: string) => {
     setSelectedBedId(bedId);

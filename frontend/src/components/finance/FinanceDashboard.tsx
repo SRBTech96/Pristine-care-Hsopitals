@@ -20,11 +20,7 @@ export const FinanceDashboard: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
   const role = getClientRole();
 
-  React.useEffect(() => {
-    fetchAll();
-  }, [filters]);
-
-  const fetchAll = async () => {
+  const fetchAll = React.useCallback(async () => {
     setLoading(true);
     try {
       const [d, m, bd, bdpt, ex, p] = await Promise.all([
@@ -47,7 +43,11 @@ export const FinanceDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  React.useEffect(() => {
+    fetchAll();
+  }, [fetchAll]);
 
   return (
     <div className="space-y-6">

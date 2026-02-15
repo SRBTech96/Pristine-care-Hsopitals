@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InpatientAdmission, VitalsRecord } from '@/types/nurse-station';
 import { nurseStationAPI } from '@/lib/nurse-station-api';
 import { AlertCircle, ThermometerSun, Heart } from 'lucide-react';
@@ -36,11 +36,7 @@ export default function VitalsTab({ admission, userRole }: VitalsTabProps) {
     abnormalFindings: false,
   });
 
-  useEffect(() => {
-    loadVitals();
-  }, [admission.id]);
-
-  const loadVitals = async () => {
+  const loadVitals = useCallback(async () => {
     try {
       setLoading(true);
       const response = await nurseStationAPI.listPatientVitals(admission.id);
@@ -50,7 +46,11 @@ export default function VitalsTab({ admission, userRole }: VitalsTabProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [admission.id]);
+
+  useEffect(() => {
+    loadVitals();
+  }, [loadVitals]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

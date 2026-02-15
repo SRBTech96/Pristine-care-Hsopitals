@@ -17,9 +17,18 @@ export const Filters: React.FC<FiltersProps> = ({ startDate, endDate, doctors = 
   const [department, setDepartment] = React.useState("");
 
   React.useEffect(() => {
-    const t = setTimeout(() => onChange({ startDate: s || undefined, endDate: e || undefined, doctorId: doctor || undefined, departmentId: department || undefined }), 300);
+    const t = setTimeout(
+      () =>
+        onChange({
+          startDate: s || undefined,
+          endDate: e || undefined,
+          doctorId: doctor || undefined,
+          departmentId: department || undefined,
+        }),
+      300
+    );
     return () => clearTimeout(t);
-  }, [s, e, doctor, department]);
+  }, [s, e, doctor, department, onChange]);
 
   return (
     <div className="bg-white p-4 rounded shadow-sm">
