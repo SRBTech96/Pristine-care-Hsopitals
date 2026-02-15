@@ -103,10 +103,10 @@ async function generateExcelClientSide(
     if (data.pnl) {
       summaryData.push(["PROFIT & LOSS SUMMARY"], [], [
         "Revenue",
-        data.pnl.revenue,
+        String(data.pnl.revenue),
       ]);
-      summaryData.push(["Expenses", data.pnl.expenses]);
-      summaryData.push(["Profit", data.pnl.profit]);
+      summaryData.push(["Expenses", String(data.pnl.expenses)]);
+      summaryData.push(["Profit", String(data.pnl.profit)]);
     }
 
     const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
@@ -116,7 +116,7 @@ async function generateExcelClientSide(
     // Daily Revenue sheet
     if (data.dailyRevenue?.length) {
       const dailyData = [["Date", "Revenue"]];
-      data.dailyRevenue.forEach((r) => dailyData.push([r.date, r.total]));
+      data.dailyRevenue.forEach((r) => dailyData.push([r.date, String(r.total)]));
       const dailySheet = XLSX.utils.aoa_to_sheet(dailyData);
       dailySheet["!cols"] = [{ wch: 15 }, { wch: 15 }];
       XLSX.utils.book_append_sheet(wb, dailySheet, "Daily Revenue");
@@ -125,7 +125,7 @@ async function generateExcelClientSide(
     // Monthly Revenue sheet
     if (data.monthlyRevenue?.length) {
       const monthlyData = [["Month", "Revenue"]];
-      data.monthlyRevenue.forEach((r) => monthlyData.push([r.date, r.total]));
+      data.monthlyRevenue.forEach((r) => monthlyData.push([r.date, String(r.total)]));
       const monthlySheet = XLSX.utils.aoa_to_sheet(monthlyData);
       monthlySheet["!cols"] = [{ wch: 15 }, { wch: 15 }];
       XLSX.utils.book_append_sheet(wb, monthlySheet, "Monthly Revenue");
@@ -134,7 +134,7 @@ async function generateExcelClientSide(
     // Revenue by Doctor sheet
     if (data.revenueByDoctor?.length) {
       const doctorData = [["Doctor", "Revenue"]];
-      data.revenueByDoctor.forEach((r) => doctorData.push([r.key, r.amount]));
+      data.revenueByDoctor.forEach((r) => doctorData.push([r.key, String(r.amount)]));
       const doctorSheet = XLSX.utils.aoa_to_sheet(doctorData);
       doctorSheet["!cols"] = [{ wch: 25 }, { wch: 15 }];
       XLSX.utils.book_append_sheet(wb, doctorSheet, "By Doctor");
@@ -143,7 +143,7 @@ async function generateExcelClientSide(
     // Revenue by Department sheet
     if (data.revenueByDepartment?.length) {
       const deptData = [["Department", "Revenue"]];
-      data.revenueByDepartment.forEach((r) => deptData.push([r.key, r.amount]));
+      data.revenueByDepartment.forEach((r) => deptData.push([r.key, String(r.amount)]));
       const deptSheet = XLSX.utils.aoa_to_sheet(deptData);
       deptSheet["!cols"] = [{ wch: 25 }, { wch: 15 }];
       XLSX.utils.book_append_sheet(wb, deptSheet, "By Department");
@@ -152,7 +152,7 @@ async function generateExcelClientSide(
     // Expenses sheet
     if (data.expenses?.length) {
       const expData = [["Date", "Amount"]];
-      data.expenses.forEach((e) => expData.push([e.date, e.total]));
+      data.expenses.forEach((e) => expData.push([e.date, String(e.total)]));
       const expSheet = XLSX.utils.aoa_to_sheet(expData);
       expSheet["!cols"] = [{ wch: 15 }, { wch: 15 }];
       XLSX.utils.book_append_sheet(wb, expSheet, "Expenses");

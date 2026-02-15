@@ -41,7 +41,7 @@ export function setupWebVitalsMonitoring() {
     try {
       const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1];
+        const lastEntry = entries[entries.length - 1] as any;
 
         reportWebVitals({
           name: "LCP",
